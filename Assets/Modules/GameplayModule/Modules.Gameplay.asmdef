@@ -1,0 +1,21 @@
+{
+  "name": "Modules.Gameplay",
+  "references": [
+    "FlowIoC",
+    "FlowIoC.Editor",
+    "Unity.RenderPipelines.Core.Runtime",
+    "Unity.RenderPipelines.Universal.Runtime",
+    "Unity.InputSystem",
+    "Modules.Loading",
+    "Modules.Gameplay.Signals"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

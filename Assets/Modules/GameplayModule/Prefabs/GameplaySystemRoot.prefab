@@ -1,0 +1,195 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4486889424014116514
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6714883090345358872}
+  - component: {fileID: 7422317409910993039}
+  - component: {fileID: 3455521898284427510}
+  m_Layer: 0
+  m_Name: GameplaySystemRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6714883090345358872
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4486889424014116514}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1603670443940107821}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7422317409910993039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4486889424014116514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 543c504df7cafb249ba5fe30eadbe4a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay::Modules.GameplayModule.RootsContexts.GameplaySystemRoot
+  SubContextTypes:
+  - ContextScript: {fileID: 11500000, guid: 7e664dc3781d6de41a564dd240d87da4, type: 3}
+    ContextFullName: Modules.GameplayModule.GameplayScreenModule.RootsContexts.GameplayScreenContext
+    ContextName: GameplayScreenContext
+    AutoSetup: 1
+    IsTest: 0
+    Settings:
+      rid: -2
+    LegacyOverrideScreen: 0
+    LegacyScreenManagerId: 0
+    LegacyScreenLayer: 0
+    LegacyScreenTag: 0
+    LegacyScreenHasShowAnimation: 0
+    LegacyScreenHasHideAnimation: 0
+  - ContextScript: {fileID: 11500000, guid: bf1723558fa67e648a7466d21f2ae441, type: 3}
+    ContextFullName: FlowIoC.PoolModule.RootsContexts.PoolSubContext
+    ContextName: PoolSubContext
+    AutoSetup: 1
+    IsTest: 0
+    Settings:
+      rid: 7385398308710383858
+    LegacyOverrideScreen: 0
+    LegacyScreenManagerId: 0
+    LegacyScreenLayer: 0
+    LegacyScreenTag: 0
+    LegacyScreenHasShowAnimation: 0
+    LegacyScreenHasHideAnimation: 0
+  initializeOrder: 0
+  AutoBindInjections: 1
+  AutoBindMediations: 1
+  AutoInitialize: 1
+  AutoSetup: 1
+  AutoLaunch: 1
+  IsTest: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 7385398308710383858
+      type: {class: PoolSubContextSettingsCVO, ns: FlowIoC.PoolModule.Data.ValueObjects, asm: FlowIoC}
+      data:
+        Groups:
+          m_Keys:
+          - gameplay
+          m_Values:
+          - Group: {fileID: 11400000, guid: 50eed1e23068bb2408ec573ff8f95aac, type: 2}
+            AutoInitialize: 1
+            GroupSpecificPools: 0
+        UnregisterWhenRootDestroyed: 1
+--- !u!114 &3455521898284427510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4486889424014116514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f39bbf08b2e417abc79bcaf1de79c9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FlowIoC::FlowIoC.BaseModule.Adapters.RootAdapter
+  _scriptableMap:
+    m_Keys:
+    - CD_Weapons
+    - CD_Characters
+    - CD_Missions
+    - CD_Upgrades
+    m_Values:
+    - {fileID: 11400000, guid: ffeb05d41afa3194f96d308a338dabec, type: 2}
+    - {fileID: 11400000, guid: dba58ee85bd234846bb360c96149ac17, type: 2}
+    - {fileID: 11400000, guid: 30939febcb7005a47989b1b7ecf4573e, type: 2}
+    - {fileID: 11400000, guid: 65e4860bc80fa514bb723fe7d1045a63, type: 2}
+  _sharedScriptableMap:
+    m_Keys: []
+    m_Values: []
+  _monoMap:
+    m_Keys: []
+    m_Values: []
+  _sharedMonoMap:
+    m_Keys: []
+    m_Values: []
+--- !u!1 &5013403246497681211
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1603670443940107821}
+  - component: {fileID: 8603425910904175240}
+  - component: {fileID: 7748358352596657981}
+  m_Layer: 0
+  m_Name: NightShiftView
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1603670443940107821
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5013403246497681211}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6714883090345358872}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8603425910904175240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5013403246497681211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03cab3481c6e0644b9556052741d16c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FlowIoC::FlowIoC.BaseModule.Injectable.Components.ViewInjector
+  viewDataList: []
+--- !u!114 &7748358352596657981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5013403246497681211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9f78218ef121c54894a40a16f92fba3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay::Modules.GameplayModule.ViewsMediators.NightShiftView
+  _levelPrefab: {fileID: 1325422582311337430, guid: 7ec7f7494cbf32a4da33bc3f691407ac, type: 3}
+  _shotShake: 0.55
+  _guardShotShake: 0.35
+  _impactShake: 0.25
+  _explosionShake: 1.4
+  _shakeStrength: 0.6
+  _shakeRecovery: 2.2

@@ -1,0 +1,243 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f07d6b07023536a43ab751ffb8db37e0, type: 3}
+  m_Name: Pool_Gameplay
+  m_EditorClassIdentifier: FlowIoC::FlowIoC.PoolModule.Data.UnityObjects.CD_PoolGroup
+  _items:
+  - PoolKey: gameplay.bullet
+    InitialCreateCount: 16
+    IsExtendable: 1
+    LazyLoad: 0
+    IsAddressable: 0
+    Prefab: {fileID: 5302011235158407846, guid: 72f421b02438d7049970c4d568515c7e, type: 3}
+    AddressablePrefab:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+  - PoolKey: gameplay.fx.muzzle
+    InitialCreateCount: 4
+    IsExtendable: 1
+    LazyLoad: 0
+    IsAddressable: 0
+    Prefab: {fileID: 341298213007254051, guid: 4714398e6d3bd6b41945e88a5e9e3a5e, type: 3}
+    AddressablePrefab:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+  - PoolKey: gameplay.fx.guard_muzzle
+    InitialCreateCount: 4
+    IsExtendable: 1
+    LazyLoad: 0
+    IsAddressable: 0
+    Prefab: {fileID: 963823014767141670, guid: 956d9cc97f954174792c72a359b46187, type: 3}
+    AddressablePrefab:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+  - PoolKey: gameplay.fx.impact_wall
+    InitialCreateCount: 8
+    IsExtendable: 1
+    LazyLoad: 0
+    IsAddressable: 0
+    Prefab: {fileID: 1049141538608363001, guid: d7f224947858a404dad03c3026ddd6a9, type: 3}
+    AddressablePrefab:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+  - PoolKey: gameplay.fx.impact_blood
+    InitialCreateCount: 6
+    IsExtendable: 1
+    LazyLoad: 0
+    IsAddressable: 0
+    Prefab: {fileID: 6496291526461973432, guid: 3b9c5a56fdad1be4eb2b075098742ed3, type: 3}
+    AddressablePrefab:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+  - PoolKey: gameplay.fx.shell_load
+    InitialCreateCount: 3
+    IsExtendable: 1
+    LazyLoad: 0
+    IsAddressable: 0
+    Prefab: {fileID: 4511558711025372138, guid: 40b0898a889a02d498ba79d56b5c7838, type: 3}
+    AddressablePrefab:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+  - PoolKey: gameplay.fx.melee
+    InitialCreateCount: 2
+    IsExtendable: 1
+    LazyLoad: 0
+    IsAddressable: 0
+    Prefab: {fileID: 3107222133708472883, guid: b7b5e7e2f5fe1d14eb8dab4de9ad6c2f, type: 3}
+    AddressablePrefab:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+  - PoolKey: gameplay.fx.door_kick
+    InitialCreateCount: 2
+    IsExtendable: 1
+    LazyLoad: 0
+    IsAddressable: 0
+    Prefab: {fileID: 5544173206634742693, guid: 3c55a5e9348989b48a55dac5adee5bbf, type: 3}
+    AddressablePrefab:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+  - PoolKey: gameplay.decal.bullet_hole
+    InitialCreateCount: 40
+    IsExtendable: 1
+    LazyLoad: 0
+    IsAddressable: 0
+    Prefab: {fileID: 9174217090192677032, guid: bb9046ecb5ea84a418b995e419c9950f, type: 3}
+    AddressablePrefab:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+  - PoolKey: gameplay.decal.blood
+    InitialCreateCount: 30
+    IsExtendable: 1
+    LazyLoad: 0
+    IsAddressable: 0
+    Prefab: {fileID: 4193269333802319241, guid: 9957f057ccb355d488a584fae7cc0e4d, type: 3}
+    AddressablePrefab:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+  - PoolKey: gameplay.weapon_pickup
+    InitialCreateCount: 12
+    IsExtendable: 1
+    LazyLoad: 0
+    IsAddressable: 0
+    Prefab: {fileID: 1393406234514399537, guid: 5aa755bc3c7ac8648971f19451ce2b86, type: 3}
+    AddressablePrefab:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+  - PoolKey: gameplay.decal.scorch
+    InitialCreateCount: 6
+    IsExtendable: 1
+    LazyLoad: 0
+    IsAddressable: 0
+    Prefab: {fileID: 8975669437547507397, guid: 4c9d642831529024894d7bb280c758e6, type: 3}
+    AddressablePrefab:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+  - PoolKey: gameplay.fx.ceiling_debris
+    InitialCreateCount: 4
+    IsExtendable: 1
+    LazyLoad: 0
+    IsAddressable: 0
+    Prefab: {fileID: 5892132227180757181, guid: e69930b3131b4b6469bd23adfe1bf2e6, type: 3}
+    AddressablePrefab:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+  - PoolKey: gameplay.fx.floor_dust
+    InitialCreateCount: 4
+    IsExtendable: 1
+    LazyLoad: 0
+    IsAddressable: 0
+    Prefab: {fileID: 8704009833954132393, guid: 7849b2bcdf8fa824eac407e0e9f70cf9, type: 3}
+    AddressablePrefab:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+  - PoolKey: gameplay.fx.splinters
+    InitialCreateCount: 4
+    IsExtendable: 1
+    LazyLoad: 0
+    IsAddressable: 0
+    Prefab: {fileID: 1458651681710231322, guid: 0045c3bbe3f3f9f43b18dc11e5b3e1de, type: 3}
+    AddressablePrefab:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+  - PoolKey: gameplay.fx.glass
+    InitialCreateCount: 4
+    IsExtendable: 1
+    LazyLoad: 0
+    IsAddressable: 0
+    Prefab: {fileID: 8331973107139667920, guid: 891e28513c46c3f4499f5734332c642f, type: 3}
+    AddressablePrefab:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+  - PoolKey: gameplay.fx.metal_sparks
+    InitialCreateCount: 4
+    IsExtendable: 1
+    LazyLoad: 0
+    IsAddressable: 0
+    Prefab: {fileID: 6762634284868815273, guid: c08bb3d8ce0309947b84c36f70b30fab, type: 3}
+    AddressablePrefab:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+  - PoolKey: gameplay.fx.dirt
+    InitialCreateCount: 2
+    IsExtendable: 1
+    LazyLoad: 0
+    IsAddressable: 0
+    Prefab: {fileID: 8331244522355613058, guid: a7855ca702f851147a9a48c032a6fcfc, type: 3}
+    AddressablePrefab:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+  - PoolKey: gameplay.fx.explosion
+    InitialCreateCount: 4
+    IsExtendable: 1
+    LazyLoad: 0
+    IsAddressable: 0
+    Prefab: {fileID: 3982681223831077268, guid: 1d986fa17c45bb146ad7dfff7906a2ce, type: 3}
+    AddressablePrefab:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0

@@ -1,0 +1,106 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3565d1d6621fa294692e877ae355071b, type: 3}
+  m_Name: CD_Weapons
+  m_EditorClassIdentifier: Modules.Gameplay::Modules.GameplayModule.Data.UnityObjects.CD_Weapons
+  PlayerStartWeapon: revolver
+  Weapons:
+  - Id: revolver
+    DisplayName: REVOLVER
+    Prefab: {fileID: 5764084499895320103, guid: 4a2b2db796cb2724e81f4f94537a4b45, type: 3}
+    Magazine: 6
+    Reserve: 12
+    Reload: 0
+    ReloadTime: 0.32
+    Automatic: 0
+    FireInterval: 0.2
+    Pellets: 1
+    Spread: 0
+    Damage: 1
+    BulletSpeed: 42
+    BulletLife: 1
+    NoiseRadius: 11
+  - Id: pistol
+    DisplayName: PISTOL
+    Prefab: {fileID: 3917138384976205592, guid: 42d4a8123c43e9d40afeef5cbc159560, type: 3}
+    Magazine: 12
+    Reserve: 24
+    Reload: 1
+    ReloadTime: 1.1
+    Automatic: 0
+    FireInterval: 0.15
+    Pellets: 1
+    Spread: 2
+    Damage: 1
+    BulletSpeed: 40
+    BulletLife: 1
+    NoiseRadius: 9
+  - Id: silenced_pistol
+    DisplayName: SILENCED PISTOL
+    Prefab: {fileID: 3281459831384510409, guid: 7a814e012c30dbd40a87d1f88a6d9ead, type: 3}
+    Magazine: 8
+    Reserve: 16
+    Reload: 1
+    ReloadTime: 1.3
+    Automatic: 0
+    FireInterval: 0.22
+    Pellets: 1
+    Spread: 1
+    Damage: 1
+    BulletSpeed: 36
+    BulletLife: 1
+    NoiseRadius: 2.5
+  - Id: shotgun
+    DisplayName: SHOTGUN
+    Prefab: {fileID: 1673374067204030067, guid: ff1fcac5d717bd344b4332e2a6626b6a, type: 3}
+    Magazine: 2
+    Reserve: 8
+    Reload: 0
+    ReloadTime: 0.45
+    Automatic: 0
+    FireInterval: 0.5
+    Pellets: 6
+    Spread: 14
+    Damage: 1
+    BulletSpeed: 34
+    BulletLife: 0.4
+    NoiseRadius: 14
+  - Id: smg
+    DisplayName: SMG
+    Prefab: {fileID: 2237718203004166460, guid: 096d56702d9545849bae79276b2b55bc, type: 3}
+    Magazine: 24
+    Reserve: 48
+    Reload: 1
+    ReloadTime: 1.6
+    Automatic: 1
+    FireInterval: 0.08
+    Pellets: 1
+    Spread: 5
+    Damage: 1
+    BulletSpeed: 44
+    BulletLife: 1
+    NoiseRadius: 12
+  - Id: rifle
+    DisplayName: RIFLE
+    Prefab: {fileID: 8451675891386500460, guid: 96ef12f3064cb0e4e95e97385f24564b, type: 3}
+    Magazine: 5
+    Reserve: 10
+    Reload: 1
+    ReloadTime: 1.5
+    Automatic: 0
+    FireInterval: 0.6
+    Pellets: 1
+    Spread: 0
+    Damage: 3
+    BulletSpeed: 70
+    BulletLife: 0.8
+    NoiseRadius: 16

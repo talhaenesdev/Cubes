@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37db12834d828394ea451ac76078854b, type: 3}
+  m_Name: CD_Upgrades
+  m_EditorClassIdentifier: Modules.Gameplay::Modules.GameplayModule.Data.UnityObjects.CD_Upgrades
+  Upgrades:
+  - Id: armor
+    Title: PADDED COAT
+    Description: Survive one more hit.
+    Kind: 0
+    Amount: 1
+    MaxLevel: 2
+    Cost: 400
+  - Id: quick_hands
+    Title: QUICK HANDS
+    Description: Reload 15% faster.
+    Kind: 1
+    Amount: 15
+    MaxLevel: 3
+    Cost: 200
+  - Id: light_step
+    Title: LIGHT STEP
+    Description: Move 10% faster.
+    Kind: 2
+    Amount: 10
+    MaxLevel: 3
+    Cost: 250
+  - Id: bandolier
+    Title: BANDOLIER
+    Description: Start with 6 more spare rounds.
+    Kind: 3
+    Amount: 6
+    MaxLevel: 3
+    Cost: 150
