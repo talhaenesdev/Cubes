@@ -19,6 +19,17 @@ namespace Modules.GameplayModule.Entities
         [SerializeField] private Transform _armPivot;
         [Tooltip("The held weapon's prefab is placed here; +X points down the barrel.")]
         [SerializeField] private Transform _weaponSocket;
+        [Tooltip("Where the pocket weapon hangs; made at runtime under the torso when empty.")]
+        [SerializeField] private Transform _holsterSocket;
+        [Tooltip("The hip, relative to the torso, used when the socket is made at runtime.")]
+        [SerializeField] private Vector3 _holsterOffset = new(-0.18f, -0.42f, 0f);
+        private GameObject _holsterPrefab;
+        private GameObject _holstered;
+        [Tooltip("Shown in the hand instead of the weapon while the player starts the music at a contract's start.")]
+        [SerializeField] private GameObject _phone;
+        [SerializeField] private SpriteRenderer _phoneScreen;
+        [Tooltip("Worn through a contract; put on at its start, before the phone comes out.")]
+        [SerializeField] private Transform _headphones;
         [SerializeField] private SpriteRenderer[] _coat = new SpriteRenderer[0];
         [SerializeField] private RevolverCylinder _cylinder;
         [SerializeField] private MagazineSwap _magazine;
@@ -30,6 +41,19 @@ namespace Modules.GameplayModule.Entities
         [SerializeField] private GameObject _ventEyes;
         [SerializeField] private Transform _shadow;
         [SerializeField] private Transform _bloodPool;
+
+        [Header("Outfit (dyed from CD_Outfits; empty on characters that wear none)")]
+        [SerializeField] private SpriteRenderer[] _outfitCoat = new SpriteRenderer[0];
+        [SerializeField] private SpriteRenderer[] _outfitCoatShade = new SpriteRenderer[0];
+        [SerializeField] private SpriteRenderer[] _outfitWaistcoat = new SpriteRenderer[0];
+        [SerializeField] private SpriteRenderer[] _outfitShirt = new SpriteRenderer[0];
+        [SerializeField] private SpriteRenderer[] _outfitTie = new SpriteRenderer[0];
+        [SerializeField] private SpriteRenderer[] _outfitHat = new SpriteRenderer[0];
+        [SerializeField] private SpriteRenderer[] _outfitHatBand = new SpriteRenderer[0];
+        [SerializeField] private SpriteRenderer[] _outfitScarf = new SpriteRenderer[0];
+        [SerializeField] private GameObject[] _outfitHatParts = new GameObject[0];
+        [SerializeField] private GameObject[] _outfitScarfParts = new GameObject[0];
+        [SerializeField] private GameObject[] _outfitCigarette = new GameObject[0];
 
         [Header("Look")]
         [SerializeField] private Color _coatColor = new(0.28f, 0.25f, 0.30f);
@@ -60,6 +84,49 @@ namespace Modules.GameplayModule.Entities
         public override void OnInitialized() => Recache();
 
         // Puts the weapon's prefab in the hand; null leaves the hand empty. Nothing happens when it is already held.
+        // The weapon carried in the pocket, worn at the hip, muzzle down; null leaves the hip empty.
+        public void SetHolster(GameObject prefab)
+        {
+            if (prefab == _holsterPrefab) return;
+            _holsterPrefab = prefab;
+            if (_holstered != null)
+            {
+                // Out of the hierarchy at once, so the tint list rebuilt below no longer finds it.
+                _holstered.transform.SetParent(null, false);
+                Destroy(_holstered);
+                _holstered = null;
+            }
+            if (prefab != null)
+            {
+                Transform hip = HolsterSocket();
+                if (hip != null)
+                {
+                    _holstered = Instantiate(prefab, hip, false);
+                    _holstered.transform.localPosition = Vector3.zero;
+                    _holstered.transform.localRotation = Quaternion.identity;
+                    _holstered.transform.localScale = Vector3.one * 0.8f;
+                    // Behind the coat's front, in front of the back leg.
+                    foreach (SpriteRenderer part in _holstered.GetComponentsInChildren<SpriteRenderer>(true)) part.sortingOrder -= 8;
+                    foreach (Transform child in _holstered.GetComponentsInChildren<Transform>(true))
+                        if (child.name == "Muzzle") child.gameObject.SetActive(false);
+                }
+            }
+            Recache(_weapon == null ? null : _weapon.transform);
+        }
+
+        // The hip: made once under the torso if the prefab has none of its own.
+        private Transform HolsterSocket()
+        {
+            if (_holsterSocket != null) return _holsterSocket;
+            Transform parent = _torso != null ? _torso : _body;
+            if (parent == null) return null;
+            _holsterSocket = new GameObject("Holster").transform;
+            _holsterSocket.SetParent(parent, false);
+            _holsterSocket.localPosition = _holsterOffset;
+            _holsterSocket.localRotation = Quaternion.Euler(0f, 0f, -100f);
+            return _holsterSocket;
+        }
+
         public void SetWeapon(GameObject prefab)
         {
             if (prefab == _weaponPrefab || _weaponSocket == null) return;
@@ -98,6 +165,50 @@ namespace Modules.GameplayModule.Entities
 
         public void Kick() => _recoil = 1f;
 
+        // The swing: wound back, thrown forward, the body lunging behind it.
+        public void Punch() => _punch = 1f;
+
+        // A hit lands: every part goes white for an instant.
+        public void Flash() => _flash = 1f;
+
+        private float _punch;
+        private float _flash;
+        private const float PunchTime = 0.28f;
+
+        private string _wearing;
+
+        // Dyes the coat, waistcoat, shirt, tie, hat and scarf and shows or hides the hat, scarf and cigarette.
+        public void Wear(Data.ValueObjects.OutfitCVO outfit)
+        {
+            if (outfit == null || outfit.Id == _wearing) return;
+            _wearing = outfit.Id;
+            Dye(_outfitCoat, outfit.Coat);
+            Dye(_outfitCoatShade, outfit.Coat * new Color(0.6f, 0.6f, 0.6f, 1f));
+            Dye(_outfitWaistcoat, outfit.Waistcoat);
+            Dye(_outfitShirt, outfit.Shirt);
+            Dye(_outfitTie, outfit.Tie);
+            Dye(_outfitHat, outfit.Hat);
+            Dye(_outfitHatBand, outfit.HatBand);
+            Dye(_outfitScarf, outfit.Scarf);
+            Show(_outfitHatParts, outfit.WearHat);
+            Show(_outfitScarfParts, outfit.WearScarf);
+            Show(_outfitCigarette, outfit.Cigarette);
+            if (_outfitCoat.Length > 0) _coatColor = outfit.Coat;
+            Recache(_weapon == null ? null : _weapon.transform);
+        }
+
+        private void Dye(SpriteRenderer[] parts, Color color)
+        {
+            foreach (SpriteRenderer part in parts)
+                if (part != null) part.color = new Color(color.r, color.g, color.b, part.color.a);
+        }
+
+        private void Show(GameObject[] parts, bool on)
+        {
+            foreach (GameObject part in parts)
+                if (part != null) part.SetActive(on);
+        }
+
         public void Apply(CharacterPoseVO pose)
         {
             float dt = Time.deltaTime;
@@ -115,6 +226,10 @@ namespace Modules.GameplayModule.Entities
             _body.localScale = new Vector3(_facing, pose.Crouching && pose.Alive ? _crouchScale : 1f, 1f);
             PoseLegs(pose);
             PoseArm(pose);
+            PosePhone(pose);
+            PoseHeadphones(pose);
+            PosePunch(pose);
+            PoseTrackSwitch(pose);
             Tint(pose);
             bool reloading = pose.Alive && pose.Reloading;
             if (_cylinder != null) _cylinder.Apply(reloading && (!pose.MagazineReload || _magazine == null), pose.Ammo, pose.Magazine, pose.ReloadProgress);
@@ -174,17 +289,83 @@ namespace Modules.GameplayModule.Entities
             _armPivot.localRotation = Quaternion.Euler(0f, 0f, angle);
         }
 
+        // Raise the phone to the face, tap, hold while the music starts, lower it and take the weapon back.
+        private void PosePhone(CharacterPoseVO pose)
+        {
+            bool using_ = pose.Alive && pose.Phone >= 0f && pose.Phone < 1f;
+            if (_phone != null && _phone.activeSelf != using_) _phone.SetActive(using_);
+            if (_weaponSocket != null && _weaponSocket.gameObject.activeSelf == using_) _weaponSocket.gameObject.SetActive(!using_);
+            if (!using_ || _armPivot == null) return;
+            float t = pose.Phone;
+            float raise = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t / 0.22f)) * (1f - Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((t - 0.68f) / 0.25f)));
+            float tap = t > 0.3f && t < 0.38f ? Mathf.Sin((t - 0.3f) / 0.08f * Mathf.PI) * 6f : 0f;
+            _armPivot.localRotation = Quaternion.Euler(0f, 0f, Mathf.Lerp(-60f, 72f, raise) - tap);
+            if (_phoneScreen != null)
+                _phoneScreen.color = t >= 0.35f ? new Color(0.75f, 0.95f, 1f) : new Color(0.25f, 0.35f, 0.4f);
+        }
+
+        // Hung round the neck, lifted up over the ears with the hand, then worn.
+        private void PoseHeadphones(CharacterPoseVO pose)
+        {
+            if (_headphones == null) return;
+            bool worn = pose.Alive && pose.Headphones >= 0f;
+            if (_headphones.gameObject.activeSelf != worn) _headphones.gameObject.SetActive(worn);
+            if (!worn) return;
+            float t = Mathf.SmoothStep(0f, 1f, pose.Headphones);
+            _headphones.localPosition = new Vector3(0f, Mathf.Lerp(-0.45f, 0f, t), 0f);
+            if (pose.Headphones >= 1f || _armPivot == null) return;
+            float reach = Mathf.Sin(Mathf.Clamp01(pose.Headphones) * Mathf.PI);
+            _armPivot.localRotation = Quaternion.Euler(0f, 0f, Mathf.Lerp(-60f, 110f, reach));
+            if (_weaponSocket != null && _weaponSocket.gameObject.activeSelf) _weaponSocket.gameObject.SetActive(false);
+        }
+
+        // The weapon lowered and away, the hand up to the ear cup, a tap, and the weapon back in hand.
+        private void PoseTrackSwitch(CharacterPoseVO pose)
+        {
+            bool switching = pose.Alive && pose.TrackSwitch >= 0f && pose.TrackSwitch < 1f;
+            if (!switching)
+            {
+                if (_trackSwitching && _weaponSocket != null && pose.Phone < 0f) _weaponSocket.gameObject.SetActive(true);
+                _trackSwitching = false;
+                return;
+            }
+            _trackSwitching = true;
+            if (_weaponSocket != null && _weaponSocket.gameObject.activeSelf) _weaponSocket.gameObject.SetActive(false);
+            if (_armPivot == null) return;
+            float t = pose.TrackSwitch;
+            float reach = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t / 0.35f)) * (1f - Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((t - 0.7f) / 0.3f)));
+            // A small press against the cup at the tap.
+            float tap = t > 0.45f && t < 0.58f ? Mathf.Sin((t - 0.45f) / 0.13f * Mathf.PI) * 8f : 0f;
+            _armPivot.localRotation = Quaternion.Euler(0f, 0f, Mathf.Lerp(-60f, 112f, reach) - tap);
+        }
+
+        private bool _trackSwitching;
+
+        private void PosePunch(CharacterPoseVO pose)
+        {
+            if (_punch <= 0f || !pose.Alive) { _punch = 0f; if (_body != null) _body.localPosition = new Vector3(0f, _body.localPosition.y, 0f); return; }
+            _punch = Mathf.Max(0f, _punch - Time.deltaTime / PunchTime);
+            float t = 1f - _punch;
+            // A quick wind-up behind, then the arm thrown straight out, then back.
+            float swing = t < 0.25f ? Mathf.Lerp(0f, -55f, t / 0.25f) : t < 0.5f ? Mathf.Lerp(-55f, 15f, (t - 0.25f) / 0.25f) : Mathf.Lerp(15f, 0f, (t - 0.5f) / 0.5f);
+            if (_armPivot != null) _armPivot.localRotation = Quaternion.Euler(0f, 0f, swing);
+            float lunge = Mathf.Sin(Mathf.Clamp01((t - 0.2f) / 0.5f) * Mathf.PI) * 0.18f;
+            if (_body != null) _body.localPosition = new Vector3(lunge, _body.localPosition.y, 0f);
+        }
+
         private void Tint(CharacterPoseVO pose)
         {
             float alpha = pose.Hidden ? _hiddenAlpha : 1f;
+            _flash = Mathf.Max(0f, _flash - Time.unscaledDeltaTime * 9f);
             for (int i = 0; i < _renderers.Count; i++)
             {
-                Color color = _colors[i];
-                color.a *= alpha;
+                Color color = _flash > 0f ? Color.Lerp(_colors[i], Color.white, _flash * 0.85f) : _colors[i];
+                color.a = _colors[i].a * alpha;
                 _renderers[i].color = color;
             }
             Color coat = Color.Lerp(_coatColor, _alertColor, pose.Alert * 0.65f);
             if (!pose.Alive) coat *= new Color(0.65f, 0.65f, 0.65f, 1f);
+            if (_flash > 0f) coat = Color.Lerp(coat, Color.white, _flash * 0.85f);
             coat.a = alpha;
             foreach (SpriteRenderer part in _coat) part.color = coat;
         }

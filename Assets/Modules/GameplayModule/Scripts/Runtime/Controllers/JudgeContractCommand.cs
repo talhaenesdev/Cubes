@@ -15,10 +15,11 @@ namespace Modules.GameplayModule.Controllers
                 _model.CompleteMission();
                 _model.Run.Hint = "CONTRACT COMPLETE  /  heading home";
             }
-            else if (!_model.Run.Alive) _model.Run.Hint = "YOU WERE SEEN. ONE SHOT IS ALL IT TAKES.  /  R to retry";
-            if (_model.Run.Won || !_model.Run.Alive) _model.IsTicking = false;
+            else if (!_model.Run.Alive && string.IsNullOrEmpty(_model.Run.Hint)) _model.Run.Hint = "YOU WERE SEEN. ONE SHOT IS ALL IT TAKES.  /  R to retry";
+            if (_model.Run.Won || !_model.Run.Alive || _model.Run.Abandoned) _model.IsTicking = false;
             // The tick stops here, so this is the only frame a win is judged in.
             if (_model.Run.Won && !_model.Run.InHideout) _signals.Extracted.Dispatch();
+            else if (_model.Run.Abandoned && !_model.Run.InHideout) _signals.Abandoned.Dispatch();
         }
     }
 }

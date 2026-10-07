@@ -1,17 +1,19 @@
 {
-  "name": "Modules.Main.Screen",
-  "references": [
-    "FlowIoC",
-    "UnityEngine.UI",
-    "Modules.Main.Screen.Signals"
-  ],
-  "includePlatforms": [],
-  "excludePlatforms": [],
-  "allowUnsafeCode": false,
-  "overrideReferences": false,
-  "precompiledReferences": [],
-  "autoReferenced": true,
-  "defineConstraints": [],
-  "versionDefines": [],
-  "noEngineReferences": false
+    "name": "Modules.Main.Screen",
+    "references": [
+        "FlowIoC",
+        "Modules.Localization",
+        "UnityEngine.UI",
+        "Modules.Main.Screen.Signals",
+        "Modules.AudioSettings"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

@@ -1,0 +1,173 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a7dd9bb2ea2ab44eb3e01ca075e4d92, type: 3}
+  m_Name: CD_Music
+  m_EditorClassIdentifier: Modules.Gameplay::Modules.GameplayModule.Data.UnityObjects.CD_Music
+  HideoutTrack: 'burn the world waltz '
+  ContractTrack: 
+  Tracks:
+  - Id: 'burn the world waltz '
+    Title: BURN THE WORLD WALTZ
+    Artist: KEVIN MACLEOD
+    Category: 1
+    Credit: '"Burn the World Waltz" Kevin MacLeod (incompetech.com)
+
+      Licensed
+      under Creative Commons: By Attribution 4.0 License
+
+      http://creativecommons.org/licenses/by/4.0/'
+    Clip: {fileID: 8300000, guid: 61a4b0825cd1a5a448919088ba386b94, type: 3}
+    Volume: 0.7
+  - Id: waltz primordial
+    Title: WALTZ PRIMORDIAL
+    Artist: KEVIN MACLEOD
+    Category: 0
+    Credit: '"Waltz Primordial" Kevin MacLeod (incompetech.com)
+
+      Licensed under
+      Creative Commons: By Attribution 4.0 License
+
+      http://creativecommons.org/licenses/by/4.0/'
+    Clip: {fileID: 8300000, guid: b4c28eff74e4d3944b74026aaaff878e, type: 3}
+    Volume: 0.7
+  - Id: boogie party
+    Title: BOOGIE PARTY
+    Artist: KEVIN MACLEOD
+    Category: 1
+    Credit: '"Boogie Party" Kevin MacLeod (incompetech.com)
+
+      Licensed under
+      Creative Commons: By Attribution 4.0 License
+
+      http://creativecommons.org/licenses/by/4.0/'
+    Clip: {fileID: 8300000, guid: 255374111aec77746b50951f9f83ce6a, type: 3}
+    Volume: 0.7
+  - Id: el magicia
+    Title: EL MAGICIA
+    Artist: KEVIN MACLEOD
+    Category: 1
+    Credit: '"El Magicia" Kevin MacLeod (incompetech.com)
+
+      Licensed under Creative
+      Commons: By Attribution 4.0 License
+
+      http://creativecommons.org/licenses/by/4.0/'
+    Clip: {fileID: 8300000, guid: e2f099dba3763254f824161df1fa6f38, type: 3}
+    Volume: 0.7
+  - Id: exhilarate
+    Title: EXHILARATE
+    Artist: KEVIN MACLEOD
+    Category: 1
+    Credit: '"Exhilarate" Kevin MacLeod (incompetech.com)
+
+      Licensed under Creative
+      Commons: By Attribution 4.0 License
+
+      http://creativecommons.org/licenses/by/4.0/'
+    Clip: {fileID: 8300000, guid: 9c8baf5849aaec54ba806e48fccedc9f, type: 3}
+    Volume: 0.7
+  - Id: feelin good
+    Title: FEELIN GOOD
+    Artist: KEVIN MACLEOD
+    Category: 1
+    Credit: '"Feelin Good" Kevin MacLeod (incompetech.com)
+
+      Licensed under
+      Creative Commons: By Attribution 4.0 License
+
+      http://creativecommons.org/licenses/by/4.0/'
+    Clip: {fileID: 8300000, guid: 4256282995d4f0a4a882a37b269fc79d, type: 3}
+    Volume: 0.7
+  - Id: metalmania
+    Title: METALMANIA
+    Artist: KEVIN MACLEOD
+    Category: 1
+    Credit: '"Metalmania" Kevin MacLeod (incompetech.com)
+
+      Licensed under Creative
+      Commons: By Attribution 4.0 License
+
+      http://creativecommons.org/licenses/by/4.0/'
+    Clip: {fileID: 8300000, guid: eec25ccde102731439e8d8c3396499dc, type: 3}
+    Volume: 0.7
+  - Id: motherlode
+    Title: MOTHERLODE
+    Artist: KEVIN MACLEOD
+    Category: 1
+    Credit: '"Motherlode" Kevin MacLeod (incompetech.com)
+
+      Licensed under Creative
+      Commons: By Attribution 4.0 License
+
+      http://creativecommons.org/licenses/by/4.0/'
+    Clip: {fileID: 8300000, guid: 935711105829ed54081c707b896bbc0b, type: 3}
+    Volume: 0.7
+  - Id: noise attack
+    Title: NOISE ATTACK
+    Artist: KEVIN MACLEOD
+    Category: 1
+    Credit: '"Noise Attack" Kevin MacLeod (incompetech.com)
+
+      Licensed under
+      Creative Commons: By Attribution 4.0 License
+
+      http://creativecommons.org/licenses/by/4.0/'
+    Clip: {fileID: 8300000, guid: 692e7907f1e75bc46ad3851467de0ddb, type: 3}
+    Volume: 0.7
+  - Id: sax rock and roll
+    Title: SAX ROCK AND ROLL
+    Artist: KEVIN MACLEOD
+    Category: 1
+    Credit: '"Sax Rock and Roll" Kevin MacLeod (incompetech.com)
+
+      Licensed
+      under Creative Commons: By Attribution 4.0 License
+
+      http://creativecommons.org/licenses/by/4.0/'
+    Clip: {fileID: 8300000, guid: 0c56ef6e6bb71b54dabe9d91d9ee6256, type: 3}
+    Volume: 0.7
+  - Id: surf shimmy
+    Title: SURF SHIMMY
+    Artist: KEVIN MACLEOD
+    Category: 1
+    Credit: '"Surf Shimmy" Kevin MacLeod (incompetech.com)
+
+      Licensed under
+      Creative Commons: By Attribution 4.0 License
+
+      http://creativecommons.org/licenses/by/4.0/'
+    Clip: {fileID: 8300000, guid: 101e4bfc1775114429c0f561d03401ec, type: 3}
+    Volume: 0.7
+  - Id: twisted
+    Title: TWISTED
+    Artist: KEVIN MACLEOD
+    Category: 1
+    Credit: '"Twisted" Kevin MacLeod (incompetech.com)
+
+      Licensed under Creative
+      Commons: By Attribution 4.0 License
+
+      http://creativecommons.org/licenses/by/4.0/'
+    Clip: {fileID: 8300000, guid: a6aea00def2e20d4b8a9e5003088aa33, type: 3}
+    Volume: 0.7
+  - Id: welcome to the show
+    Title: WELCOME TO THE SHOW
+    Artist: KEVIN MACLEOD
+    Category: 1
+    Credit: '"Welcome to the Show" Kevin MacLeod (incompetech.com)
+
+      Licensed
+      under Creative Commons: By Attribution 4.0 License
+
+      http://creativecommons.org/licenses/by/4.0/'
+    Clip: {fileID: 8300000, guid: 51119d9c9d7058246a077afeb562604f, type: 3}
+    Volume: 0.7

@@ -13,8 +13,12 @@ namespace Modules.GameplayModule.Data.ValueObjects
         public bool Interact;
         public bool Reload;
         public bool Swap;
+        // Skip to the next song on the job: the player taps the headphones.
+        public bool NextTrack;
         public bool ReloadHeld;
         public bool Pause;
         public Vector2 Aim;
+        // The mouse wheel this frame: up is positive. Zero while the pointer is over the HUD.
+        public float Zoom;
     }
 }

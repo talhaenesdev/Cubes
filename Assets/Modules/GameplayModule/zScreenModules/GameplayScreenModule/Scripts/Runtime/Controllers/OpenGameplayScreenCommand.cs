@@ -3,6 +3,7 @@ using FlowIoC.BaseModule.Controller;
 using FlowIoC.BaseModule.Injectable.Attributes;
 using FlowIoC.ConsoleModule;
 using FlowIoC.ScreenModule.Service;
+using Modules.LocalizationModule.Services;
 using Modules.GameplayModule.GameplayScreenModule.ViewsMediators;
 
 namespace Modules.GameplayModule.GameplayScreenModule.Controllers
@@ -10,6 +11,7 @@ namespace Modules.GameplayModule.GameplayScreenModule.Controllers
     internal class OpenGameplayScreenCommand : Command
     {
         [Inject] private IScreenService _screenService { get; set; }
+        [Inject] private ILocalizationService _localization { get; set; }
 
         /// <summary>
         /// Three ways out, and every one of them resolves the retain: the screen opened, the screen
@@ -24,8 +26,9 @@ namespace Modules.GameplayModule.GameplayScreenModule.Controllers
 
             try
             {
-                if (_screenService.TryGet.Screen<GameplayScreenView>(out _))
+                if (_screenService.TryGet.Screen<GameplayScreenView>(out GameplayScreenView open))
                 {
+                    open.Localize(_localization.Get);
                     Release();
                     return;
                 }
@@ -38,6 +41,7 @@ namespace Modules.GameplayModule.GameplayScreenModule.Controllers
                     return;
                 }
 
+                screen.Localize(_localization.Get);
                 Release();
             }
             catch (Exception exception)

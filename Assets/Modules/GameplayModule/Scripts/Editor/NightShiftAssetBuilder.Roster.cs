@@ -15,6 +15,15 @@ namespace Modules.GameplayModule.Editor
     {
         public const string WeaponsAsset = ModuleRoot + "/Scriptables/CD_Weapons.asset";
         public const string CharactersAsset = ModuleRoot + "/Scriptables/CD_Characters.asset";
+        public const string GameplayAsset = ModuleRoot + "/Scriptables/CD_Gameplay.asset";
+
+        private readonly System.Collections.Generic.Dictionary<string, (string, float)[]> ShippedPools = new()
+        {
+            {"triangle", new[] {("pistol", 3f), ("silenced_pistol", 1f), ("revolver", 1f)}},
+            {"pentagon", new[] {("smg", 3f), ("pistol", 1f)}},
+            {"hexagon", new[] {("shotgun", 3f), ("smg", 1f)}},
+            {"diamond", new[] {("rifle", 4f), ("revolver", 1f)}},
+        };
         private const string Pickup = Prefabs + "/Weapons/PB_WeaponPickup.prefab";
         private readonly Color _wood = new(0.42f, 0.27f, 0.16f);
         private readonly Dictionary<CharacterShape, Sprite> _shapes = new();
@@ -51,7 +60,8 @@ namespace Modules.GameplayModule.Editor
         {
             switch (shape)
             {
-                case CharacterShape.Square: return Mathf.Abs(x) < 0.94f && Mathf.Abs(y) < 0.94f;
+                case CharacterShape.Square:
+                case CharacterShape.Rectangle: return Mathf.Abs(x) < 0.94f && Mathf.Abs(y) < 0.94f;
                 case CharacterShape.Circle: return x * x + y * y < 0.94f * 0.94f;
                 case CharacterShape.Diamond: return Mathf.Abs(x) * 1.25f + Mathf.Abs(y) < 0.98f;
                 case CharacterShape.Triangle: return Polygon(3, x, y);
@@ -145,6 +155,7 @@ namespace Modules.GameplayModule.Editor
 
         private void BuildShapeCharacters()
         {
+            ShapeCharacter(CharacterShape.Rectangle, new Color(0.13f, 0.12f, 0.14f));
             ShapeCharacter(CharacterShape.Square, new Color(0.17f, 0.18f, 0.22f));
             ShapeCharacter(CharacterShape.Triangle, new Color(0.42f, 0.13f, 0.15f));
             ShapeCharacter(CharacterShape.Pentagon, new Color(0.3f, 0.21f, 0.36f));
@@ -183,23 +194,45 @@ namespace Modules.GameplayModule.Editor
             Part("Foot", legFront, new Vector2(0.05f, -0.39f), new Vector2(0.24f, 0.1f), _ink, 3).sprite = round;
 
             // Body: ink outline, a shaded back layer, the lit face of the shape and a soft highlight.
-            Transform torso = Node("Torso", body, new Vector2(0f, 0.97f)).transform;
-            Part("Outline", torso, Vector2.zero, new Vector2(1.12f, 1.12f), _ink, 4).sprite = sprite;
-            Part("Shade", torso, new Vector2(0.03f, -0.04f), new Vector2(0.97f, 0.97f), dark, 5).sprite = sprite;
-            SpriteRenderer fill = Part("Shape", torso, new Vector2(-0.015f, 0.02f), new Vector2(0.9f, 0.9f), color, 6);
-            fill.sprite = sprite;
+            // The rectangle stands taller and broader-shouldered than the other shapes.
+            bool hero = shape == CharacterShape.Rectangle;
+            Vector2 build = hero ? new Vector2(0.82f, 1.3f) : Vector2.one;
+            Transform torso = Node("Torso", body, new Vector2(0f, hero ? 1.08f : 0.97f)).transform;
+            SpriteRenderer fill;
+            if (hero)
+            {
+                // A clean slab with a thin ink edge: the rectangle is its own silhouette.
+                Part("Outline", torso, Vector2.zero, new Vector2(0.82f, 1.24f), _ink, 4);
+                Part("Shade", torso, new Vector2(0.02f, -0.02f), new Vector2(0.76f, 1.18f), dark, 5);
+                fill = Part("Shape", torso, new Vector2(0f, 0.01f), new Vector2(0.74f, 1.16f), color, 6);
+            }
+            else
+            {
+                Part("Outline", torso, Vector2.zero, Vector2.Scale(new Vector2(1.12f, 1.12f), build), _ink, 4).sprite = sprite;
+                Part("Shade", torso, new Vector2(0.03f, -0.04f), Vector2.Scale(new Vector2(0.97f, 0.97f), build), dark, 5).sprite = sprite;
+                fill = Part("Shape", torso, new Vector2(-0.015f, 0.02f), Vector2.Scale(new Vector2(0.9f, 0.9f), build), color, 6);
+                fill.sprite = sprite;
+            }
             coat.Add(fill);
-            SpriteRenderer shine = Part("Shine", torso, new Vector2(-0.2f, 0.24f), new Vector2(0.34f, 0.2f), new Color(1f, 1f, 1f, 0.18f), 7, 20f);
-            shine.sprite = _soft;
-            SpriteRenderer rim = Part("Rim", torso, new Vector2(0.28f, -0.2f), new Vector2(0.2f, 0.34f), new Color(light.r, light.g, light.b, 0.2f), 7, -20f);
-            rim.sprite = _soft;
+            if (!hero)
+            {
+                SpriteRenderer shine = Part("Shine", torso, new Vector2(-0.2f, 0.24f), new Vector2(0.34f, 0.2f), new Color(1f, 1f, 1f, 0.18f), 7, 20f);
+                shine.sprite = _soft;
+                SpriteRenderer rim = Part("Rim", torso, new Vector2(0.28f, -0.2f), new Vector2(0.2f, 0.34f), new Color(light.r, light.g, light.b, 0.2f), 7, -20f);
+                rim.sprite = _soft;
+            }
 
-            if (shape == CharacterShape.Square) Reaper(torso, sprite);
-            else Face(torso, round, friendly);
-            Suit(shape, torso);
-            Accessory(shape, torso, color, dark);
+            if (hero) Hero(torso, round, color);
+            else
+            {
+                if (shape == CharacterShape.Square) Reaper(torso, sprite);
+                else Face(torso, round, friendly);
+                Suit(shape, torso);
+                Accessory(shape, torso, color, dark);
+            }
 
-            Transform arm = Node("ArmPivot", body, new Vector2(0.05f, 0.85f)).transform;
+            // The arm comes from the shoulder: high on the rectangle's chest.
+            Transform arm = Node("ArmPivot", body, hero ? new Vector2(0f, 1.13f) : new Vector2(0.05f, 0.85f)).transform;
             coat.Add(Part("Arm", arm, new Vector2(0.2f, 0f), new Vector2(0.36f, 0.12f), color, 11));
             Part("Hand", arm, new Vector2(0.4f, 0f), new Vector2(0.16f, 0.16f), dark, 13).sprite = round;
             Transform socket = Node("WeaponSocket", arm, new Vector2(0.42f, 0.02f)).transform;
@@ -229,6 +262,14 @@ namespace Modules.GameplayModule.Editor
             cylinder.transform.localPosition = new Vector3(0f, 2.15f, 0f);
             Assign(rig, "_magazine", MagazineIndicator(root.transform));
             Node(StyleMarker, root.transform, Vector2.zero);
+            if (hero)
+            {
+                OutfitSlots(rig, root.transform);
+                Node(OutfitMarker, root.transform, Vector2.zero);
+                // Over the taller body and its hat.
+                cylinder.transform.localPosition = new Vector3(0f, 2.5f, 0f);
+                root.transform.Find("Magazine Swap").localPosition = new Vector3(0f, 2.5f, 0f);
+            }
 
             Assign(rig, "_pose", pose);
             Assign(rig, "_body", body);
@@ -309,13 +350,68 @@ namespace Modules.GameplayModule.Editor
             Part("Knot", torso, new Vector2(0.1f, -0.16f), new Vector2(0.08f, 0.06f), shape == CharacterShape.Square ? new Color(0.25f, 0.25f, 0.3f) : _crimson, 13);
         }
 
-        // A fedora: crown with its pinch, a band, and a brim tipped over the eyes.
-        private void Fedora(Transform torso, Color band, float tilt = -4f)
+        // A fedora: crown with its pinch, a band, and a brim tipped over the eyes; lift raises it for a taller body.
+        private void Fedora(Transform torso, Color band, float tilt = -4f, float lift = 0f)
         {
-            Part("Hat crown", torso, new Vector2(0.03f, 0.53f), new Vector2(0.52f, 0.22f), _felt, 14, tilt);
-            Part("Hat pinch", torso, new Vector2(0.03f, 0.63f), new Vector2(0.18f, 0.04f), new Color(0.02f, 0.02f, 0.02f), 15, tilt);
-            Part("Hat band", torso, new Vector2(0.03f, 0.45f), new Vector2(0.53f, 0.06f), band, 15, tilt);
-            Part("Hat brim", torso, new Vector2(0.08f, 0.4f), new Vector2(0.9f, 0.06f), _felt, 15, tilt);
+            Part("Hat crown", torso, new Vector2(0.03f, 0.53f + lift), new Vector2(0.52f, 0.22f), _felt, 14, tilt);
+            Part("Hat pinch", torso, new Vector2(0.03f, 0.63f + lift), new Vector2(0.18f, 0.04f), new Color(0.02f, 0.02f, 0.02f), 15, tilt);
+            Part("Hat band", torso, new Vector2(0.03f, 0.45f + lift), new Vector2(0.53f, 0.06f), band, 15, tilt);
+            Part("Hat brim", torso, new Vector2(0.08f, 0.4f + lift), new Vector2(0.9f, 0.06f), _felt, 15, tilt);
+        }
+
+        // The player, laid out on one grid (torso space; the lit body spans x -0.37..0.37, y -0.58..0.58): a long
+        // charcoal trench over a three-piece, a white silk scarf, a crimson tie and pocket square, a fedora sitting on
+        // the head, half-lidded eyes in the brim's shadow, a scar, and a cigarette in a crooked smile.
+        private void Hero(Transform torso, Sprite round, Color coat)
+        {
+            Color shadow = coat * new Color(0.6f, 0.6f, 0.6f, 1f);
+            Color shade = coat * new Color(0.55f, 0.55f, 0.55f, 1f);
+            Color silk = new(0.9f, 0.88f, 0.84f);
+            Color waistcoat = new(0.08f, 0.07f, 0.08f);
+            Part("Coat skirt", torso, new Vector2(0f, -0.7f), new Vector2(0.74f, 0.26f), coat, 6);
+            Part("Coat skirt edge", torso, new Vector2(0f, -0.83f), new Vector2(0.78f, 0.03f), _ink, 6);
+            Part("Coat skirt flare", torso, new Vector2(-0.37f, -0.72f), new Vector2(0.08f, 0.26f), shadow, 6, -8f);
+            Part("Coat split", torso, new Vector2(0.13f, -0.7f), new Vector2(0.025f, 0.26f), shadow, 7);
+            Part("Waistcoat", torso, new Vector2(0.13f, -0.2f), new Vector2(0.26f, 0.34f), waistcoat, 9);
+            Part("Shirt", torso, new Vector2(0.13f, 0f), new Vector2(0.13f, 0.22f), silk, 10);
+            Part("Tie", torso, new Vector2(0.13f, -0.04f), new Vector2(0.055f, 0.26f), _crimson, 12);
+            Part("Tie knot", torso, new Vector2(0.13f, 0.09f), new Vector2(0.075f, 0.06f), _crimson, 12);
+            Part("Lapel L", torso, new Vector2(0f, -0.06f), new Vector2(0.09f, 0.42f), shadow, 11, -14f);
+            Part("Lapel R", torso, new Vector2(0.26f, -0.06f), new Vector2(0.09f, 0.42f), shadow, 11, 14f);
+            Part("Belt", torso, new Vector2(0f, -0.4f), new Vector2(0.74f, 0.055f), new Color(0.05f, 0.04f, 0.04f), 12);
+            Part("Buckle", torso, new Vector2(0.13f, -0.4f), new Vector2(0.075f, 0.07f), _hatBrass, 13);
+            Part("Pocket square", torso, new Vector2(-0.2f, -0.08f), new Vector2(0.09f, 0.07f), _crimson, 12, 10f);
+            Part("Pocket square tip", torso, new Vector2(-0.19f, -0.05f), new Vector2(0.05f, 0.04f), silk, 13, 40f);
+            Part("Scarf", torso, new Vector2(0.02f, 0.15f), new Vector2(0.7f, 0.07f), silk, 13);
+            Part("Scarf end", torso, new Vector2(-0.27f, -0.02f), new Vector2(0.08f, 0.32f), silk, 13, -6f);
+            Part("Scarf end shadow", torso, new Vector2(-0.25f, -0.02f), new Vector2(0.025f, 0.3f), new Color(0.7f, 0.68f, 0.64f), 14, -6f);
+            Part("Brim shade", torso, new Vector2(0.06f, 0.43f), new Vector2(0.74f, 0.14f), new Color(0f, 0f, 0f, 0.45f), 8).sprite = _soft;
+            // a full dark beard along the jaw, a moustache and a goatee framing the crooked smile
+            Color beard = new(0.09f, 0.06f, 0.05f);
+            Part("Beard", torso, new Vector2(0.14f, 0.2f), new Vector2(0.44f, 0.12f), beard, 9);
+            Part("Beard edge", torso, new Vector2(0.14f, 0.13f), new Vector2(0.36f, 0.04f), beard, 9);
+            Part("Sideburn", torso, new Vector2(-0.06f, 0.3f), new Vector2(0.06f, 0.16f), beard, 9);
+            Part("Moustache", torso, new Vector2(0.2f, 0.28f), new Vector2(0.17f, 0.04f), beard, 12, 3f);
+            Part("Goatee", torso, new Vector2(0.2f, 0.18f), new Vector2(0.09f, 0.08f), beard, 10);
+            Part("Eye far", torso, new Vector2(0.03f, 0.37f), new Vector2(0.13f, 0.07f), new Color(0.85f, 0.83f, 0.78f), 9).sprite = round;
+            Part("Eye", torso, new Vector2(0.22f, 0.37f), new Vector2(0.17f, 0.085f), new Color(0.88f, 0.86f, 0.8f), 9).sprite = round;
+            Part("Pupil far", torso, new Vector2(0.055f, 0.365f), new Vector2(0.05f, 0.05f), _ink, 10).sprite = round;
+            Part("Pupil", torso, new Vector2(0.255f, 0.365f), new Vector2(0.065f, 0.065f), _ink, 10).sprite = round;
+            Part("Glint", torso, new Vector2(0.27f, 0.38f), new Vector2(0.025f, 0.025f), new Color(1f, 1f, 1f), 11).sprite = round;
+            Part("Lid far", torso, new Vector2(0.03f, 0.395f), new Vector2(0.15f, 0.04f), _ink, 11);
+            Part("Lid", torso, new Vector2(0.22f, 0.4f), new Vector2(0.2f, 0.045f), _ink, 11, -4f);
+            Part("Brow", torso, new Vector2(0.22f, 0.455f), new Vector2(0.2f, 0.035f), _ink, 11, -8f);
+            Part("Scar", torso, new Vector2(0.03f, 0.37f), new Vector2(0.022f, 0.2f), new Color(0.75f, 0.55f, 0.5f, 0.85f), 12, 18f);
+            Part("Smile", torso, new Vector2(0.19f, 0.25f), new Vector2(0.12f, 0.026f), _ink, 11, 5f);
+            Part("Smile hook", torso, new Vector2(0.255f, 0.265f), new Vector2(0.045f, 0.026f), _ink, 11, 35f);
+            Part("Cigarette", torso, new Vector2(0.36f, 0.25f), new Vector2(0.18f, 0.03f), silk, 12, -5f);
+            Part("Ember", torso, new Vector2(0.45f, 0.243f), new Vector2(0.032f, 0.032f), new Color(1f, 0.45f, 0.1f), 13).sprite = round;
+            Part("Ember glow", torso, new Vector2(0.45f, 0.243f), new Vector2(0.16f, 0.16f), new Color(1f, 0.4f, 0.1f, 0.35f), 12).sprite = _soft;
+            Part("Smoke", torso, new Vector2(0.5f, 0.46f), new Vector2(0.12f, 0.38f), new Color(0.75f, 0.75f, 0.75f, 0.22f), 12, -10f).sprite = _soft;
+            Part("Hat brim", torso, new Vector2(0.07f, 0.6f), new Vector2(0.92f, 0.055f), _felt, 15, -5f);
+            Part("Hat band", torso, new Vector2(0.04f, 0.66f), new Vector2(0.54f, 0.055f), _crimson, 15, -5f);
+            Part("Hat crown", torso, new Vector2(0.04f, 0.76f), new Vector2(0.52f, 0.22f), _felt, 14, -5f);
+            Part("Hat pinch", torso, new Vector2(0.04f, 0.86f), new Vector2(0.18f, 0.035f), new Color(0.02f, 0.02f, 0.02f), 15, -5f);
         }
 
         // One touch per shape on top of the suit, so the cast reads apart at a glance.
@@ -357,6 +453,37 @@ namespace Modules.GameplayModule.Editor
         }
 
         private const string StyleMarker = "Style Mafia";
+        private const string OutfitMarker = "Style Outfit Bearded";
+
+        // Files the hero's coat, waistcoat, shirt, tie, hat and scarf parts in the rig's outfit slots, by name.
+        private void OutfitSlots(CharacterRig rig, Transform root)
+        {
+            Object[] Renderers(params string[] names)
+            {
+                var found = new List<Object>();
+                foreach (SpriteRenderer part in root.GetComponentsInChildren<SpriteRenderer>(true))
+                    if (System.Array.IndexOf(names, part.name) >= 0) found.Add(part);
+                return found.ToArray();
+            }
+            Object[] Objects(params string[] names)
+            {
+                var found = new List<Object>();
+                foreach (SpriteRenderer part in root.GetComponentsInChildren<SpriteRenderer>(true))
+                    if (System.Array.IndexOf(names, part.name) >= 0) found.Add(part.gameObject);
+                return found.ToArray();
+            }
+            AssignArray(rig, "_outfitCoat", Renderers("Shape", "Coat skirt", "Arm"));
+            AssignArray(rig, "_outfitCoatShade", Renderers("Shade", "Shoulder", "Coat skirt flare", "Coat split", "Lapel L", "Lapel R"));
+            AssignArray(rig, "_outfitWaistcoat", Renderers("Waistcoat"));
+            AssignArray(rig, "_outfitShirt", Renderers("Shirt", "Pocket square tip"));
+            AssignArray(rig, "_outfitTie", Renderers("Tie", "Tie knot", "Pocket square"));
+            AssignArray(rig, "_outfitHat", Renderers("Hat crown", "Hat brim"));
+            AssignArray(rig, "_outfitHatBand", Renderers("Hat band"));
+            AssignArray(rig, "_outfitScarf", Renderers("Scarf", "Scarf end"));
+            AssignArray(rig, "_outfitHatParts", Objects("Hat crown", "Hat pinch", "Hat band", "Hat brim", "Brim shade"));
+            AssignArray(rig, "_outfitScarfParts", Objects("Scarf", "Scarf end", "Scarf end shadow"));
+            AssignArray(rig, "_outfitCigarette", Objects("Cigarette", "Ember", "Ember glow", "Smoke"));
+        }
 
         // The whole-magazine reload: an empty magazine drops from the grip, a full one rises in, a bar fills.
         private MagazineSwap MagazineIndicator(Transform parent)
@@ -386,7 +513,8 @@ namespace Modules.GameplayModule.Editor
         public bool NeedsRestyle(string path)
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-            return prefab != null && (prefab.transform.Find("Magazine Swap") == null || prefab.transform.Find(StyleMarker) == null);
+            return prefab != null && (prefab.transform.Find("Magazine Swap") == null || prefab.transform.Find(StyleMarker) == null
+                || (path == CharacterPath(CharacterShape.Rectangle) && prefab.transform.Find(OutfitMarker) == null));
         }
 
         // ---------------------------------------------------------------- configs
@@ -413,8 +541,29 @@ namespace Modules.GameplayModule.Editor
                 AssetDatabase.CreateAsset(characters, CharactersAsset);
                 _report.Add("Wrote " + CharactersAsset);
             }
+            if (characters.Find("rectangle") == null)
+            {
+                characters.Types.Insert(0, new CharacterTypeCVO
+                {
+                    Id = "rectangle", DisplayName = "RECTANGLE", Shape = CharacterShape.Rectangle, Faction = Faction.Friendly,
+                    Weapon = "revolver", Health = 1, WalkSpeed = 1.05f, AlertSpeed = 1.9f, SightRange = 6.5f, ReactionTime = 0.45f,
+                });
+                characters.PlayerType = "rectangle";
+                _report.Add("Added the rectangle to CD_Characters and made it the player");
+            }
             foreach (CharacterTypeCVO type in characters.Types)
+            {
                 if (type.Prefab == null) type.Prefab = AssetDatabase.LoadAssetAtPath<GameObject>(CharacterPath(type.Shape));
+                // The shipped enemies carry a spread of arms; a pool already set is the developer's.
+                if (type.WeaponPool.Count == 0 && ShippedPools.TryGetValue(type.Id, out (string, float)[] pool))
+                    foreach ((string weapon, float weight) in pool) type.WeaponPool.Add(new WeaponChanceCVO {Weapon = weapon, Weight = weight});
+            }
+
+            if (AssetDatabase.LoadAssetAtPath<CD_Gameplay>(GameplayAsset) == null)
+            {
+                AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<CD_Gameplay>(), GameplayAsset);
+                _report.Add("Wrote " + GameplayAsset);
+            }
             EditorUtility.SetDirty(characters);
         }
 
@@ -434,6 +583,9 @@ namespace Modules.GameplayModule.Editor
             FileEntry(keys, values, nameof(CD_Characters), AssetDatabase.LoadAssetAtPath<CD_Characters>(CharactersAsset));
             FileEntry(keys, values, nameof(CD_Missions), AssetDatabase.LoadAssetAtPath<CD_Missions>(MissionsAsset));
             FileEntry(keys, values, nameof(CD_Upgrades), AssetDatabase.LoadAssetAtPath<CD_Upgrades>(UpgradesAsset));
+            FileEntry(keys, values, nameof(CD_Music), AssetDatabase.LoadAssetAtPath<CD_Music>(MusicAsset));
+            FileEntry(keys, values, nameof(CD_Outfits), AssetDatabase.LoadAssetAtPath<CD_Outfits>(OutfitsAsset));
+            FileEntry(keys, values, nameof(CD_Gameplay), AssetDatabase.LoadAssetAtPath<CD_Gameplay>(GameplayAsset));
             serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 

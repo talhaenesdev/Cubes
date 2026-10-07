@@ -22,10 +22,13 @@ namespace Modules.GameplayModule.Data.ValueObjects
         public int Vent = -1;
         public bool Alive = true;
         public bool Won;
+        // Walked back out of the door they came in by, without the job done: home, nothing paid.
+        public bool Abandoned;
         public bool Paused;
         public bool Active;
         // The player's character type and weapon, by Id in CD_Characters and CD_Weapons.
         public string PlayerType = "square";
+        public string Outfit;
         public string Weapon = "revolver";
         public int Ammo = 6;
         public int Reserve = 12;
@@ -37,6 +40,8 @@ namespace Modules.GameplayModule.Data.ValueObjects
         public float ReloadRemaining;
         public float ShotCooldown;
         public float MeleeCooldown;
+        // The last swing hit someone: the view shows the blow landing rather than a whiff.
+        public bool MeleeLanded;
         public float NoiseRemaining;
         public float NoiseRadius;
         public Vector2 NoisePosition;
@@ -46,7 +51,7 @@ namespace Modules.GameplayModule.Data.ValueObjects
         public float FlashRemaining;
         public Vector2 ShotFrom;
         public Vector2 ShotTo;
-        public string Hint = "Clear the building. Return to the green exit.";
+        public string Hint = "";
         public GuardRVO[] Guards = Array.Empty<GuardRVO>();
         public DoorRVO[] Doors = Array.Empty<DoorRVO>();
         public LightRVO[] Lights = Array.Empty<LightRVO>();
@@ -63,11 +68,38 @@ namespace Modules.GameplayModule.Data.ValueObjects
         public StairRVO[] Stairs = Array.Empty<StairRVO>();
         // Weapons lying on the floor: placed by the level, or dropped by whoever carried them.
         public List<PickupRVO> Pickups = new();
+        // Cash the dead dropped, lying on the floor; and what the player has picked up this contract. It is only
+        // banked when they get out - dying or retrying loses it.
+        public List<LootRVO> Loot = new();
+        public int LootCount;
+        public int CashCarried;
         public int PickupCount;
         public TerminalRVO[] Terminals = Array.Empty<TerminalRVO>();
         // The terminal the player is using, or -1. While one is open the run stands still.
         public int Terminal = -1;
+        // The start of a contract: the player takes out a phone and taps it, the track's card slides in, the music
+        // starts a beat later, the phone goes away. The run is paused meanwhile.
+        // The intro: headphones on, then the phone out, a tap, and the music.
+        public const float IntroLength = 3.6f;
+        public const float IntroHeadset = 1.0f;
+        public const float IntroTap = 1.9f;
+        public const float IntroMusic = 2.5f;
+        public bool IntroPlaying;
+        // The hideout's tape deck is running; the view spins its reels.
+        public bool TapePlaying;
+        // The tape deck's panel is open on the HUD; the run stands still.
+        public bool DeckOpen;
+        public float IntroRemaining;
+        public bool IntroTapped;
+        // Changing the song on the job: the weapon goes away, a hand to the headphones, a tap, the weapon back.
+        // Seconds left of it, 0 when not; whether the tap has happened.
+        public const float TrackSwitchLength = 1.1f;
+        public const float TrackSwitchTap = 0.55f;
+        public float TrackSwitch;
+        public bool TrackSwitchTapped;
         public PropRVO[] Props = Array.Empty<PropRVO>();
+        // Spots a bullet just hit, which nearby guards come to look at.
+        public List<DisturbanceRVO> Disturbances = new();
         // The hideout: no enemies, no exit, a mission board and an upgrade bench.
         public bool InHideout;
         public StationRVO[] Stations = Array.Empty<StationRVO>();
@@ -76,6 +108,16 @@ namespace Modules.GameplayModule.Data.ValueObjects
         // What bought upgrades change, applied when the run starts.
         public float ReloadScale = 1f;
         public float MoveScale = 1f;
+        // CD_Gameplay.CameraZoom, carried to the view with the rest of the run.
+        public float CameraZoom = 1f;
+        public bool HasDocument;
+        public Vector2 Document;
+        public bool DocumentTaken;
+        // The phone call at home: the line being shown, -1 when no call; the time spent on it.
+        public int Call = -1;
+        // The phone rings until the player answers it.
+        public bool CallRinging;
+        public float CallTimer;
         public int Cash;
     }
 
@@ -108,10 +150,41 @@ namespace Modules.GameplayModule.Data.ValueObjects
         // Difficulty, applied when the run begins: shorter waits between shots, faster bullets.
         public float FireRateScale = 1f;
         public float BulletSpeedScale = 1f;
+        // Senses copied from the character type.
+        public float SuspicionRate = 1.6f;
+        public float SuspicionDecay = 0.6f;
+        public float CrouchSight = 0.6f;
+        public float DarkSight = 2.2f;
+        public float CloseSense = 1.3f;
+        public float Hearing = 1f;
+        public float ChaseMemory = 3f;
+        public float InvestigateTime = 1.5f;
+        public float Curiosity = 6f;
+        public float FirePace = 3f;
+        public float DropChance = 1f;
         public bool Investigating;
         public Vector2 Target;
         public float Chase;
         public float Wait;
+        // Tactics, copied from the type; and where the guard is in them.
+        public bool UsesCover = true;
+        public float CoverSearch = 7f;
+        public float PeekTime = 1.1f;
+        public float HideTime = 1.3f;
+        public bool RaisesAlarm;
+        public float AlarmRadius = 3.5f;
+        // Crouched behind its crate: a smaller target that cannot shoot.
+        public bool Crouching;
+        public bool HasCover;
+        // Where it stands behind its crate.
+        public float CoverSpot;
+        public float PeekTimer;
+        // Where it last saw the player; what it tells the others.
+        public Vector2 LastSeen;
+        // Running to warn this guard, by index; -1 when not. Done once nobody is left to warn.
+        public int Warning = -1;
+        public bool AlarmDone;
+        public Vector2Int CashDrop;
     }
 
     [Serializable]
@@ -146,6 +219,14 @@ namespace Modules.GameplayModule.Data.ValueObjects
     {
         public Vector2 Position;
         public StationKind Kind;
+    }
+
+    // Where a bullet just hit, and for how much longer guards in range take an interest.
+    [Serializable]
+    public class DisturbanceRVO
+    {
+        public Vector2 Position;
+        public float Life;
     }
 
     // A breakable thing. Hit is its box's centre above Position, Size its box; Lift moves a falling lamp down.
@@ -210,5 +291,13 @@ namespace Modules.GameplayModule.Data.ValueObjects
         public Vector2 Normal;
         public bool Blood;
         public ImpactKind Kind;
+    }
+
+    [Serializable]
+    public class LootRVO
+    {
+        public int Id;
+        public Vector2 Position;
+        public int Amount;
     }
 }

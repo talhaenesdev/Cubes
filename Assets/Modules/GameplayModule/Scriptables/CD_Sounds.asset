@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4747b4abf3896a24d97d8dbfa1161e33, type: 3}
+  m_Name: CD_Sounds
+  m_EditorClassIdentifier: Modules.Gameplay::Modules.GameplayModule.Data.UnityObjects.CD_Sounds
+  Footsteps:
+  - {fileID: 8300000, guid: 78fdf1986f88a0c44ae497e91c6e860c, type: 3}
+  - {fileID: 8300000, guid: 46e859c2cfffd324ab6926b45a3b2afb, type: 3}
+  - {fileID: 8300000, guid: 7a5f1498c22ed214a90a06aaf1cfd9df, type: 3}
+  - {fileID: 8300000, guid: 4b2041b9f9f40c345b33561e8aa8bf17, type: 3}
+  StepInterval: 0.36
+  CrouchStepInterval: 0.6
+  StepVolume: 0.45
+  CrouchStepVolume: 0.15
+  GuardStepVolume: 0.35
+  GuardHearRange: 9
+  SwitchClick: {fileID: 8300000, guid: 0768766d0636c4d4c8379e7f272bd304, type: 3}
+  SwitchVolume: 0.7
+  LampHum: {fileID: 0}
+  HumVolume: 0.08
+  CatMeows:
+  - {fileID: 8300000, guid: 91a9ab7a29e0d3a4fbc36ca2baf36ae9, type: 3}
+  - {fileID: 8300000, guid: 0a971f668e57be147ac4e8bd12238b26, type: 3}
+  MeowVolume: 0.4
+  MeowInterval: {x: 14, y: 30}
+  CatPurr: {fileID: 8300000, guid: e1fe615c652871b4b9efe6c5de2edf7f, type: 3}
+  PurrVolume: 0.35
+  PurrRange: 1.4
+  CashPickup: {fileID: 8300000, guid: 70b27473073ca4249bb943ac295922fb, type: 3}
+  CashVolume: 0.6
+  PhoneRing: {fileID: 8300000, guid: 99956ce35c9330f49bbb4e4c95ff522a, type: 3}
+  RingVolume: 0.5
+  ContractAmbience: {fileID: 0}
+  HideoutAmbience: {fileID: 8300000, guid: 4605be4cdacd328408e65ae8ae35a3e7, type: 3}
+  AmbienceVolume: 0.3

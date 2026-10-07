@@ -10,9 +10,6 @@ namespace Modules.GameplayModule.Controllers
     // killing in its radius, blowing doors open and setting off the barrels beside it.
     internal class ResolvePropsCommand : Command
     {
-        private const float BlastRadius = 2.4f;
-        private const float ChainRadius = 2.8f;
-        private const float CrushHalfWidth = 0.7f;
         [Inject] private INightShiftModel _model { get; set; }
         public override void Execute()
         {
@@ -44,30 +41,25 @@ namespace Modules.GameplayModule.Controllers
             AddImpact(run, landed, Vector2.up, ImpactKind.Glass);
             Noise(run, landed, 7f);
             foreach (GuardRVO guard in run.Guards)
-                if (guard.Alive && Mathf.Abs(guard.Position.y - prop.Position.y) < 0.2f && Mathf.Abs(guard.Position.x - landed.x) < CrushHalfWidth)
-                    guard.Alive = false;
-            if (!run.InVent && Mathf.Abs(run.Player.y - prop.Position.y) < 0.2f && Mathf.Abs(run.Player.x - landed.x) < CrushHalfWidth)
-            {
-                run.Alive = false;
-                run.Hint = "Crushed under a falling lamp.";
-            }
+                if (guard.Alive && Mathf.Abs(guard.Position.y - prop.Position.y) < 0.2f && Mathf.Abs(guard.Position.x - landed.x) < _model.Tuning.CrushHalfWidth)
+                    _model.DamageGuard(guard, _model.Tuning.CrushDamage);
+            if (!run.InVent && Mathf.Abs(run.Player.y - prop.Position.y) < 0.2f && Mathf.Abs(run.Player.x - landed.x) < _model.Tuning.CrushHalfWidth)
+                _model.DamagePlayer(_model.Tuning.CrushDamage, "Crushed under a falling lamp.");
         }
         private void Explode(ContractRVO run, Vector2 center)
         {
             AddImpact(run, center, Vector2.up, ImpactKind.Explosion);
             Noise(run, center, 16f);
             foreach (GuardRVO guard in run.Guards)
-                if (guard.Alive && Vector2.Distance(guard.Position + Vector2.up * 0.8f, center) < BlastRadius) guard.Alive = false;
-            if (!run.InVent && Vector2.Distance(run.Player + Vector2.up * 0.8f, center) < BlastRadius)
-            {
-                run.Alive = false;
-                run.Hint = "Caught in the blast.";
-            }
+                if (guard.Alive && Vector2.Distance(guard.Position + Vector2.up * 0.8f, center) < _model.Tuning.BlastRadius)
+                    _model.DamageGuard(guard, _model.Tuning.BlastDamage);
+            if (!run.InVent && Vector2.Distance(run.Player + Vector2.up * 0.8f, center) < _model.Tuning.BlastRadius)
+                _model.DamagePlayer(_model.Tuning.BlastDamage, "Caught in the blast.");
             foreach (DoorRVO door in run.Doors)
-                if (!door.Open && Vector2.Distance(door.Position + Vector2.up, center) < BlastRadius + 0.5f) door.Open = true;
+                if (!door.Open && Vector2.Distance(door.Position + Vector2.up, center) < _model.Tuning.BlastRadius + 0.5f) door.Open = true;
             // The chain goes off next frame, one barrel after another.
             foreach (PropRVO other in run.Props)
-                if (!other.Broken && other.Kind == PropKind.Barrel && Vector2.Distance(other.Position + other.Hit, center) < ChainRadius) other.Broken = true;
+                if (!other.Broken && other.Kind == PropKind.Barrel && Vector2.Distance(other.Position + other.Hit, center) < _model.Tuning.ChainRadius) other.Broken = true;
         }
         private void Noise(ContractRVO run, Vector2 at, float radius)
         {

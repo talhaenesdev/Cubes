@@ -114,11 +114,17 @@ MonoBehaviour:
     - CD_Characters
     - CD_Missions
     - CD_Upgrades
+    - CD_Music
+    - CD_Outfits
+    - CD_Gameplay
     m_Values:
     - {fileID: 11400000, guid: ffeb05d41afa3194f96d308a338dabec, type: 2}
     - {fileID: 11400000, guid: dba58ee85bd234846bb360c96149ac17, type: 2}
     - {fileID: 11400000, guid: 30939febcb7005a47989b1b7ecf4573e, type: 2}
     - {fileID: 11400000, guid: 65e4860bc80fa514bb723fe7d1045a63, type: 2}
+    - {fileID: 11400000, guid: 059a51a9a5c32624894107a0246d3ef0, type: 2}
+    - {fileID: 11400000, guid: 055b2f14870a9124f88091cb901eeffb, type: 2}
+    - {fileID: 11400000, guid: 7f37d37b1602f6e419784048e94ff22c, type: 2}
   _sharedScriptableMap:
     m_Keys: []
     m_Values: []
@@ -187,9 +193,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Modules.Gameplay::Modules.GameplayModule.ViewsMediators.NightShiftView
   _levelPrefab: {fileID: 1325422582311337430, guid: 7ec7f7494cbf32a4da33bc3f691407ac, type: 3}
+  _sounds: {fileID: 11400000, guid: 77f730068f5708a4aaa02475e379d8ac, type: 2}
   _shotShake: 0.55
+  _shotKick: 0.22
+  _hitStop: 0.06
+  _meleeShake: 0.6
   _guardShotShake: 0.35
   _impactShake: 0.25
   _explosionShake: 1.4
+  _musicFade: 1.2
+  _deathDuck: 0.35
   _shakeStrength: 0.6
   _shakeRecovery: 2.2

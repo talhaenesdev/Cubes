@@ -1,0 +1,193 @@
+using System.Collections.Generic;
+using Modules.LocalizationModule.Data.ValueObjects;
+using UnityEngine;
+
+namespace Modules.LocalizationModule.Data.UnityObjects
+{
+    // Every translated text, one row per key. Add a row and use its key anywhere a text is shown.
+    [CreateAssetMenu(fileName = "CD_Localization", menuName = "Night Shift/CD_Localization")]
+    public class CD_Localization : ScriptableObject
+    {
+        public List<LocalizedTextCVO> Texts = new();
+
+        // The rows the game ships with. The key is the English text, so English is left empty and the key shows.
+        public void FillDefaults()
+        {
+            Texts = new List<LocalizedTextCVO>
+            {
+                new() {Key = "DEAD OF NIGHT  /  A stealth-action prototype", Turkish = "GECE YARISI  /  Bir gizlilik-aksiyon prototipi"},
+                new() {Key = "The city sleeps. Your work begins.\nEnter the building. Finish the contract. Get out alive.", Turkish = "Şehir uyuyor. Senin işin şimdi başlıyor.\nBinaya gir. Kontratı bitir. Canlı çık."},
+                new() {Key = "PLAY", Turkish = "OYNA"},
+                new() {Key = "LANGUAGE: ENGLISH", Turkish = "DİL: TÜRKÇE"},
+                new() {Key = "NIGHT OPERATIONS", Turkish = "GECE OPERASYONLARI"},
+                new() {Key = "WATCH THE ANGLES.\nMAKE EVERY SHOT COUNT.", Turkish = "AÇILARI KOLLA.\nHER MERMİ SAYILIR."},
+                new() {Key = "ONE BUILDING. ONE WAY OUT.", Turkish = "TEK BİNA. TEK ÇIKIŞ."},
+                new() {Key = "FIELD MANUAL", Turkish = "SAHA KILAVUZU"},
+                new() {Key = "A/D  Move     SPACE  Jump\nCTRL  Crouch     E  Use", Turkish = "A/D  Yürü     BOŞLUK  Zıpla\nCTRL  Eğil     E  Kullan"},
+                new() {Key = "LMB  Fire     RMB/F  Melee\nQ  Swap weapon", Turkish = "SOL TIK  Ateş     SAĞ TIK/F  Yakın dövüş\nQ  Silah değiştir"},
+                new() {Key = "R  Reload / Retry\nT  Next song     ESC  Pause", Turkish = "R  Doldur / Tekrar dene\nT  Sonraki şarkı     ESC  Duraklat"},
+                new() {Key = "RETRY", Turkish = "TEKRAR"},
+                new() {Key = "MENU", Turkish = "MENÜ"},
+                new() {Key = "SAVE", Turkish = "KAYDET"},
+                new() {Key = "CLOSE", Turkish = "KAPAT"},
+                new() {Key = "Type to edit.  SAVE keeps the text on this computer.  ESC closes.", Turkish = "Yazmak için tıkla.  KAYDET metni bu bilgisayarda tutar.  ESC kapatır."},
+                new() {Key = "NOW PLAYING", Turkish = "ŞİMDİ ÇALIYOR"},
+                new() {Key = "|<  PREV", Turkish = "|<  ÖNCEKİ"},
+                new() {Key = "NEXT  >|", Turkish = "SONRAKİ  >|"},
+                new() {Key = "PAUSE", Turkish = "DURAKLAT"},
+                new() {Key = "PLAYING", Turkish = "ÇALIYOR"},
+                new() {Key = "STOPPED", Turkish = "DURDU"},
+                new() {Key = "NO TAPE", Turkish = "KASET YOK"},
+                new() {Key = "Press PLAY", Turkish = "OYNA'ya bas"},
+                new() {Key = "Drop music into Music/Hideout", Turkish = "Müziği Music/Hideout klasörüne at"},
+                new() {Key = "AWAITING CONTRACT", Turkish = "KONTRAT BEKLENİYOR"},
+                new() {Key = "DEAD  -  R to retry", Turkish = "ÖLDÜN  -  R ile tekrar dene"},
+                new() {Key = "CONTRACT COMPLETE", Turkish = "KONTRAT TAMAM"},
+                new() {Key = "PAUSED", Turkish = "DURAKLATILDI"},
+                new() {Key = "HOME", Turkish = "EV"},
+                new() {Key = "E  —  crawl to the linked vent    A / D  —  climb out", Turkish = "E  —  bağlı kanala sürün    A / D  —  dışarı çık"},
+                new() {Key = "E  —  stairs up", Turkish = "E  —  yukarı çık"},
+                new() {Key = "E  —  stairs down", Turkish = "E  —  aşağı in"},
+                new() {Key = "E  —  enter vent", Turkish = "E  —  kanala gir"},
+                new() {Key = "E  —  kill the lights", Turkish = "E  —  ışıkları kapat"},
+                new() {Key = "E  —  turn the lights on", Turkish = "E  —  ışıkları aç"},
+                new() {Key = "E  —  use the computer: {0}", Turkish = "E  —  bilgisayarı kullan: {0}"},
+                new() {Key = "E  —  close the door", Turkish = "E  —  kapıyı kapat"},
+                new() {Key = "E  —  kick the door", Turkish = "E  —  kapıyı tekmele"},
+                new() {Key = "E  —  extract", Turkish = "E  —  kaç"},
+                new() {Key = "Clear - back to the exit", Turkish = "Temiz - çıkışa dön"},
+                new() {Key = "E  —  pick up the {0}", Turkish = "E  —  {0} al"},
+                new() {Key = "  ({0} to the pocket)", Turkish = "  ({0} cebe)"},
+                new() {Key = "  (drops the {0})", Turkish = "  ({0} yere düşer)"},
+                new() {Key = "CASH  ${0}", Turkish = "NAKİT  ${0}"},
+                new() {Key = "MISSION BOARD", Turkish = "GÖREV PANOSU"},
+                new() {Key = "DONE", Turkish = "BİTTİ"},
+                new() {Key = "WARDROBE", Turkish = "GARDIROP"},
+                new() {Key = "   (wearing)", Turkish = "   (giyili)"},
+                new() {Key = "WEAPON LOCKER", Turkish = "SİLAH DOLABI"},
+                new() {Key = "PUT AWAY  {0}   (hand)", Turkish = "KALDIR  {0}   (el)"},
+                new() {Key = "PUT AWAY  {0}   (pocket)", Turkish = "KALDIR  {0}   (cep)"},
+                new() {Key = "HAND EMPTY", Turkish = "EL BOŞ"},
+                new() {Key = "POCKET EMPTY", Turkish = "CEP BOŞ"},
+                new() {Key = "TAKE  {0}", Turkish = "AL  {0}"},
+                new() {Key = "UPGRADE BENCH", Turkish = "GELİŞTİRME TEZGAHI"},
+                new() {Key = "MAXED", Turkish = "TAMAMLANDI"},
+                new() {Key = "LV {0}/{1}", Turkish = "SV {0}/{1}"},
+                new() {Key = "REVOLVER", Turkish = "TOPLU TABANCA"},
+                new() {Key = "PISTOL", Turkish = "TABANCA"},
+                new() {Key = "SILENCED PISTOL", Turkish = "SUSTURUCULU TABANCA"},
+                new() {Key = "SHOTGUN", Turkish = "POMPALI"},
+                new() {Key = "SMG", Turkish = "HAFİF MAKİNELİ"},
+                new() {Key = "RIFLE", Turkish = "TÜFEK"},
+                new() {Key = "TOMMY GUN", Turkish = "TOMMY"},
+                new() {Key = "SAWED-OFF", Turkish = "KESİK NAMLU"},
+                new() {Key = "MAGNUM", Turkish = "MAGNUM"},
+                new() {Key = "DERRINGER", Turkish = "CEP TABANCASI"},
+                new() {Key = "PADDED COAT", Turkish = "ASTARLI PALTO"},
+                new() {Key = "Survive one more hit.", Turkish = "Bir isabete daha dayan."},
+                new() {Key = "QUICK HANDS", Turkish = "HIZLI ELLER"},
+                new() {Key = "Reload 15% faster.", Turkish = "%15 daha hızlı doldur."},
+                new() {Key = "LIGHT STEP", Turkish = "HAFİF ADIM"},
+                new() {Key = "Move 10% faster.", Turkish = "%10 daha hızlı hareket et."},
+                new() {Key = "BANDOLIER", Turkish = "FİŞEKLİK"},
+                new() {Key = "Start with 6 more spare rounds.", Turkish = "6 yedek mermiyle fazladan başla."},
+                new() {Key = "ENGAGEMENT BLACK", Turkish = "NİŞAN SİYAHI"},
+                new() {Key = "MIDNIGHT", Turkish = "GECE YARISI"},
+                new() {Key = "BONE WHITE", Turkish = "KEMİK BEYAZI"},
+                new() {Key = "OXBLOOD", Turkish = "BORDO"},
+                new() {Key = "BLUE NOTE", Turkish = "MAVİ NOTA"},
+                new() {Key = "UNDERTAKER", Turkish = "CENAZECİ"},
+                new() {Key = "TOBACCO ROAD", Turkish = "TÜTÜN YOLU"},
+                new() {Key = "BAREHEADED", Turkish = "ŞAPKASIZ"},
+                new() {Key = "NIGHT SHIFT  /  COLD STORAGE 07", Turkish = "GECE VARDİYASI  /  SOĞUK HAVA DEPOSU 07"},
+                new() {Key = "Six shapes guard a cold storage unit. Clear the building, leave by the green exit.", Turkish = "Altı şekil bir soğuk hava deposunu koruyor. Binayı temizle, yeşil çıkıştan çık."},
+                new() {Key = "DOCKS MASSACRE  /  SHAPE & SONS", Turkish = "LİMAN KATLİAMI  /  SHAPE & SONS"},
+                new() {Key = "Twenty-two of the family hold the waterfront warehouse. Brutal. Barrels are live - use them.", Turkish = "Ailenin yirmi iki adamı sahildeki depoyu tutuyor. Acımasız. Variller patlıyor - kullan."},
+                new() {Key = "DELIVERIES / LOG", Turkish = "TESLİMATLAR / KAYIT"},
+                new() {Key = "COLD STORAGE / 07", Turkish = "SOĞUK HAVA DEPOSU / 07"},
+                new() {Key = "STAFF ONLY / SECURITY", Turkish = "PERSONEL / GÜVENLİK"},
+                new() {Key = "DOCK OFFICE / MANIFEST", Turkish = "LİMAN OFİSİ / MANİFESTO"},
+                new() {Key = "THE FAMILY / LEDGER", Turkish = "AİLE / DEFTER"},
+                new() {Key = "SETTINGS", Turkish = "AYARLAR"},
+                new() {Key = "E  —  hide in the vent", Turkish = "E  —  havalandırmaya saklan"},
+                new() {Key = "E  —  climb out of the vent", Turkish = "E  —  havalandırmadan çık"},
+                new() {Key = "E  —  give up the job and go home", Turkish = "E  —  işi bırak ve eve dön"},
+                new() {Key = "CREDITS", Turkish = "EMEĞİ GEÇENLER"},
+                new() {Key = "Click, E or Space to answer", Turkish = "Açmak için tıkla, E ya da Boşluk"},
+                new() {Key = "CONTINUE", Turkish = "DEVAM ET"},
+                new() {Key = "E  —  take the documents", Turkish = "E  —  belgeleri al"},
+                new() {Key = "DOCUMENTS SECURED", Turkish = "BELGE ELE GEÇİRİLDİ"},
+                new() {Key = "Find the documents", Turkish = "Belgeleri bul"},
+                new() {Key = "Documents secured - get to the exit  {0}", Turkish = "Belge alındı - çıkışa git  {0}"},
+                new() {Key = "downstairs", Turkish = "aşağı kat"},
+                new() {Key = "INCOMING CALL", Turkish = "GELEN ARAMA"},
+                new() {Key = "E / SPACE  —  next", Turkish = "E / BOŞLUK  —  devam"},
+                new() {Key = "THE BROKER", Turkish = "SİMSAR"},
+                new() {Key = "It's me. Don't talk, just listen.", Turkish = "Benim. Konuşma, sadece dinle."},
+                new() {Key = "Every family in this city keeps its secrets on paper. Ledgers, contracts, names.", Turkish = "Bu şehirdeki her aile sırlarını kâğıtta saklar. Defterler, kontratlar, isimler."},
+                new() {Key = "Each job on the board hides one file. Find it, take it, get out.", Turkish = "Panodaki her işte bir dosya saklı. Bul, al, çık."},
+                new() {Key = "You don't need to kill them all. You need the papers - and your skin.", Turkish = "Hepsini öldürmen gerekmiyor. Kâğıtlar lazım - bir de kendi postun."},
+                new() {Key = "Bring every file home. When I have them all, this city is ours.", Turkish = "Her dosyayı eve getir. Hepsi bende olunca bu şehir bizim."},
+                new() {Key = "VOLUME", Turkish = "SES"},
+                new() {Key = "MASTER VOLUME", Turkish = "ANA SES"},
+                new() {Key = "MUSIC VOLUME", Turkish = "MÜZİK SESİ"},
+                new() {Key = "SPIN CYCLE  /  LUCKY SUDS", Turkish = "SIKMA  /  LUCKY SUDS ÇAMAŞIRHANESİ"},
+                new() {Key = "Two lookouts wash the family's money at night. Quiet job - nobody upstairs.", Turkish = "İki gözcü gece ailenin parasını aklıyor. Sessiz iş - üst katta kimse yok."},
+                new() {Key = "LAST ORDERS  /  ROSIE'S DINER", Turkish = "SON SİPARİŞ  /  ROSIE'NİN LOKANTASI"},
+                new() {Key = "A back-room card game. The dealers are slow and the coffee is worse.", Turkish = "Arka odada kumar masası. Krupiyeler yavaş, kahve daha kötü."},
+                new() {Key = "HOT GOODS  /  GOLDMAN PAWN", Turkish = "SICAK MALLAR  /  GOLDMAN REHİN"},
+                new() {Key = "The pawnbroker keeps two floors of stolen goods and a nervous guard on each.", Turkish = "Rehinci iki kat çalıntı mal saklıyor, her katta gergin bir koruma var."},
+                new() {Key = "GLASS JAW  /  IRON BOX GYM", Turkish = "CAM ÇENE  /  IRON BOX SALONU"},
+                new() {Key = "Hexagons train here after hours. They hit hard and hear everything.", Turkish = "Altıgenler mesai sonrası burada antrenman yapıyor. Sert vururlar, her şeyi duyarlar."},
+                new() {Key = "MATINEE  /  THE ORPHEUM", Turkish = "MATİNE  /  ORPHEUM SİNEMASI"},
+                new() {Key = "The projectionist runs the family's film reels. Dark halls, long sightlines.", Turkish = "Makinist ailenin makaralarını çeviriyor. Karanlık salonlar, uzun görüş hatları."},
+                new() {Key = "ROOM SERVICE  /  HOTEL MERIDIAN", Turkish = "ODA SERVİSİ  /  MERIDIAN OTELİ"},
+                new() {Key = "A lieutenant hides on the top floor. Corridors full of doors, guards that check them.", Turkish = "Bir yüzbaşı en üst katta saklanıyor. Kapılarla dolu koridorlar, onları kontrol eden korumalar."},
+                new() {Key = "PROOF  /  BLACKWATER DISTILLERY", Turkish = "DERECE  /  BLACKWATER İMALATHANESİ"},
+                new() {Key = "The family's still. Barrels everywhere - and every barrel burns.", Turkish = "Ailenin imbiği. Her yer varil - ve her varil yanar."},
+                new() {Key = "HOUSE EDGE  /  THE GOLDEN CIRCLE", Turkish = "KASA AVANTAJI  /  GOLDEN CIRCLE KUMARHANESİ"},
+                new() {Key = "The family's casino. Diamonds on the floor, sharpshooters on the balcony.", Turkish = "Ailenin kumarhanesi. Salonda baklavalar, balkonda keskin nişancılar."},
+                new() {Key = "BOUGHT BADGES  /  PRECINCT 13", Turkish = "SATIN ALINMIŞ ROZETLER  /  13. KARAKOL"},
+                new() {Key = "Crooked cops on the family's payroll. They react fast and never stop looking.", Turkish = "Ailenin maaşlı rüşvetçi polisleri. Hızlı tepki verir, aramayı asla bırakmazlar."},
+                new() {Key = "TOP FLOOR  /  THE DON'S PENTHOUSE", Turkish = "EN ÜST KAT  /  DON'UN ÇATI KATI"},
+                new() {Key = "The Don himself, two floors of his best. Nothing on this list is harder.", Turkish = "Bizzat Don ve en iyi adamlarıyla dolu iki kat. Listede bundan zoru yok."},
+                new() {Key = "Cash in drum 4. Rinse twice.", Turkish = "Para 4 numaralı tamburda. İki kez durula."},
+                new() {Key = "Table 3 owes 400. Don't serve the Square.", Turkish = "3. masa 400 borçlu. Kare'ye servis yapma."},
+                new() {Key = "Rings in the safe. Guns under the counter.", Turkish = "Yüzükler kasada. Silahlar tezgâhın altında."},
+                new() {Key = "Fight fixed for round 3.", Turkish = "Maç 3. rauntta satılacak."},
+                new() {Key = "Reel 2 is the ledger. Burn reel 1.", Turkish = "Defter 2. makarada. 1. makarayı yak."},
+                new() {Key = "Suite 12. He orders at midnight.", Turkish = "Süit 12. Gece yarısı sipariş verir."},
+                new() {Key = "Batch 9 goes out Friday. Mind the fumes.", Turkish = "9. parti cuma çıkıyor. Buhara dikkat."},
+                new() {Key = "The house always wins. Count room upstairs.", Turkish = "Kasa hep kazanır. Sayım odası üst katta."},
+                new() {Key = "Evidence room key: under the mug.", Turkish = "Delil odası anahtarı: kupanın altında."},
+                new() {Key = "After the docks, the Square comes for me. Let him.", Turkish = "Limandan sonra Kare bana gelecek. Gelsin."},
+                new() {Key = "LUCKY  SUDS / NOTES", Turkish = "LUCKY  SUDS / NOTLAR"},
+                new() {Key = "R O S I E ' S / NOTES", Turkish = "R O S I E ' S / NOTLAR"},
+                new() {Key = "GOLDMAN  PAWN / NOTES", Turkish = "GOLDMAN  PAWN / NOTLAR"},
+                new() {Key = "IRON  BOX / NOTES", Turkish = "IRON  BOX / NOTLAR"},
+                new() {Key = "O R P H E U M / NOTES", Turkish = "O R P H E U M / NOTLAR"},
+                new() {Key = "HOTEL  MERIDIAN / NOTES", Turkish = "HOTEL  MERIDIAN / NOTLAR"},
+                new() {Key = "BLACKWATER / NOTES", Turkish = "BLACKWATER / NOTLAR"},
+                new() {Key = "GOLDEN  CIRCLE / NOTES", Turkish = "GOLDEN  CIRCLE / NOTLAR"},
+                new() {Key = "PRECINCT  13 / NOTES", Turkish = "PRECINCT  13 / NOTLAR"},
+                new() {Key = "T H E   D O N / NOTES", Turkish = "T H E   D O N / NOTLAR"},
+            };
+        }
+
+        // Rows FillDefaults lists that this table lacks are added; rows already here are left as they are.
+        public int AddMissingDefaults()
+        {
+            var defaults = CreateInstance<CD_Localization>();
+            defaults.FillDefaults();
+            int added = 0;
+            foreach (LocalizedTextCVO row in defaults.Texts)
+                if (!Texts.Exists(text => text.Key == row.Key))
+                {
+                    Texts.Add(row);
+                    added++;
+                }
+            DestroyImmediate(defaults);
+            return added;
+        }
+    }
+}

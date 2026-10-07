@@ -9,6 +9,10 @@ namespace Modules.GameplayModule.Controllers
     {
         [Inject] private INightShiftModel _model { get; set; }
         [InjectSignal] private GameplayInternalSignals _signals { get; set; }
-        public override void Execute() => _signals.RosterShared.Dispatch(_model.Characters, _model.Weapons);
+        public override void Execute()
+        {
+            _signals.RosterShared.Dispatch(_model.Characters, _model.Weapons);
+            _signals.OutfitsShared.Dispatch(_model.Outfits);
+        }
     }
 }

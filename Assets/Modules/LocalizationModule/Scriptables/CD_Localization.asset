@@ -1,0 +1,521 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad5d4dcc8f7c03f498a31a716c6a0041, type: 3}
+  m_Name: CD_Localization
+  m_EditorClassIdentifier: Modules.Localization::Modules.LocalizationModule.Data.UnityObjects.CD_Localization
+  Texts:
+  - Key: DEAD OF NIGHT  /  A stealth-action prototype
+    English: 
+    Turkish: GECE YARISI  /  Bir gizlilik-aksiyon prototipi
+  - Key: 'The city sleeps. Your work begins.
+
+      Enter the building. Finish the
+      contract. Get out alive.'
+    English: 
+    Turkish: "\u015Eehir uyuyor. Senin i\u015Fin \u015Fimdi ba\u015Fl\u0131yor.\nBinaya
+      gir. Kontrat\u0131 bitir. Canl\u0131 \xE7\u0131k."
+  - Key: PLAY
+    English: 
+    Turkish: OYNA
+  - Key: 'LANGUAGE: ENGLISH'
+    English: 
+    Turkish: "D\u0130L: T\xDCRK\xC7E"
+  - Key: NIGHT OPERATIONS
+    English: 
+    Turkish: GECE OPERASYONLARI
+  - Key: 'WATCH THE ANGLES.
+
+      MAKE EVERY SHOT COUNT.'
+    English: 
+    Turkish: "A\xC7ILARI KOLLA.\nHER MERM\u0130 SAYILIR."
+  - Key: ONE BUILDING. ONE WAY OUT.
+    English: 
+    Turkish: "TEK B\u0130NA. TEK \xC7IKI\u015E."
+  - Key: FIELD MANUAL
+    English: 
+    Turkish: SAHA KILAVUZU
+  - Key: 'A/D  Move     SPACE  Jump
+
+      CTRL  Crouch     E  Use'
+    English: 
+    Turkish: "A/D  Y\xFCr\xFC     BO\u015ELUK  Z\u0131pla\nCTRL  E\u011Fil     E 
+      Kullan"
+  - Key: 'LMB  Fire     RMB/F  Melee
+
+      Q  Swap weapon'
+    English: 
+    Turkish: "SOL TIK  Ate\u015F     SA\u011E TIK/F  Yak\u0131n d\xF6v\xFC\u015F\nQ 
+      Silah de\u011Fi\u015Ftir"
+  - Key: 'R  Reload / Retry
+
+      ESC  Pause'
+    English: 
+    Turkish: 'R  Doldur / Tekrar dene
+
+      ESC  Duraklat'
+  - Key: RETRY
+    English: 
+    Turkish: TEKRAR
+  - Key: MENU
+    English: 
+    Turkish: "MEN\xDC"
+  - Key: SAVE
+    English: 
+    Turkish: KAYDET
+  - Key: CLOSE
+    English: 
+    Turkish: KAPAT
+  - Key: Type to edit.  SAVE keeps the text on this computer.  ESC closes.
+    English: 
+    Turkish: "Yazmak i\xE7in t\u0131kla.  KAYDET metni bu bilgisayarda tutar.  ESC
+      kapat\u0131r."
+  - Key: NOW PLAYING
+    English: 
+    Turkish: "\u015E\u0130MD\u0130 \xC7ALIYOR"
+  - Key: '|<  PREV'
+    English: 
+    Turkish: "|<  \xD6NCEK\u0130"
+  - Key: NEXT  >|
+    English: 
+    Turkish: "SONRAK\u0130  >|"
+  - Key: PAUSE
+    English: 
+    Turkish: DURAKLAT
+  - Key: PLAYING
+    English: 
+    Turkish: "\xC7ALIYOR"
+  - Key: STOPPED
+    English: 
+    Turkish: DURDU
+  - Key: NO TAPE
+    English: 
+    Turkish: KASET YOK
+  - Key: Press PLAY
+    English: 
+    Turkish: OYNA'ya bas
+  - Key: Drop music into Music/Hideout
+    English: 
+    Turkish: "M\xFCzi\u011Fi Music/Hideout klas\xF6r\xFCne at"
+  - Key: AWAITING CONTRACT
+    English: 
+    Turkish: "KONTRAT BEKLEN\u0130YOR"
+  - Key: DEAD  -  R to retry
+    English: 
+    Turkish: "\xD6LD\xDCN  -  R ile tekrar dene"
+  - Key: CONTRACT COMPLETE
+    English: 
+    Turkish: KONTRAT TAMAM
+  - Key: PAUSED
+    English: 
+    Turkish: DURAKLATILDI
+  - Key: HOME
+    English: 
+    Turkish: EV
+  - Key: "E  \u2014  crawl to the linked vent    A / D  \u2014  climb out"
+    English: 
+    Turkish: "E  \u2014  ba\u011Fl\u0131 kanala s\xFCr\xFCn    A / D  \u2014  d\u0131\u015Far\u0131
+      \xE7\u0131k"
+  - Key: "E  \u2014  stairs up"
+    English: 
+    Turkish: "E  \u2014  yukar\u0131 \xE7\u0131k"
+  - Key: "E  \u2014  stairs down"
+    English: 
+    Turkish: "E  \u2014  a\u015Fa\u011F\u0131 in"
+  - Key: "E  \u2014  enter vent"
+    English: 
+    Turkish: "E  \u2014  kanala gir"
+  - Key: "E  \u2014  kill the lights"
+    English: 
+    Turkish: "E  \u2014  \u0131\u015F\u0131klar\u0131 kapat"
+  - Key: "E  \u2014  turn the lights on"
+    English: 
+    Turkish: "E  \u2014  \u0131\u015F\u0131klar\u0131 a\xE7"
+  - Key: "E  \u2014  use the computer: {0}"
+    English: 
+    Turkish: "E  \u2014  bilgisayar\u0131 kullan: {0}"
+  - Key: "E  \u2014  close the door"
+    English: 
+    Turkish: "E  \u2014  kap\u0131y\u0131 kapat"
+  - Key: "E  \u2014  kick the door"
+    English: 
+    Turkish: "E  \u2014  kap\u0131y\u0131 tekmele"
+  - Key: "E  \u2014  extract"
+    English: 
+    Turkish: "E  \u2014  ka\xE7"
+  - Key: Clear - back to the exit
+    English: 
+    Turkish: "Temiz - \xE7\u0131k\u0131\u015Fa d\xF6n"
+  - Key: "E  \u2014  pick up the {0}"
+    English: 
+    Turkish: "E  \u2014  {0} al"
+  - Key: '  ({0} to the pocket)'
+    English: 
+    Turkish: '  ({0} cebe)'
+  - Key: '  (drops the {0})'
+    English: 
+    Turkish: "  ({0} yere d\xFC\u015Fer)"
+  - Key: CASH  ${0}
+    English: 
+    Turkish: "NAK\u0130T  ${0}"
+  - Key: MISSION BOARD
+    English: 
+    Turkish: "G\xD6REV PANOSU"
+  - Key: DONE
+    English: 
+    Turkish: "B\u0130TT\u0130"
+  - Key: WARDROBE
+    English: 
+    Turkish: GARDIROP
+  - Key: '   (wearing)'
+    English: 
+    Turkish: '   (giyili)'
+  - Key: WEAPON LOCKER
+    English: 
+    Turkish: "S\u0130LAH DOLABI"
+  - Key: PUT AWAY  {0}   (hand)
+    English: 
+    Turkish: KALDIR  {0}   (el)
+  - Key: PUT AWAY  {0}   (pocket)
+    English: 
+    Turkish: KALDIR  {0}   (cep)
+  - Key: HAND EMPTY
+    English: 
+    Turkish: "EL BO\u015E"
+  - Key: POCKET EMPTY
+    English: 
+    Turkish: "CEP BO\u015E"
+  - Key: TAKE  {0}
+    English: 
+    Turkish: AL  {0}
+  - Key: UPGRADE BENCH
+    English: 
+    Turkish: "GEL\u0130\u015ET\u0130RME TEZGAHI"
+  - Key: MAXED
+    English: 
+    Turkish: TAMAMLANDI
+  - Key: LV {0}/{1}
+    English: 
+    Turkish: SV {0}/{1}
+  - Key: REVOLVER
+    English: 
+    Turkish: TOPLU TABANCA
+  - Key: PISTOL
+    English: 
+    Turkish: TABANCA
+  - Key: SILENCED PISTOL
+    English: 
+    Turkish: SUSTURUCULU TABANCA
+  - Key: SHOTGUN
+    English: 
+    Turkish: POMPALI
+  - Key: SMG
+    English: 
+    Turkish: "HAF\u0130F MAK\u0130NEL\u0130"
+  - Key: RIFLE
+    English: 
+    Turkish: "T\xDCFEK"
+  - Key: TOMMY GUN
+    English: 
+    Turkish: TOMMY
+  - Key: SAWED-OFF
+    English: 
+    Turkish: "KES\u0130K NAMLU"
+  - Key: MAGNUM
+    English: 
+    Turkish: MAGNUM
+  - Key: DERRINGER
+    English: 
+    Turkish: CEP TABANCASI
+  - Key: PADDED COAT
+    English: 
+    Turkish: ASTARLI PALTO
+  - Key: Survive one more hit.
+    English: 
+    Turkish: Bir isabete daha dayan.
+  - Key: QUICK HANDS
+    English: 
+    Turkish: HIZLI ELLER
+  - Key: Reload 15% faster.
+    English: 
+    Turkish: "%15 daha h\u0131zl\u0131 doldur."
+  - Key: LIGHT STEP
+    English: 
+    Turkish: "HAF\u0130F ADIM"
+  - Key: Move 10% faster.
+    English: 
+    Turkish: "%10 daha h\u0131zl\u0131 hareket et."
+  - Key: BANDOLIER
+    English: 
+    Turkish: "F\u0130\u015EEKL\u0130K"
+  - Key: Start with 6 more spare rounds.
+    English: 
+    Turkish: "6 yedek mermiyle fazladan ba\u015Fla."
+  - Key: ENGAGEMENT BLACK
+    English: 
+    Turkish: "N\u0130\u015EAN S\u0130YAHI"
+  - Key: MIDNIGHT
+    English: 
+    Turkish: GECE YARISI
+  - Key: BONE WHITE
+    English: 
+    Turkish: "KEM\u0130K BEYAZI"
+  - Key: OXBLOOD
+    English: 
+    Turkish: BORDO
+  - Key: BLUE NOTE
+    English: 
+    Turkish: "MAV\u0130 NOTA"
+  - Key: UNDERTAKER
+    English: 
+    Turkish: "CENAZEC\u0130"
+  - Key: TOBACCO ROAD
+    English: 
+    Turkish: "T\xDCT\xDCN YOLU"
+  - Key: BAREHEADED
+    English: 
+    Turkish: "\u015EAPKASIZ"
+  - Key: NIGHT SHIFT  /  COLD STORAGE 07
+    English: 
+    Turkish: "GECE VARD\u0130YASI  /  SO\u011EUK HAVA DEPOSU 07"
+  - Key: Six shapes guard a cold storage unit. Clear the building, leave by the green
+      exit.
+    English: 
+    Turkish: "Alt\u0131 \u015Fekil bir so\u011Fuk hava deposunu koruyor. Binay\u0131
+      temizle, ye\u015Fil \xE7\u0131k\u0131\u015Ftan \xE7\u0131k."
+  - Key: DOCKS MASSACRE  /  SHAPE & SONS
+    English: 
+    Turkish: "L\u0130MAN KATL\u0130AMI  /  SHAPE & SONS"
+  - Key: Twenty-two of the family hold the waterfront warehouse. Brutal. Barrels
+      are live - use them.
+    English: 
+    Turkish: "Ailenin yirmi iki adam\u0131 sahildeki depoyu tutuyor. Ac\u0131mas\u0131z.
+      Variller patl\u0131yor - kullan."
+  - Key: DELIVERIES / LOG
+    English: 
+    Turkish: "TESL\u0130MATLAR / KAYIT"
+  - Key: COLD STORAGE / 07
+    English: 
+    Turkish: "SO\u011EUK HAVA DEPOSU / 07"
+  - Key: STAFF ONLY / SECURITY
+    English: 
+    Turkish: "PERSONEL / G\xDCVENL\u0130K"
+  - Key: DOCK OFFICE / MANIFEST
+    English: 
+    Turkish: "L\u0130MAN OF\u0130S\u0130 / MAN\u0130FESTO"
+  - Key: THE FAMILY / LEDGER
+    English: 
+    Turkish: "A\u0130LE / DEFTER"
+  - Key: SPIN CYCLE  /  LUCKY SUDS
+    English: 
+    Turkish: "SIKMA  /  LUCKY SUDS \xC7AMA\u015EIRHANES\u0130"
+  - Key: Two lookouts wash the family's money at night. Quiet job - nobody upstairs.
+    English: 
+    Turkish: "\u0130ki g\xF6zc\xFC gece ailenin paras\u0131n\u0131 akl\u0131yor.
+      Sessiz i\u015F - \xFCst katta kimse yok."
+  - Key: LAST ORDERS  /  ROSIE'S DINER
+    English: 
+    Turkish: "SON S\u0130PAR\u0130\u015E  /  ROSIE'N\u0130N LOKANTASI"
+  - Key: A back-room card game. The dealers are slow and the coffee is worse.
+    English: 
+    Turkish: "Arka odada kumar masas\u0131. Krupiyeler yava\u015F, kahve daha k\xF6t\xFC."
+  - Key: HOT GOODS  /  GOLDMAN PAWN
+    English: 
+    Turkish: "SICAK MALLAR  /  GOLDMAN REH\u0130N"
+  - Key: The pawnbroker keeps two floors of stolen goods and a nervous guard on each.
+    English: 
+    Turkish: "Rehinci iki kat \xE7al\u0131nt\u0131 mal sakl\u0131yor, her katta gergin
+      bir koruma var."
+  - Key: GLASS JAW  /  IRON BOX GYM
+    English: 
+    Turkish: "CAM \xC7ENE  /  IRON BOX SALONU"
+  - Key: Hexagons train here after hours. They hit hard and hear everything.
+    English: 
+    Turkish: "Alt\u0131genler mesai sonras\u0131 burada antrenman yap\u0131yor. Sert
+      vururlar, her \u015Feyi duyarlar."
+  - Key: MATINEE  /  THE ORPHEUM
+    English: 
+    Turkish: "MAT\u0130NE  /  ORPHEUM S\u0130NEMASI"
+  - Key: The projectionist runs the family's film reels. Dark halls, long sightlines.
+    English: 
+    Turkish: "Makinist ailenin makaralar\u0131n\u0131 \xE7eviriyor. Karanl\u0131k
+      salonlar, uzun g\xF6r\xFC\u015F hatlar\u0131."
+  - Key: ROOM SERVICE  /  HOTEL MERIDIAN
+    English: 
+    Turkish: "ODA SERV\u0130S\u0130  /  MERIDIAN OTEL\u0130"
+  - Key: A lieutenant hides on the top floor. Corridors full of doors, guards that
+      check them.
+    English: 
+    Turkish: "Bir y\xFCzba\u015F\u0131 en \xFCst katta saklan\u0131yor. Kap\u0131larla
+      dolu koridorlar, onlar\u0131 kontrol eden korumalar."
+  - Key: PROOF  /  BLACKWATER DISTILLERY
+    English: 
+    Turkish: "DERECE  /  BLACKWATER \u0130MALATHANES\u0130"
+  - Key: The family's still. Barrels everywhere - and every barrel burns.
+    English: 
+    Turkish: "Ailenin imbi\u011Fi. Her yer varil - ve her varil yanar."
+  - Key: HOUSE EDGE  /  THE GOLDEN CIRCLE
+    English: 
+    Turkish: "KASA AVANTAJI  /  GOLDEN CIRCLE KUMARHANES\u0130"
+  - Key: The family's casino. Diamonds on the floor, sharpshooters on the balcony.
+    English: 
+    Turkish: "Ailenin kumarhanesi. Salonda baklavalar, balkonda keskin ni\u015Fanc\u0131lar."
+  - Key: BOUGHT BADGES  /  PRECINCT 13
+    English: 
+    Turkish: "SATIN ALINMI\u015E ROZETLER  /  13. KARAKOL"
+  - Key: Crooked cops on the family's payroll. They react fast and never stop looking.
+    English: 
+    Turkish: "Ailenin maa\u015Fl\u0131 r\xFC\u015Fvet\xE7i polisleri. H\u0131zl\u0131
+      tepki verir, aramay\u0131 asla b\u0131rakmazlar."
+  - Key: TOP FLOOR  /  THE DON'S PENTHOUSE
+    English: 
+    Turkish: "EN \xDCST KAT  /  DON'UN \xC7ATI KATI"
+  - Key: The Don himself, two floors of his best. Nothing on this list is harder.
+    English: 
+    Turkish: "Bizzat Don ve en iyi adamlar\u0131yla dolu iki kat. Listede bundan
+      zoru yok."
+  - Key: Cash in drum 4. Rinse twice.
+    English: 
+    Turkish: "Para 4 numaral\u0131 tamburda. \u0130ki kez durula."
+  - Key: Table 3 owes 400. Don't serve the Square.
+    English: 
+    Turkish: "3. masa 400 bor\xE7lu. Kare'ye servis yapma."
+  - Key: Rings in the safe. Guns under the counter.
+    English: 
+    Turkish: "Y\xFCz\xFCkler kasada. Silahlar tezg\xE2h\u0131n alt\u0131nda."
+  - Key: Fight fixed for round 3.
+    English: 
+    Turkish: "Ma\xE7 3. rauntta sat\u0131lacak."
+  - Key: Reel 2 is the ledger. Burn reel 1.
+    English: 
+    Turkish: "Defter 2. makarada. 1. makaray\u0131 yak."
+  - Key: Suite 12. He orders at midnight.
+    English: 
+    Turkish: "S\xFCit 12. Gece yar\u0131s\u0131 sipari\u015F verir."
+  - Key: Batch 9 goes out Friday. Mind the fumes.
+    English: 
+    Turkish: "9. parti cuma \xE7\u0131k\u0131yor. Buhara dikkat."
+  - Key: The house always wins. Count room upstairs.
+    English: 
+    Turkish: "Kasa hep kazan\u0131r. Say\u0131m odas\u0131 \xFCst katta."
+  - Key: 'Evidence room key: under the mug.'
+    English: 
+    Turkish: "Delil odas\u0131 anahtar\u0131: kupan\u0131n alt\u0131nda."
+  - Key: After the docks, the Square comes for me. Let him.
+    English: 
+    Turkish: Limandan sonra Kare bana gelecek. Gelsin.
+  - Key: LUCKY  SUDS / NOTES
+    English: 
+    Turkish: LUCKY  SUDS / NOTLAR
+  - Key: R O S I E ' S / NOTES
+    English: 
+    Turkish: R O S I E ' S / NOTLAR
+  - Key: GOLDMAN  PAWN / NOTES
+    English: 
+    Turkish: GOLDMAN  PAWN / NOTLAR
+  - Key: IRON  BOX / NOTES
+    English: 
+    Turkish: IRON  BOX / NOTLAR
+  - Key: O R P H E U M / NOTES
+    English: 
+    Turkish: O R P H E U M / NOTLAR
+  - Key: HOTEL  MERIDIAN / NOTES
+    English: 
+    Turkish: HOTEL  MERIDIAN / NOTLAR
+  - Key: BLACKWATER / NOTES
+    English: 
+    Turkish: BLACKWATER / NOTLAR
+  - Key: GOLDEN  CIRCLE / NOTES
+    English: 
+    Turkish: GOLDEN  CIRCLE / NOTLAR
+  - Key: PRECINCT  13 / NOTES
+    English: 
+    Turkish: PRECINCT  13 / NOTLAR
+  - Key: T H E   D O N / NOTES
+    English: 
+    Turkish: T H E   D O N / NOTLAR
+  - Key: SETTINGS
+    English: 
+    Turkish: AYARLAR
+  - Key: MASTER VOLUME
+    English: 
+    Turkish: ANA SES
+  - Key: MUSIC VOLUME
+    English: 
+    Turkish: "M\xDCZ\u0130K SES\u0130"
+  - Key: VOLUME
+    English: 
+    Turkish: SES
+  - Key: "E  \u2014  take the documents"
+    English: 
+    Turkish: "E  \u2014  belgeleri al"
+  - Key: DOCUMENTS SECURED
+    English: 
+    Turkish: "BELGE ELE GE\xC7\u0130R\u0130LD\u0130"
+  - Key: Find the documents
+    English: 
+    Turkish: Belgeleri bul
+  - Key: Documents secured - get to the exit  {0}
+    English: 
+    Turkish: "Belge al\u0131nd\u0131 - \xE7\u0131k\u0131\u015Fa git  {0}"
+  - Key: downstairs
+    English: 
+    Turkish: "a\u015Fa\u011F\u0131 kat"
+  - Key: INCOMING CALL
+    English: 
+    Turkish: GELEN ARAMA
+  - Key: "E / SPACE  \u2014  next"
+    English: 
+    Turkish: "E / BO\u015ELUK  \u2014  devam"
+  - Key: THE BROKER
+    English: 
+    Turkish: "S\u0130MSAR"
+  - Key: It's me. Don't talk, just listen.
+    English: 
+    Turkish: "Benim. Konu\u015Fma, sadece dinle."
+  - Key: Every family in this city keeps its secrets on paper. Ledgers, contracts,
+      names.
+    English: 
+    Turkish: "Bu \u015Fehirdeki her aile s\u0131rlar\u0131n\u0131 k\xE2\u011F\u0131tta
+      saklar. Defterler, kontratlar, isimler."
+  - Key: Each job on the board hides one file. Find it, take it, get out.
+    English: 
+    Turkish: "Panodaki her i\u015Fte bir dosya sakl\u0131. Bul, al, \xE7\u0131k."
+  - Key: You don't need to kill them all. You need the papers - and your skin.
+    English: 
+    Turkish: "Hepsini \xF6ld\xFCrmen gerekmiyor. K\xE2\u011F\u0131tlar laz\u0131m
+      - bir de kendi postun."
+  - Key: Bring every file home. When I have them all, this city is ours.
+    English: 
+    Turkish: "Her dosyay\u0131 eve getir. Hepsi bende olunca bu \u015Fehir bizim."
+  - Key: CONTINUE
+    English: 
+    Turkish: DEVAM ET
+  - Key: Click, E or Space to answer
+    English: 
+    Turkish: "A\xE7mak i\xE7in t\u0131kla, E ya da Bo\u015Fluk"
+  - Key: CREDITS
+    English: 
+    Turkish: "EME\u011E\u0130 GE\xC7ENLER"
+  - Key: "E  \u2014  give up the job and go home"
+    English: 
+    Turkish: "E  \u2014  i\u015Fi b\u0131rak ve eve d\xF6n"
+  - Key: 'R  Reload / Retry
+
+      T  Next song     ESC  Pause'
+    English: 
+    Turkish: "R  Doldur / Tekrar dene\nT  Sonraki \u015Fark\u0131     ESC  Duraklat"
+  - Key: "E  \u2014  hide in the vent"
+    English: 
+    Turkish: "E  \u2014  havaland\u0131rmaya saklan"
+  - Key: "E  \u2014  climb out of the vent"
+    English: 
+    Turkish: "E  \u2014  havaland\u0131rmadan \xE7\u0131k"

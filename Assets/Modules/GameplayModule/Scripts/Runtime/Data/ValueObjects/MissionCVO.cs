@@ -15,5 +15,7 @@ namespace Modules.GameplayModule.Data.ValueObjects
         public LevelAuthoring Level;
         [Tooltip("Cash paid the first time the contract is completed.")]
         [Min(0)] public int Reward = 300;
+        [Tooltip("Track Id in CD_Music. Empty plays CD_Music's ContractTrack.")]
+        public string Music = "";
     }
 }

@@ -37,8 +37,8 @@ namespace Modules.ConnectorModule.RootsContexts
 
         private void OutgoingSignals()
         {
-            _mainScreenSignals.Outgoing.PlayClicked.Connect(_gameplaySignals.Incoming.StartContract);
-            _gameplaySignals.Outgoing.ReturnedToMenu.Connect(_mainScreenSignals.Incoming.OpenMainScreen);
+            _mainScreenSignals.Outgoing.PlayClicked.Connect(_gameplaySignals.Incoming.Play);
+            _gameplaySignals.Outgoing.ReturnedToMenu.Connect(_mainScreenSignals.Incoming.OpenPauseMenu);
         }
 
         public override void DestroyContext()

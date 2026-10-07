@@ -1,21 +1,23 @@
 {
-  "name": "Modules.Gameplay",
-  "references": [
-    "FlowIoC",
-    "FlowIoC.Editor",
-    "Unity.RenderPipelines.Core.Runtime",
-    "Unity.RenderPipelines.Universal.Runtime",
-    "Unity.InputSystem",
-    "Modules.Loading",
-    "Modules.Gameplay.Signals"
-  ],
-  "includePlatforms": [],
-  "excludePlatforms": [],
-  "allowUnsafeCode": false,
-  "overrideReferences": false,
-  "precompiledReferences": [],
-  "autoReferenced": true,
-  "defineConstraints": [],
-  "versionDefines": [],
-  "noEngineReferences": false
+    "name": "Modules.Gameplay",
+    "references": [
+        "FlowIoC",
+        "Modules.Localization",
+        "FlowIoC.Editor",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.Universal.Runtime",
+        "Unity.InputSystem",
+        "Modules.Loading",
+        "Modules.Gameplay.Signals",
+        "Modules.AudioSettings"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

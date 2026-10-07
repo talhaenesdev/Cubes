@@ -11,6 +11,8 @@ namespace Modules.MainModule.MainScreenModule.Signals
     public class MainScreenSignalsIncoming
     {
         public Signal OpenMainScreen = new();
+        // Opened over a paused game: a panel with Continue rather than the title screen.
+        public Signal OpenPauseMenu = new();
     }
 
     public class MainScreenSignalsOutgoing

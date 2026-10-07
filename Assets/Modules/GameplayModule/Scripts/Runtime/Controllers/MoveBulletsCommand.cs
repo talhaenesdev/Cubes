@@ -18,6 +18,8 @@ namespace Modules.GameplayModule.Controllers
             ContractRVO run = _model.Run;
             if (!run.Alive || run.Won || run.Paused) return;
             float dt = Mathf.Min(Time.deltaTime, 0.05f);
+            for (int d = run.Disturbances.Count - 1; d >= 0; d--)
+                if ((run.Disturbances[d].Life -= dt) <= 0f) run.Disturbances.RemoveAt(d);
             for (int i = run.Bullets.Count - 1; i >= 0; i--)
             {
                 BulletRVO bullet = run.Bullets[i];
@@ -32,7 +34,7 @@ namespace Modules.GameplayModule.Controllers
                 if (bullet.FromPlayer)
                 {
                     foreach (GuardRVO guard in run.Guards)
-                        if (guard.Alive && Crosses(bullet.Position, direction, guard.Position, 1.9f, ref nearest))
+                        if (guard.Alive && Crosses(bullet.Position, direction, guard.Position, guard.Crouching ? 1.0f : 1.9f, ref nearest))
                             hitGuard = guard;
                 }
                 else if (!run.InVent)
@@ -56,22 +58,8 @@ namespace Modules.GameplayModule.Controllers
                 }
                 if (hitGuard != null || hitPlayer)
                 {
-                    if (hitGuard != null)
-                    {
-                        hitGuard.Health -= bullet.Damage;
-                        if (hitGuard.Health <= 0) hitGuard.Alive = false;
-                        // A hit that does not kill still knocks them off their feet for a moment.
-                        else hitGuard.StunRemaining = Mathf.Max(hitGuard.StunRemaining, 0.35f);
-                    }
-                    else
-                    {
-                        run.Health -= bullet.Damage;
-                        if (run.Health <= 0)
-                        {
-                            run.Alive = false;
-                            run.Hint = "A guard's bullet found you.";
-                        }
-                    }
+                    if (hitGuard != null) _model.DamageGuard(hitGuard, bullet.Damage);
+                    else _model.DamagePlayer(bullet.Damage, "A guard's bullet found you.");
                     Vector2 feet = hitGuard != null ? hitGuard.Position : run.Player;
                     AddImpact(run, point, -direction, true);
                     AddImpact(run, new Vector2(feet.x + direction.x * 0.9f, feet.y + 0.02f), Vector2.up, true);
@@ -81,6 +69,9 @@ namespace Modules.GameplayModule.Controllers
                 if (fraction < 1f)
                 {
                     AddImpact(run, point, -direction, false, Surface(run, point, direction));
+                    // Where the player's bullet struck is worth a look to whoever is near enough.
+                    if (bullet.FromPlayer && _model.Tuning.ImpactCuriosityTime > 0f)
+                        run.Disturbances.Add(new DisturbanceRVO {Position = point, Life = _model.Tuning.ImpactCuriosityTime});
                     run.Bullets.RemoveAt(i);
                     continue;
                 }

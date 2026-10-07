@@ -31,13 +31,17 @@ MonoBehaviour:
     Steps:
     - Key: Debrief
       Weight: 3
-      Message: Collecting payment
-      ChildSet: 
-    - Key: Continue
-      Weight: 0.001
-      Message: PRESS ANY KEY TO CONTINUE
+      Message: Contract complete
       ChildSet: 
     - Key: Hideout
       Weight: 0.001
+      Message: Heading home
+      ChildSet: 
+  - Key: GiveUp
+    Presentation: 1
+    StallWarningSeconds: 600
+    Steps:
+    - Key: GiveUpHideout
+      Weight: 1
       Message: Heading home
       ChildSet: 

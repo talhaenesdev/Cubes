@@ -3,6 +3,7 @@ using FlowIoC.BaseModule.Controller;
 using FlowIoC.BaseModule.Injectable.Attributes;
 using FlowIoC.ConsoleModule;
 using FlowIoC.ScreenModule.Service;
+using Modules.LocalizationModule.Services;
 using Modules.MainModule.MainScreenModule.ViewsMediators;
 
 namespace Modules.MainModule.MainScreenModule.Controllers
@@ -10,6 +11,7 @@ namespace Modules.MainModule.MainScreenModule.Controllers
     internal class OpenMainScreenCommand : Command
     {
         [Inject] private IScreenService _screenService { get; set; }
+        [Inject] private ILocalizationService _localization { get; set; }
 
         /// <summary>
         /// Three ways out, and every one of them resolves the retain. The success path is the one
@@ -39,6 +41,8 @@ namespace Modules.MainModule.MainScreenModule.Controllers
                     return;
                 }
 
+                screen.ShowAsPause(false);
+                screen.Localize(_localization.Get);
                 Release();
             }
             catch (Exception exception)

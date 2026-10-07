@@ -13,6 +13,9 @@ namespace Modules.GameplayModule.Data.ValueObjects
         public float HalfWidth = 14f;
         public float ExitX = -13.3f;
         public Vector2 PlayerSpawn = new(-13f, 0f);
+        // The file the contract is after; with one, the exit opens once it is taken rather than once the building is clear.
+        public bool HasDocument;
+        public Vector2 Document;
         public GuardSpawnVO[] Guards =
         {
             new() {Position = new Vector2(-5f, 0f), Left = -6.5f, Right = -4f, Facing = 1, Type = "triangle"},

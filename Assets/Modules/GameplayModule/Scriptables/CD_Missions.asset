@@ -20,9 +20,82 @@ MonoBehaviour:
       the green exit.
     Level: {fileID: 1325422582311337430, guid: 7ec7f7494cbf32a4da33bc3f691407ac, type: 3}
     Reward: 500
+    Music: 
+  - Id: laundromat
+    Title: SPIN CYCLE  /  LUCKY SUDS
+    Briefing: Two lookouts wash the family's money at night. Quiet job - nobody upstairs.
+    Level: {fileID: 3456392521905230729, guid: 422e67ce42a62574780f3f146a69ae37, type: 3}
+    Reward: 300
+    Music: 
+  - Id: diner
+    Title: LAST ORDERS  /  ROSIE'S DINER
+    Briefing: A back-room card game. The dealers are slow and the coffee is worse.
+    Level: {fileID: 16549343629306196, guid: c690ba3fb7a7e78409ac299b48b4ffe0, type: 3}
+    Reward: 450
+    Music: 
+  - Id: pawnshop
+    Title: HOT GOODS  /  GOLDMAN PAWN
+    Briefing: The pawnbroker keeps two floors of stolen goods and a nervous guard
+      on each.
+    Level: {fileID: 8274712339227131227, guid: 1f705574b9aaee94cbed76c4bf40780d, type: 3}
+    Reward: 600
+    Music: 
+  - Id: gym
+    Title: GLASS JAW  /  IRON BOX GYM
+    Briefing: Hexagons train here after hours. They hit hard and hear everything.
+    Level: {fileID: 8013049665936046466, guid: b6c46e52bceb8d4469f3196cf941ffaa, type: 3}
+    Reward: 800
+    Music: 
+  - Id: cinema
+    Title: MATINEE  /  THE ORPHEUM
+    Briefing: The projectionist runs the family's film reels. Dark halls, long sightlines.
+    Level: {fileID: 8781681637161347367, guid: ebb29d22c2cfcf5469c45208b19843ab, type: 3}
+    Reward: 1000
+    Music: 
+  - Id: hotel
+    Title: ROOM SERVICE  /  HOTEL MERIDIAN
+    Briefing: A lieutenant hides on the top floor. Corridors full of doors, guards
+      that check them.
+    Level: {fileID: 4538986113228662629, guid: 001d92b4a4b1a534194a0ecab108a756, type: 3}
+    Reward: 1250
+    Music: 
+  - Id: distillery
+    Title: PROOF  /  BLACKWATER DISTILLERY
+    Briefing: The family's still. Barrels everywhere - and every barrel burns.
+    Level: {fileID: 4321281112221073220, guid: 2ed37e59457d73643a9453ae902a013f, type: 3}
+    Reward: 1500
+    Music: 
+  - Id: casino
+    Title: HOUSE EDGE  /  THE GOLDEN CIRCLE
+    Briefing: The family's casino. Diamonds on the floor, sharpshooters on the balcony.
+    Level: {fileID: 2932353736634146327, guid: 8fb87e7fd30f4a649b000089c2d1c970, type: 3}
+    Reward: 1800
+    Music: 
+  - Id: precinct
+    Title: BOUGHT BADGES  /  PRECINCT 13
+    Briefing: Crooked cops on the family's payroll. They react fast and never stop
+      looking.
+    Level: {fileID: 920474953059191862, guid: c08ca32be72daf24b865936807ec5e91, type: 3}
+    Reward: 2100
+    Music: 
+  - Id: penthouse
+    Title: TOP FLOOR  /  THE DON'S PENTHOUSE
+    Briefing: The Don himself, two floors of his best. Nothing on this list is harder.
+    Level: {fileID: 5264518571354483259, guid: 36dc60d2120913c49820d0a30db540cd, type: 3}
+    Reward: 2400
+    Music: 
   - Id: docks_massacre
     Title: DOCKS MASSACRE  /  SHAPE & SONS
     Briefing: Twenty-two of the family hold the waterfront warehouse. Brutal. Barrels
       are live - use them.
     Level: {fileID: 6634587345506471847, guid: 8f74e598cc3bd124fb8f2a51a4d58be2, type: 3}
     Reward: 2500
+    Music: 
+  PhoneCaller: THE BROKER
+  PhoneCall:
+  - It's me. Don't talk, just listen.
+  - Every family in this city keeps its secrets on paper. Ledgers, contracts, names.
+  - Each job on the board hides one file. Find it, take it, get out.
+  - You don't need to kill them all. You need the papers - and your skin.
+  - Bring every file home. When I have them all, this city is ours.
+  PhoneLineTime: 6

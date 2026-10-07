@@ -6,6 +6,7 @@ namespace Modules.GameplayModule.Constants
         public const string Group = "gameplay";
         public const string Bullet = "gameplay.bullet";
         public const string Pickup = "gameplay.weapon_pickup";
+        public const string Cash = "gameplay.cash";
         public const string Muzzle = "gameplay.fx.muzzle";
         public const string GuardMuzzle = "gameplay.fx.guard_muzzle";
         public const string ImpactWall = "gameplay.fx.impact_wall";

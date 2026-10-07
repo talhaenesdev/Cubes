@@ -153,7 +153,7 @@ namespace Modules.LoadingModule.LoadingScreenModule.ViewsMediators
             title.fontStyle = FontStyle.Bold;
             title.alignment = TextAnchor.MiddleCenter;
             title.color = _gold;
-            title.text = "N I G H T    S H I F T";
+            title.text = "C U B E S";
             title.raycastTarget = false;
         }
 

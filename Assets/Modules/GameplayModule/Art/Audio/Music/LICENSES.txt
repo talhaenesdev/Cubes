@@ -1,0 +1,23 @@
+Drop music here (mp3, ogg or wav). Each file is added to Scriptables/CD_Music on import.
+Name files SND_MUS_<Title>_01, e.g. SND_MUS_NightOnTheDocks_01.mp3.
+
+Keep every track's licence below, and copy its attribution into the track's Credit field.
+Kevin MacLeod (incompetech.com) tracks are CC BY 4.0 and must be credited, for example:
+"Night on the Docks - Sax" Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 4.0 License
+http://creativecommons.org/licenses/by/4.0/
+
+--- Tracks in this folder ---
+Contracts - "Burn the World Waltz" Kevin MacLeod (incompetech.com) - CC BY 4.0
+Hideout - "Waltz Primordial" Kevin MacLeod (incompetech.com) - CC BY 4.0
+Contracts - "Boogie Party" Kevin MacLeod (incompetech.com) - CC BY 4.0
+Contracts - "El Magicia" Kevin MacLeod (incompetech.com) - CC BY 4.0
+Contracts - "Exhilarate" Kevin MacLeod (incompetech.com) - CC BY 4.0
+Contracts - "Feelin Good" Kevin MacLeod (incompetech.com) - CC BY 4.0
+Contracts - "Metalmania" Kevin MacLeod (incompetech.com) - CC BY 4.0
+Contracts - "Motherlode" Kevin MacLeod (incompetech.com) - CC BY 4.0
+Contracts - "Noise Attack" Kevin MacLeod (incompetech.com) - CC BY 4.0
+Contracts - "Sax Rock and Roll" Kevin MacLeod (incompetech.com) - CC BY 4.0
+Contracts - "Surf Shimmy" Kevin MacLeod (incompetech.com) - CC BY 4.0
+Contracts - "Twisted" Kevin MacLeod (incompetech.com) - CC BY 4.0
+Contracts - "Welcome to the Show" Kevin MacLeod (incompetech.com) - CC BY 4.0

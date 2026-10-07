@@ -18,6 +18,112 @@ namespace Modules.GameplayModule.Models
         public CD_Characters Characters { get; private set; }
         public CD_Missions Missions { get; private set; }
         public CD_Upgrades Upgrades { get; private set; }
+        public CD_Music Music { get; private set; }
+        public CD_Outfits Outfits { get; private set; }
+        public CD_Gameplay Tuning { get; private set; }
+        public bool Wear(string outfit)
+        {
+            OutfitCVO chosen = Outfits != null ? Outfits.Find(outfit) : null;
+            if (chosen == null) return false;
+            if (!Owns(outfit))
+            {
+                int cost = Tuning.UseMoney && Tuning.OutfitsCost ? chosen.Price : 0;
+                if (Progress.Cash < cost) return false;
+                Progress.Cash -= cost;
+                Progress.OwnedOutfits.Add(outfit);
+                Run.Cash = Progress.Cash;
+            }
+            Progress.Outfit = outfit;
+            Run.Outfit = outfit;
+            SaveProgress();
+            return true;
+        }
+        public bool Owns(string outfit)
+        {
+            OutfitCVO found = Outfits != null ? Outfits.Find(outfit) : null;
+            return found != null && (found.Price <= 0 || !Tuning.UseMoney || !Tuning.OutfitsCost || Progress.OwnedOutfits.Contains(outfit));
+        }
+        public bool MenuOpen { get; set; }
+        public bool PausedBeforeMenu { get; set; }
+        public void StoreWeapon(int slot)
+        {
+            string weapon = slot == 0 ? Run.Weapon : Run.Holster;
+            if (Weapon(weapon) == null) return;
+            // The locker keeps one of each; a second of a kind already in it is simply left behind.
+            if (!Progress.Locker.Contains(weapon)) Progress.Locker.Add(weapon);
+            if (slot == 0)
+            {
+                // The pocket weapon comes up to the hand.
+                Run.Weapon = Run.Holster;
+                Run.Ammo = Run.HolsterAmmo;
+                Run.Reserve = Run.HolsterReserve;
+                Run.Holster = null;
+            }
+            else Run.Holster = null;
+            KeepLoadout();
+        }
+        public void TakeWeapon(string weapon)
+        {
+            WeaponCVO taken = Weapon(weapon);
+            if (taken == null || !Progress.Locker.Remove(weapon)) return;
+            if (Weapon(Run.Weapon) != null)
+            {
+                if (string.IsNullOrEmpty(Run.Holster))
+                {
+                    Run.Holster = Run.Weapon;
+                    Run.HolsterAmmo = Run.Ammo;
+                    Run.HolsterReserve = Run.Reserve;
+                }
+                else if (!Progress.Locker.Contains(Run.Weapon)) Progress.Locker.Add(Run.Weapon);
+            }
+            Run.Weapon = taken.Id;
+            Run.Ammo = taken.Magazine;
+            Run.Reserve = taken.Reserve;
+            KeepLoadout();
+        }
+        // What the player carries is what the next run starts with.
+        private void KeepLoadout()
+        {
+            Progress.Hand = Run.Weapon;
+            Progress.Pocket = Run.Holster;
+            SaveProgress();
+        }
+        public string PlayingTrack { get; set; }
+        public float PlayerZoom { get; set; }
+        public bool CallHeard
+        {
+            get => Progress.CallHeard;
+            set
+            {
+                if (Progress.CallHeard == value) return;
+                Progress.CallHeard = value;
+                SaveProgress();
+            }
+        }
+        public string QueuedTrack { get; set; }
+        public bool TapePaused { get; set; }
+        public MusicTrackCVO Tape(int step)
+        {
+            if (Music == null) return null;
+            var tapes = Music.Tracks.FindAll(track => track.Category == MusicCategory.Hideout && track.Clip != null);
+            if (tapes.Count == 0) return null;
+            int playing = tapes.FindIndex(track => track.Id == PlayingTrack);
+            if (playing < 0)
+            {
+                // The first tape is the chosen HideoutTrack when there is one.
+                int chosen = tapes.FindIndex(track => track.Id == Music.HideoutTrack);
+                return tapes[chosen >= 0 ? chosen : 0];
+            }
+            return tapes[((playing + step) % tapes.Count + tapes.Count) % tapes.Count];
+        }
+        public MusicTrackCVO TrackFor(string mission)
+        {
+            if (Music == null) return null;
+            if (Missions == null || Missions.Find(mission) == null)
+                return Music.Find(Music.HideoutTrack) ?? Music.Pick(MusicCategory.Hideout);
+            string own = Missions.Find(mission).Music;
+            return Music.Find(own) ?? Music.Find(Music.ContractTrack) ?? Music.Pick(MusicCategory.Contract);
+        }
         public ProgressSVO Progress { get; private set; } = new();
         public string Mission { get; set; }
         public Entities.LevelAuthoring RequestedLevel
@@ -54,13 +160,17 @@ namespace Modules.GameplayModule.Models
                 Characters = adapter.GetScriptable<CD_Characters>();
                 Missions = adapter.GetScriptable<CD_Missions>();
                 Upgrades = adapter.GetScriptable<CD_Upgrades>();
+                Music = adapter.GetScriptable<CD_Music>();
+                Outfits = adapter.GetScriptable<CD_Outfits>();
+                Tuning = adapter.GetScriptable<CD_Gameplay>();
             }
             else FlowLogger.LogWarning("GameplaySystemRoot has no RootAdapter; the default weapons and characters are used.");
             if (Weapons == null) { Weapons = ScriptableObject.CreateInstance<CD_Weapons>(); Weapons.FillDefaults(); }
             if (Characters == null) { Characters = ScriptableObject.CreateInstance<CD_Characters>(); Characters.FillDefaults(); }
             if (Upgrades == null) { Upgrades = ScriptableObject.CreateInstance<CD_Upgrades>(); Upgrades.FillDefaults(); }
-            string saved = PlayerPrefs.GetString(ProgressKey, "");
-            Progress = string.IsNullOrEmpty(saved) ? new ProgressSVO() : JsonUtility.FromJson<ProgressSVO>(saved) ?? new ProgressSVO();
+            if (Outfits == null) { Outfits = ScriptableObject.CreateInstance<CD_Outfits>(); Outfits.FillDefaults(); }
+            if (Tuning == null) Tuning = ScriptableObject.CreateInstance<CD_Gameplay>();
+            Progress = LoadProgress();
         }
         public void Deconstruct() { }
         public int UpgradeLevel(string id)
@@ -75,7 +185,7 @@ namespace Modules.GameplayModule.Models
             foreach (UpgradeCVO candidate in Upgrades.Upgrades) if (candidate.Id == id) upgrade = candidate;
             if (upgrade == null) return false;
             int level = UpgradeLevel(id);
-            int price = upgrade.Cost * (level + 1);
+            int price = Tuning.UseMoney ? upgrade.Cost * (level + 1) : 0;
             if (level >= upgrade.MaxLevel || Progress.Cash < price) return false;
             Progress.Cash -= price;
             UpgradeLevelSVO entry = Progress.Upgrades.Find(bought => bought.Id == id);
@@ -87,17 +197,142 @@ namespace Modules.GameplayModule.Models
         }
         public void CompleteMission()
         {
+            if (Tuning.UseMoney && Run.CashCarried > 0)
+            {
+                Progress.Cash += Run.CashCarried;
+                Run.Cash = Progress.Cash;
+                Run.CashCarried = 0;
+                SaveProgress();
+            }
             MissionCVO mission = Missions != null ? Missions.Find(Mission) : null;
             if (mission == null || Progress.Completed.Contains(mission.Id)) return;
             Progress.Completed.Add(mission.Id);
-            Progress.Cash += mission.Reward;
+            Progress.CurrentMission = null;
+            ClearRunSave();
+            // A weapon found on the job comes home with the player.
+            Progress.Hand = Run.Weapon;
+            Progress.Pocket = Run.Holster;
+            if (Tuning.UseMoney && Tuning.MissionsPay) Progress.Cash += mission.Reward;
             Run.Cash = Progress.Cash;
             SaveProgress();
         }
-        private void SaveProgress()
+        // The save is a JSON file beside the game's other data; a save from before it, kept in PlayerPrefs, is read once.
+        private static string SavePath => System.IO.Path.Combine(Application.persistentDataPath, "save.json");
+
+        private ProgressSVO LoadProgress()
         {
-            PlayerPrefs.SetString(ProgressKey, JsonUtility.ToJson(Progress));
-            PlayerPrefs.Save();
+            string saved = null;
+            try
+            {
+                if (System.IO.File.Exists(SavePath)) saved = System.IO.File.ReadAllText(SavePath);
+            }
+            catch (System.Exception exception)
+            {
+                FlowLogger.LogWarning("The save file could not be read: " + exception.Message);
+            }
+            if (string.IsNullOrEmpty(saved)) saved = PlayerPrefs.GetString(ProgressKey, "");
+            ProgressSVO progress = string.IsNullOrEmpty(saved) ? null : JsonUtility.FromJson<ProgressSVO>(saved);
+            progress ??= new ProgressSVO();
+            progress.Completed ??= new System.Collections.Generic.List<string>();
+            progress.Upgrades ??= new System.Collections.Generic.List<UpgradeLevelSVO>();
+            progress.Locker ??= new System.Collections.Generic.List<string>();
+            // Saves from before the locker kept one of each lose their duplicates.
+            progress.Locker = new System.Collections.Generic.List<string>(new System.Collections.Generic.HashSet<string>(progress.Locker));
+            progress.OwnedOutfits ??= new System.Collections.Generic.List<string>();
+            return progress;
+        }
+
+        private static string RunPath => System.IO.Path.Combine(Application.persistentDataPath, "run.json");
+        public bool RestoreNextRun { get; set; }
+        public float RunSaveTimer { get; set; }
+
+        public void SaveRun()
+        {
+            RunSaveTimer = 0f;
+            if (Run == null || !Run.Active || Run.InHideout || !Run.Alive || Run.Won || string.IsNullOrEmpty(Mission)) return;
+            try
+            {
+                System.IO.File.WriteAllText(RunPath, JsonUtility.ToJson(new RunSaveSVO {Mission = Mission, Run = Run}));
+            }
+            catch (System.Exception exception)
+            {
+                FlowLogger.LogError("The contract could not be saved: " + exception.Message);
+            }
+        }
+
+        public bool RestoreRun()
+        {
+            try
+            {
+                if (!System.IO.File.Exists(RunPath)) return false;
+                RunSaveSVO saved = JsonUtility.FromJson<RunSaveSVO>(System.IO.File.ReadAllText(RunPath));
+                if (saved?.Run == null || saved.Mission != Mission || !saved.Run.Alive || saved.Run.Won) return false;
+                ContractRVO run = saved.Run;
+                // Back in exactly as it was, minus what only lasts a moment.
+                run.Active = true;
+                run.Paused = false;
+                run.Call = -1;
+                run.Menu = -1;
+                run.Terminal = -1;
+                run.DeckOpen = false;
+                run.IntroRemaining = 0f;
+                run.CameraZoom = PlayerZoom > 0f ? PlayerZoom : Tuning.CameraZoom;
+                Run = run;
+                return true;
+            }
+            catch (System.Exception exception)
+            {
+                FlowLogger.LogWarning("The saved contract could not be read: " + exception.Message);
+                return false;
+            }
+        }
+
+        public void ClearRunSave()
+        {
+            try
+            {
+                if (System.IO.File.Exists(RunPath)) System.IO.File.Delete(RunPath);
+            }
+            catch (System.Exception exception)
+            {
+                FlowLogger.LogWarning("The saved contract could not be removed: " + exception.Message);
+            }
+        }
+
+        public bool DamagePlayer(int amount, string cause)
+        {
+            if (!Run.Alive || amount <= 0) return false;
+            Run.Health -= amount;
+            if (Run.Health > 0) return false;
+            Run.Alive = false;
+            Run.Hint = cause;
+            return true;
+        }
+
+        public bool DamageGuard(GuardRVO guard, int amount)
+        {
+            if (!guard.Alive || amount <= 0) return false;
+            guard.Health -= amount;
+            if (guard.Health <= 0)
+            {
+                guard.Alive = false;
+                return true;
+            }
+            // A hit that does not kill still knocks them off their feet for a moment.
+            guard.StunRemaining = Mathf.Max(guard.StunRemaining, 0.35f);
+            return false;
+        }
+
+        public void SaveProgress()
+        {
+            try
+            {
+                System.IO.File.WriteAllText(SavePath, JsonUtility.ToJson(Progress, true));
+            }
+            catch (System.Exception exception)
+            {
+                FlowLogger.LogError("The save file could not be written: " + exception.Message);
+            }
         }
         // The sum of an upgrade kind's bought levels times each upgrade's Amount.
         private float Bonus(UpgradeKind kind)
@@ -126,9 +361,14 @@ namespace Modules.GameplayModule.Models
                 guards[i] = new GuardRVO
                 {
                     Position = spawn.Position, Left = spawn.Left, Right = spawn.Right, Facing = spawn.Facing >= 0 ? 1 : -1,
-                    Type = type.Id, Faction = type.Faction, Weapon = string.IsNullOrEmpty(spawn.Weapon) ? type.Weapon : spawn.Weapon,
+                    Type = type.Id, Faction = type.Faction, Weapon = string.IsNullOrEmpty(spawn.Weapon) ? DrawWeapon(type) : spawn.Weapon,
+                    SuspicionRate = type.SuspicionRate, SuspicionDecay = type.SuspicionDecay, CrouchSight = type.CrouchSight,
+                    DarkSight = type.DarkSight, CloseSense = type.CloseSense, Hearing = type.Hearing, ChaseMemory = type.ChaseMemory,
+                    InvestigateTime = type.InvestigateTime, Curiosity = type.Curiosity, FirePace = type.FirePace, DropChance = type.DropChance,
                     Health = type.Health, WalkSpeed = type.WalkSpeed, AlertSpeed = type.AlertSpeed,
                     SightRange = type.SightRange, ReactionTime = type.ReactionTime,
+                    UsesCover = type.UsesCover, CoverSearch = type.CoverSearch, PeekTime = type.PeekTime, HideTime = type.HideTime,
+                    RaisesAlarm = type.RaisesAlarm, AlarmRadius = type.AlarmRadius, CashDrop = type.CashDrop,
                 };
                 ApplyDifficulty(guards[i], level.Difficulty, spawn);
             }
@@ -161,13 +401,22 @@ namespace Modules.GameplayModule.Models
                 Covers = (Vector2[]) level.Covers.Clone(),
                 Stairs = stairs,
                 Terminals = terminals,
+                HasDocument = level.HasDocument,
+                Document = level.Document,
             };
             CharacterTypeCVO player = CharacterType(Characters != null ? Characters.PlayerType : null);
             Run.PlayerType = player.Id;
             Run.Health = player.Health + Mathf.RoundToInt(Bonus(UpgradeKind.Health));
             Run.ReloadScale = Mathf.Max(0.2f, 1f - Bonus(UpgradeKind.ReloadSpeed) / 100f);
             Run.MoveScale = 1f + Bonus(UpgradeKind.MoveSpeed) / 100f;
+            Run.CameraZoom = PlayerZoom > 0f ? PlayerZoom : Tuning.CameraZoom;
             Run.InHideout = Missions != null && Missions.Find(Mission) == null;
+            if (Progress.CurrentMission != (Run.InHideout ? null : Mission))
+            {
+                Progress.CurrentMission = Run.InHideout ? null : Mission;
+                SaveProgress();
+                if (Run.InHideout) ClearRunSave();
+            }
             Run.Cash = Progress.Cash;
             var stations = new StationRVO[level.Stations.Length];
             for (int i = 0; i < stations.Length; i++) stations[i] = new StationRVO {Position = level.Stations[i].Position, Kind = level.Stations[i].Kind};
@@ -176,7 +425,16 @@ namespace Modules.GameplayModule.Models
             for (int i = 0; i < props.Length; i++)
                 props[i] = new PropRVO {Position = level.Props[i].Position, Kind = level.Props[i].Kind, Hit = level.Props[i].Hit, Size = level.Props[i].Size};
             Run.Props = props;
-            WeaponCVO start = Weapon(Weapons != null ? Weapons.PlayerStartWeapon : null) ?? Weapon(player.Weapon);
+            Run.Outfit = Outfits.Find(Progress.Outfit) != null ? Progress.Outfit : Outfits.Default;
+            // The run starts with what the player carried out last time, else the starting weapon.
+            WeaponCVO start = Weapon(Progress.Hand) ?? Weapon(Weapons != null ? Weapons.PlayerStartWeapon : null) ?? Weapon(player.Weapon);
+            WeaponCVO pocket = Weapon(Progress.Pocket);
+            if (pocket != null && (start == null || pocket.Id != start.Id))
+            {
+                Run.Holster = pocket.Id;
+                Run.HolsterAmmo = pocket.Magazine;
+                Run.HolsterReserve = pocket.Reserve;
+            }
             Run.Weapon = start != null ? start.Id : null;
             Run.Ammo = start != null ? start.Magazine : 0;
             Run.Reserve = start != null ? start.Reserve + Mathf.RoundToInt(Bonus(UpgradeKind.Ammo)) : 0;
@@ -202,8 +460,23 @@ namespace Modules.GameplayModule.Models
             guard.ReactionTime *= reaction / aggression;
             guard.SightRange *= sight;
             guard.FireRateScale = fire / aggression;
-            guard.BulletSpeedScale = bullet;
+            guard.BulletSpeedScale = bullet * CharacterType(guard.Type).BulletSpeed;
+            guard.SuspicionRate *= aggression / reaction;
             guard.AlertSpeed *= speed;
+        }
+        // A weapon from the type's pool by weight; the type's single Weapon when the pool is empty.
+        private string DrawWeapon(CharacterTypeCVO type)
+        {
+            float total = 0f;
+            foreach (WeaponChanceCVO chance in type.WeaponPool) total += Mathf.Max(0f, chance.Weight);
+            if (total <= 0f) return type.Weapon;
+            float roll = Random.value * total;
+            foreach (WeaponChanceCVO chance in type.WeaponPool)
+            {
+                roll -= Mathf.Max(0f, chance.Weight);
+                if (roll <= 0f) return chance.Weapon;
+            }
+            return type.WeaponPool[type.WeaponPool.Count - 1].Weapon;
         }
         // An Id the cast does not list falls back to its first entry, so a typo in a marker still spawns someone.
         private CharacterTypeCVO CharacterType(string id)

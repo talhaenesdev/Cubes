@@ -31,6 +31,9 @@ namespace Modules.GameplayModule.Editor
             MissionBoard = 11,
             UpgradeBench = 12,
             Prop = 13,
+            CassettePlayer = 14,
+            Wardrobe = 15,
+            WeaponLocker = 16,
         }
 
         private const string Fixtures = NightShiftAssetBuilder.ModuleRoot + "/Prefabs/Fixtures/";
@@ -70,7 +73,8 @@ namespace Modules.GameplayModule.Editor
             painter.Actions(Pick("Player spawn", Tool.PlayerSpawn), Pick("Character", Tool.Character), Pick("Weapon", Tool.Weapon), Pick("Exit", Tool.Exit));
             painter.Actions(Pick("Door", Tool.Door), Pick("Stairs (pair)", Tool.Stairs), Pick("Vent (pair)", Tool.Vent), Pick("Computer", Tool.Computer));
             painter.Actions(Pick("Crate", Tool.Crate), Pick("Light room", Tool.LightRoom), Pick("Mission board", Tool.MissionBoard), Pick("Upgrade bench", Tool.UpgradeBench));
-            painter.Actions(Pick("Breakable prop", Tool.Prop), new ModulePanelAction("Stop", Disarm, _tool != Tool.None));
+            painter.Actions(Pick("Wardrobe", Tool.Wardrobe), Pick("Weapon locker", Tool.WeaponLocker));
+            painter.Actions(Pick("Cassette player", Tool.CassettePlayer), Pick("Breakable prop", Tool.Prop), new ModulePanelAction("Stop", Disarm, _tool != Tool.None));
             _propKind = painter.Popup("Prop", _propKind, System.Enum.GetNames(typeof(Enums.PropKind)),
                 "What the Breakable prop tool places. A lamp hangs from the ceiling of the floor you click; a barrel explodes.");
 
@@ -170,6 +174,9 @@ namespace Modules.GameplayModule.Editor
                 case Tool.Crate: Prefab("PB_Crate", fixtures, at); break;
                 case Tool.MissionBoard: Prefab("PB_MissionBoard", fixtures, at); break;
                 case Tool.UpgradeBench: Prefab("PB_UpgradeBench", fixtures, at); break;
+                case Tool.CassettePlayer: Prefab("PB_CassettePlayer", fixtures, at); break;
+                case Tool.Wardrobe: Prefab("PB_Wardrobe", fixtures, at); break;
+                case Tool.WeaponLocker: Prefab("PB_WeaponLocker", fixtures, at); break;
                 case Tool.Prop: Prefab("PB_Prop_" + (Enums.PropKind) _propKind, fixtures, at); break;
                 case Tool.LightRoom:
                     var room = Prefab("PB_LightSwitch", fixtures, at)?.GetComponent<LightRoomView>();

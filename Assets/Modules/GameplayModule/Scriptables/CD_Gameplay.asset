@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 843928160b68e3843becd8c24853da31, type: 3}
+  m_Name: CD_Gameplay
+  m_EditorClassIdentifier: Modules.Gameplay::Modules.GameplayModule.Data.UnityObjects.CD_Gameplay
+  WalkSpeed: 4.7
+  CrouchSpeed: 2.25
+  JumpSpeed: 7
+  Gravity: 22
+  MeleeRange: 1.6
+  MeleeCooldown: 0.45
+  MeleeStun: 1.2
+  KickReach: 1.8
+  KickStun: 2.5
+  KickNoise: 4
+  ShotNoiseTime: 0.65
+  ImpactCuriosityTime: 1.2
+  ImpactSuspicion: 0.35
+  BlastRadius: 2.4
+  ChainRadius: 2.8
+  CrushHalfWidth: 0.7
+  UseMoney: 1
+  MissionsPay: 0
+  OutfitsCost: 0
+  LootReach: 0.8
+  BlastDamage: 3
+  CrushDamage: 2
+  MeleeDamage: 10
+  ExitReach: 1.3
+  CameraZoom: 1.6
+  ZoomMin: 0.8
+  ZoomMax: 3
+  ZoomStep: 0.15

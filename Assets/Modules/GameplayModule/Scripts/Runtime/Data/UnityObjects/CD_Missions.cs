@@ -13,6 +13,21 @@ namespace Modules.GameplayModule.Data.UnityObjects
         public LevelAuthoring Hideout;
         public List<MissionCVO> Missions = new();
 
+        [Header("Phone call")]
+        [Tooltip("Who rings the first time the player is home. Translated through CD_Localization.")]
+        public string PhoneCaller = "THE BROKER";
+        [Tooltip("What they say, one line per page. The player moves on with E, Space or a click.")]
+        [TextArea(2, 4)] public List<string> PhoneCall = new()
+        {
+            "It's me. Don't talk, just listen.",
+            "Every family in this city keeps its secrets on paper. Ledgers, contracts, names.",
+            "Each job on the board hides one file. Find it, take it, get out.",
+            "You don't need to kill them all. You need the papers - and your skin.",
+            "Bring every file home. When I have them all, this city is ours.",
+        };
+        [Tooltip("Seconds a line stays before the next one comes on its own.")]
+        [Min(1f)] public float PhoneLineTime = 6f;
+
         public MissionCVO Find(string id)
         {
             if (string.IsNullOrEmpty(id)) return null;

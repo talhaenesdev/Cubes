@@ -26,8 +26,31 @@ namespace Modules.GameplayModule.Controllers
                 _signals.Incoming.StartContract.Dispatch();
                 return;
             }
-            if (_index < 0 || _index >= _model.Upgrades.Upgrades.Count) return;
-            _model.Buy(_model.Upgrades.Upgrades[_index].Id);
+            if (kind == StationKind.Wardrobe)
+            {
+                if (_index >= 0 && _index < _model.Outfits.Outfits.Count) _model.Wear(_model.Outfits.Outfits[_index].Id);
+            }
+            else if (kind == StationKind.WeaponLocker)
+            {
+                // Lines 0 and 1 put away the hand and pocket weapons; the rest take stored ones, in locker order.
+                if (_index <= 1) _model.StoreWeapon(_index);
+                else
+                {
+                    int stored = 0;
+                    foreach (string weapon in _model.Progress.Locker)
+                    {
+                        if (_model.Weapon(weapon) == null) continue;
+                        if (stored++ != _index - 2) continue;
+                        _model.TakeWeapon(weapon);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                if (_index < 0 || _index >= _model.Upgrades.Upgrades.Count) return;
+                _model.Buy(_model.Upgrades.Upgrades[_index].Id);
+            }
             MenuVO menu = _functions.Call<BuildMenuFunction>().AddParams(kind).ExecuteAndGetResult<MenuVO>();
             _signals.Outgoing.MenuOpened.Dispatch(menu.Title, menu.Subtitle, menu.Entries);
         }

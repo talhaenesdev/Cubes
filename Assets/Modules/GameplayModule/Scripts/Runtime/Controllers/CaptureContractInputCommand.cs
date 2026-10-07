@@ -13,14 +13,14 @@ namespace Modules.GameplayModule.Controllers
         public override void Execute()
         {
             // At a terminal the keyboard types into the screen, not into the run.
-            if (!_model.Run.Active || _model.Run.Terminal >= 0 || _model.Run.Menu >= 0) return;
+            if (_model.MenuOpen || !_model.Run.Active || _model.Run.Terminal >= 0 || _model.Run.Menu >= 0 || _model.Run.DeckOpen || _model.Run.IntroRemaining > 0f) return;
             // A failed contract is tried again; a finished one goes home on its own, behind the loading screen.
             if (_input.Reload && !_model.Run.Alive)
             {
                 _signals.Incoming.StartContract.Dispatch();
                 return;
             }
-            if (_input.Pause) _model.Run.Paused = !_model.Run.Paused;
+            if (_input.Pause && _model.Run.Call < 0) _model.Run.Paused = !_model.Run.Paused;
             _model.Capture(_input);
         }
     }

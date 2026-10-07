@@ -52,20 +52,34 @@ namespace Modules.GameplayModule.Editor
             BuildShapes();
             BuildWeapons();
             BuildShapeCharacters();
+            PhoneForCharacters();
+            BuildMusic();
             BuildFixtures();
             BuildBullet();
             BuildEffects();
             BuildDecals();
             BuildConfigs();
             BuildStations();
+            BuildCassettePlayer();
             BuildProps();
             BuildLevel();
             BuildHideout();
+            DeckForHideout();
+            BuildHome();
+            TakeDownPictures();
+            IconsForHideout();
             BuildDocks();
             BuildCampaign();
             RegisterDocks();
+            BuildContracts();
+            BuildDocuments();
+            MakeLevelsSpacious();
+            RemoveVents();
+            PutVentsBack();
+            BuildSounds();
             BuildMood();
             RetireLadder();
+            BuildCash();
             BuildPool();
             RetireHumanoids();
             WireRoot();
@@ -88,7 +102,16 @@ namespace Modules.GameplayModule.Editor
             foreach (string path in Retired)
                 if (Exists(path)) return true;
             foreach (CharacterShape shape in System.Enum.GetValues(typeof(CharacterShape)))
-                if (!Exists(CharacterPath(shape)) || NeedsRestyle(CharacterPath(shape))) return true;
+                if (!Exists(CharacterPath(shape)) || NeedsRestyle(CharacterPath(shape)) || NeedsPhone(CharacterPath(shape))) return true;
+            if (!Exists(CassettePlayer) || HideoutNeedsDeck()) return true;
+            if (!Exists(GameplayAsset) || ContractsMissing() || DocumentsMissing() || SoundsMissing() || !Exists(CashPrefab) || LevelsNeedSpace()) return true;
+            if (!Exists(OutfitsAsset) || !Exists(Wardrobe) || !Exists(WeaponLocker) || !Exists(Cat) || HideoutNeedsHome()) return true;
+            if (NeedsRestyle(CharacterPath(CharacterShape.Rectangle)) || HideoutHasPictures() || NeedsIcons()) return true;
+            var outfits = AssetDatabase.LoadAssetAtPath<Data.UnityObjects.CD_Outfits>(OutfitsAsset);
+            if (outfits != null && outfits.Find("engagement") == null) return true;
+            var cast = AssetDatabase.LoadAssetAtPath<Data.UnityObjects.CD_Characters>(CharactersAsset);
+            if (cast != null && cast.Find("rectangle") == null) return true;
+            if (!Exists(MusicAsset) || !AssetDatabase.IsValidFolder(HideoutMusicFolder) || !AssetDatabase.IsValidFolder(ContractMusicFolder)) return true;
             foreach (string path in new[] {HideoutPrefab, MissionsAsset, UpgradesAsset, MissionBoard, UpgradeBench, DocksPrefab,
                          Prefabs + "/FX/PB_FX_Explosion.prefab", Prefabs + "/Decals/PB_Decal_Scorch.prefab"})
                 if (!Exists(path)) return true;
@@ -230,6 +253,7 @@ namespace Modules.GameplayModule.Editor
                 _report.Add("Wrote " + PoolAsset);
             }
             PoolItem(group, NightShiftPoolKeys.Pickup, Pickup, 12);
+            PoolItem(group, NightShiftPoolKeys.Cash, CashPrefab, 12);
             PoolItem(group, NightShiftPoolKeys.Bullet, Prefabs + "/Projectiles/PB_Bullet.prefab", 16);
             PoolItem(group, NightShiftPoolKeys.Muzzle, Prefabs + "/FX/PB_FX_Muzzle.prefab", 4);
             PoolItem(group, NightShiftPoolKeys.GuardMuzzle, Prefabs + "/FX/PB_FX_GuardMuzzle.prefab", 4);

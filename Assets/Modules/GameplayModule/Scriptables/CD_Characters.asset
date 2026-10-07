@@ -12,71 +12,240 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff25b99e75f3f1842bb79e35845011f2, type: 3}
   m_Name: CD_Characters
   m_EditorClassIdentifier: Modules.Gameplay::Modules.GameplayModule.Data.UnityObjects.CD_Characters
-  PlayerType: square
+  PlayerType: rectangle
   Types:
+  - Id: rectangle
+    DisplayName: RECTANGLE
+    Shape: 6
+    Faction: 1
+    Prefab: {fileID: 6754532814789571020, guid: b37b9b60c0591b4428319690d624d6fe, type: 3}
+    Weapon: revolver
+    WeaponPool: []
+    DropChance: 1
+    Health: 1
+    WalkSpeed: 1.05
+    AlertSpeed: 1.9
+    SightRange: 6.5
+    ReactionTime: 0.45
+    SuspicionRate: 1.6
+    SuspicionDecay: 0.6
+    CrouchSight: 0.6
+    DarkSight: 2.2
+    CloseSense: 1.3
+    Hearing: 1
+    ChaseMemory: 3
+    InvestigateTime: 1.5
+    Curiosity: 6
+    BulletSpeed: 0.6
+    FirePace: 3
+    CashDrop: {x: 0, y: 0}
+    UsesCover: 1
+    CoverSearch: 7
+    PeekTime: 1.1
+    HideTime: 1.3
+    RaisesAlarm: 0
+    AlarmRadius: 3.5
   - Id: square
     DisplayName: SQUARE
     Shape: 0
     Faction: 1
     Prefab: {fileID: 7807612603187210840, guid: 05ebeda1c9998da44ab038dc2d2a5bef, type: 3}
     Weapon: revolver
+    WeaponPool: []
+    DropChance: 1
     Health: 1
     WalkSpeed: 1.05
     AlertSpeed: 1.9
     SightRange: 6.5
     ReactionTime: 0.45
+    SuspicionRate: 1.6
+    SuspicionDecay: 0.6
+    CrouchSight: 0.6
+    DarkSight: 2.2
+    CloseSense: 1.3
+    Hearing: 1
+    ChaseMemory: 3
+    InvestigateTime: 1.5
+    Curiosity: 6
+    BulletSpeed: 0.6
+    FirePace: 3
+    CashDrop: {x: 0, y: 0}
+    UsesCover: 1
+    CoverSearch: 7
+    PeekTime: 1.1
+    HideTime: 1.3
+    RaisesAlarm: 0
+    AlarmRadius: 3.5
   - Id: triangle
     DisplayName: TRIANGLE
     Shape: 1
     Faction: 0
     Prefab: {fileID: 6763227804749069794, guid: 306d379c5be924e49afbe9a7e72077a3, type: 3}
     Weapon: pistol
+    WeaponPool:
+    - Weapon: pistol
+      Weight: 3
+    - Weapon: silenced_pistol
+      Weight: 1
+    - Weapon: revolver
+      Weight: 1
+    DropChance: 1
     Health: 1
     WalkSpeed: 1.3
     AlertSpeed: 2.4
-    SightRange: 6
-    ReactionTime: 0.4
+    SightRange: 6.6000004
+    ReactionTime: 0.32000002
+    SuspicionRate: 2
+    SuspicionDecay: 0.48000002
+    CrouchSight: 0.6
+    DarkSight: 2.2
+    CloseSense: 1.3
+    Hearing: 1.1
+    ChaseMemory: 3.8999999
+    InvestigateTime: 1.5
+    Curiosity: 6
+    BulletSpeed: 0.66
+    FirePace: 2.5500002
+    CashDrop: {x: 10, y: 25}
+    UsesCover: 1
+    CoverSearch: 7
+    PeekTime: 1.1
+    HideTime: 1.3
+    RaisesAlarm: 1
+    AlarmRadius: 3.5
   - Id: pentagon
     DisplayName: PENTAGON
     Shape: 2
     Faction: 0
     Prefab: {fileID: 6118260583255244559, guid: d10d82a3ab8515746b5c2d501261cc6a, type: 3}
     Weapon: smg
+    WeaponPool:
+    - Weapon: smg
+      Weight: 3
+    - Weapon: pistol
+      Weight: 1
+    DropChance: 1
     Health: 2
     WalkSpeed: 1
     AlertSpeed: 1.8
-    SightRange: 6.5
-    ReactionTime: 0.5
+    SightRange: 7.15
+    ReactionTime: 0.4
+    SuspicionRate: 2
+    SuspicionDecay: 0.48000002
+    CrouchSight: 0.6
+    DarkSight: 2.2
+    CloseSense: 1.3
+    Hearing: 1.1
+    ChaseMemory: 3.8999999
+    InvestigateTime: 1.5
+    Curiosity: 6
+    BulletSpeed: 0.66
+    FirePace: 2.5500002
+    CashDrop: {x: 20, y: 40}
+    UsesCover: 1
+    CoverSearch: 7
+    PeekTime: 1.1
+    HideTime: 1.3
+    RaisesAlarm: 0
+    AlarmRadius: 3.5
   - Id: hexagon
     DisplayName: HEXAGON
     Shape: 3
     Faction: 0
     Prefab: {fileID: 3436085328830556440, guid: f188639a0a705c445920e8446a7c9a69, type: 3}
     Weapon: shotgun
+    WeaponPool:
+    - Weapon: shotgun
+      Weight: 3
+    - Weapon: smg
+      Weight: 1
+    DropChance: 1
     Health: 3
     WalkSpeed: 0.8
     AlertSpeed: 1.4
-    SightRange: 5.5
-    ReactionTime: 0.6
+    SightRange: 6.05
+    ReactionTime: 0.48000002
+    SuspicionRate: 2
+    SuspicionDecay: 0.48000002
+    CrouchSight: 0.6
+    DarkSight: 2.2
+    CloseSense: 1.3
+    Hearing: 1.1
+    ChaseMemory: 3.8999999
+    InvestigateTime: 1.5
+    Curiosity: 6
+    BulletSpeed: 0.66
+    FirePace: 2.5500002
+    CashDrop: {x: 30, y: 55}
+    UsesCover: 0
+    CoverSearch: 7
+    PeekTime: 1.1
+    HideTime: 1.3
+    RaisesAlarm: 0
+    AlarmRadius: 3.5
   - Id: diamond
     DisplayName: DIAMOND
     Shape: 5
     Faction: 0
     Prefab: {fileID: 748040947343931460, guid: d023584b89c3940499186b16df71f6b7, type: 3}
     Weapon: rifle
+    WeaponPool:
+    - Weapon: rifle
+      Weight: 4
+    - Weapon: revolver
+      Weight: 1
+    DropChance: 1
     Health: 1
     WalkSpeed: 0.9
     AlertSpeed: 1.6
-    SightRange: 9
-    ReactionTime: 0.8
+    SightRange: 9.900001
+    ReactionTime: 0.64000005
+    SuspicionRate: 2
+    SuspicionDecay: 0.48000002
+    CrouchSight: 0.6
+    DarkSight: 2.2
+    CloseSense: 1.3
+    Hearing: 1.1
+    ChaseMemory: 3.8999999
+    InvestigateTime: 1.5
+    Curiosity: 6
+    BulletSpeed: 0.66
+    FirePace: 2.5500002
+    CashDrop: {x: 45, y: 80}
+    UsesCover: 1
+    CoverSearch: 7
+    PeekTime: 1.1
+    HideTime: 1.3
+    RaisesAlarm: 0
+    AlarmRadius: 3.5
   - Id: circle
     DisplayName: CIRCLE
     Shape: 4
     Faction: 1
     Prefab: {fileID: 7316023911584897620, guid: b8a2288e96848f8448302f4a2a019b85, type: 3}
     Weapon: 
+    WeaponPool: []
+    DropChance: 1
     Health: 1
     WalkSpeed: 0.9
     AlertSpeed: 1.6
     SightRange: 6
     ReactionTime: 1
+    SuspicionRate: 1.6
+    SuspicionDecay: 0.6
+    CrouchSight: 0.6
+    DarkSight: 2.2
+    CloseSense: 1.3
+    Hearing: 1
+    ChaseMemory: 3
+    InvestigateTime: 1.5
+    Curiosity: 6
+    BulletSpeed: 0.6
+    FirePace: 3
+    CashDrop: {x: 0, y: 0}
+    UsesCover: 1
+    CoverSearch: 7
+    PeekTime: 1.1
+    HideTime: 1.3
+    RaisesAlarm: 0
+    AlarmRadius: 3.5

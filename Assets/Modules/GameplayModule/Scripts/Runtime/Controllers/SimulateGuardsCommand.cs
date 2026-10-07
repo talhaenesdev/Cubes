@@ -8,11 +8,11 @@ using UnityEngine;
 namespace Modules.GameplayModule.Controllers
 {
     // Guards patrol, investigate noise, bodies and dark rooms, hunt a player they have seen - across floors,
-    // through the stairwell doors - and shoot once they have fully seen them.
+    // through the stairwell doors - and shoot once they have fully seen them. In a fight a guard that uses cover
+    // runs to a crate between it and the player and pops up to shoot; one that raises the alarm first runs to
+    // the others and tells them where the player is.
     internal class SimulateGuardsCommand : Command
     {
-        // How long a guard keeps tracking the player after losing sight of them.
-        private const float ChaseMemory = 3f;
         [Inject] private INightShiftModel _model { get; set; }
         [Inject] private IFunctionProvider _functions { get; set; }
         public override void Execute()
@@ -36,48 +36,45 @@ namespace Modules.GameplayModule.Controllers
                 Vector2 target = run.Player + Vector2.up * (run.Crouching ? 0.5f : 1f);
                 float dx = run.Player.x - guard.Position.x;
                 LightRVO room = _model.LightAt(guard.Position);
-                float range = playerDark && run.NoiseRemaining <= 0 ? 2.2f : run.Crouching ? guard.SightRange * 0.6f : guard.SightRange;
+                float range = playerDark && run.NoiseRemaining <= 0 ? guard.DarkSight : run.Crouching ? guard.SightRange * guard.CrouchSight : guard.SightRange;
                 bool sameFloor = Mathf.Abs(run.Player.y - guard.Position.y) < 1.8f;
                 bool sees = !run.InVent && !run.Hidden && sameFloor && Mathf.Abs(dx) < range
-                    && (Mathf.Sign(dx) == guard.Facing || guard.Alerted || Mathf.Abs(dx) < 1.3f)
+                    && (Mathf.Sign(dx) == guard.Facing || guard.Alerted || Mathf.Abs(dx) < guard.CloseSense)
                     && Clear(eye, target);
-                if (run.NoiseRemaining > 0 && Vector2.Distance(run.NoisePosition, guard.Position) < run.NoiseRadius)
+                if (run.NoiseRemaining > 0 && Vector2.Distance(run.NoisePosition, guard.Position) < run.NoiseRadius * guard.Hearing)
                 {
                     guard.Alerted = true;
                     Investigate(guard, run.NoisePosition);
                 }
                 if (!guard.Alerted && SeesBody(guard, run)) guard.Alerted = true;
+                // A bullet striking a wall or a crate nearby: it comes to look, uneasy but not yet sure.
+                foreach (DisturbanceRVO disturbance in run.Disturbances)
+                {
+                    if (guard.Investigating || Mathf.Abs(disturbance.Position.y - guard.Position.y) > 2f) continue;
+                    if (Vector2.Distance(disturbance.Position, guard.Position) > guard.Curiosity) continue;
+                    guard.Suspicion = Mathf.Max(guard.Suspicion, _model.Tuning.ImpactSuspicion);
+                    Investigate(guard, new Vector2(disturbance.Position.x, guard.Position.y));
+                }
                 if (!guard.Investigating && room != null && !room.On) Investigate(guard, new Vector2(room.Switch, room.Floor));
-                guard.Suspicion = Mathf.Clamp01(guard.Suspicion + dt * (sees ? 1.6f : -0.6f));
-                if (sees && guard.Suspicion >= 1f) guard.Chase = ChaseMemory;
+                // While it is hunting, it stays sure of what it saw.
+                guard.Suspicion = Mathf.Clamp01(guard.Suspicion + dt * (sees ? guard.SuspicionRate : guard.Chase > 0f ? 0f : -guard.SuspicionDecay));
+                if (sees && guard.Suspicion >= 1f)
+                {
+                    guard.Chase = guard.ChaseMemory;
+                    guard.LastSeen = run.Player;
+                }
                 else guard.Chase = Mathf.Max(0f, guard.Chase - dt);
+                bool fighting = guard.Suspicion >= 1f && guard.Chase > 0f;
+                if (!fighting) { guard.HasCover = false; guard.Crouching = false; }
+                if (fighting && guard.RaisesAlarm && !guard.AlarmDone && RaiseAlarm(guard, run, dt)) continue;
+                if (fighting && guard.UsesCover && TakeCover(guard, run, sees, dx, eye, target, dt)) continue;
                 // A spotted player is hunted wherever they go, until they vanish into a vent or the dark, or the trail goes cold.
-                if (!sees && guard.Chase > 0f && !run.InVent && !run.Hidden) Investigate(guard, run.Player);
+                if (!sees && guard.Chase > 0f && !run.InVent && !run.Hidden && !guard.HasCover) Investigate(guard, run.Player);
                 if (guard.Suspicion >= 1f && sees)
                 {
                     guard.Alerted = true;
                     guard.Facing = dx >= 0 ? 1 : -1;
-                    guard.FireCooldown -= dt;
-                    WeaponCVO weapon = _model.Weapon(guard.Weapon);
-                    if (guard.FireCooldown <= 0 && weapon != null)
-                    {
-                        // Guards fire real bullets at where the player is now; ducking or leaving their path dodges them.
-                        // They are slower than the player's, so a shot seen coming can be escaped.
-                        Vector2 direction = (target - eye).normalized;
-                        for (int p = 0; p < weapon.Pellets; p++)
-                        {
-                            Vector2 pellet = Quaternion.Euler(0f, 0f, Random.Range(-weapon.Spread, weapon.Spread)) * direction;
-                            run.Bullets.Add(new BulletRVO
-                            {
-                                Position = eye, Velocity = pellet * weapon.BulletSpeed * 0.6f * guard.BulletSpeedScale, Damage = 1,
-                                Life = weapon.BulletLife / 0.6f,
-                            });
-                        }
-                        run.GuardShots++;
-                        run.GuardShotFrom = eye + direction * 0.7f;
-                        run.GuardShotDirection = direction;
-                        guard.FireCooldown = Mathf.Max(0.2f, weapon.FireInterval * 3f * guard.FireRateScale);
-                    }
+                    Shoot(guard, run, eye, target, dt);
                     continue;
                 }
                 guard.FireCooldown = guard.ReactionTime;
@@ -116,6 +113,173 @@ namespace Modules.GameplayModule.Controllers
                 Step(guard, run, dt, speed);
             }
         }
+        private void Shoot(GuardRVO guard, ContractRVO run, Vector2 eye, Vector2 target, float dt)
+        {
+            guard.FireCooldown -= dt;
+            WeaponCVO weapon = _model.Weapon(guard.Weapon);
+            if (guard.FireCooldown > 0 || weapon == null) return;
+            // Guards fire real bullets at where the player is now; ducking or leaving their path dodges them.
+            // They are slower than the player's, so a shot seen coming can be escaped.
+            Vector2 direction = (target - eye).normalized;
+            for (int p = 0; p < weapon.Pellets; p++)
+            {
+                Vector2 pellet = Quaternion.Euler(0f, 0f, Random.Range(-weapon.Spread, weapon.Spread)) * direction;
+                run.Bullets.Add(new BulletRVO
+                {
+                    Position = eye, Velocity = pellet * weapon.BulletSpeed * guard.BulletSpeedScale, Damage = 1,
+                    Life = weapon.BulletLife / Mathf.Max(0.2f, guard.BulletSpeedScale),
+                });
+            }
+            run.GuardShots++;
+            run.GuardShotFrom = eye + direction * 0.7f;
+            run.GuardShotDirection = direction;
+            guard.FireCooldown = Mathf.Max(0.15f, weapon.FireInterval * guard.FirePace * guard.FireRateScale);
+        }
+
+        // Runs to a crate between itself and the player, then crouches behind it and pops up to shoot in turns.
+        // False when there is no crate worth having, and the guard fights in the open as before.
+        private bool TakeCover(GuardRVO guard, ContractRVO run, bool sees, float dx, Vector2 eye, Vector2 target, float dt)
+        {
+            if (!OnFloorOf(guard.Position, run.Player, run)) { guard.HasCover = false; guard.Crouching = false; return false; }
+            // A crate is only cover while it stands between the guard's spot and the player.
+            if (guard.HasCover && (Mathf.Sign(run.Player.x - guard.CoverSpot) != Mathf.Sign(run.Player.x - CoverNear(guard.CoverSpot, run))
+                                   || Mathf.Abs(run.Player.x - guard.CoverSpot) < 1.2f))
+                guard.HasCover = false;
+            if (!guard.HasCover && !FindCover(guard, run)) { guard.Crouching = false; return false; }
+            float gap = guard.CoverSpot - guard.Position.x;
+            if (Mathf.Abs(gap) > 0.1f)
+            {
+                // On the way there: upright, running, not stopping to shoot.
+                guard.Crouching = false;
+                guard.Alerted = true;
+                guard.Facing = gap > 0 ? 1 : -1;
+                bool was = guard.Investigating;
+                guard.Investigating = true;
+                float move = Mathf.Min(Mathf.Abs(gap), guard.AlertSpeed * dt);
+                guard.Position.x += Mathf.Sign(gap) * move;
+                guard.Investigating = was;
+                guard.PeekTimer = 0f;
+                return true;
+            }
+            guard.Investigating = false;
+            guard.Facing = dx >= 0 ? 1 : -1;
+            // Down, then up to shoot, then down again.
+            guard.PeekTimer += dt;
+            float cycle = guard.HideTime + guard.PeekTime;
+            if (guard.PeekTimer >= cycle) guard.PeekTimer -= cycle;
+            guard.Crouching = guard.PeekTimer < guard.HideTime;
+            if (guard.Crouching) guard.FireCooldown = Mathf.Max(guard.FireCooldown, guard.ReactionTime * 0.5f);
+            else if (sees) Shoot(guard, run, eye, target, dt);
+            return true;
+        }
+
+        // The nearest crate on this floor, within reach, that has the player on its far side.
+        private bool FindCover(GuardRVO guard, ContractRVO run)
+        {
+            float best = float.MaxValue;
+            foreach (Vector2 cover in run.Covers)
+            {
+                if (!OnFloorOf(cover, guard.Position, run)) continue;
+                float toPlayer = run.Player.x - cover.x;
+                if (Mathf.Abs(toPlayer) < 1.6f) continue;
+                float spot = cover.x - Mathf.Sign(toPlayer) * 0.6f;
+                float distance = Mathf.Abs(spot - guard.Position.x);
+                if (distance > guard.CoverSearch || distance >= best || Taken(spot, guard, run)) continue;
+                // Never run past the player to get to it.
+                if (Mathf.Sign(run.Player.x - guard.Position.x) == Mathf.Sign(spot - guard.Position.x)
+                    && Mathf.Abs(spot - guard.Position.x) > Mathf.Abs(run.Player.x - guard.Position.x) - 1f) continue;
+                best = distance;
+                guard.CoverSpot = spot;
+            }
+            guard.HasCover = best < float.MaxValue;
+            return guard.HasCover;
+        }
+
+        // One guard to a crate side: a spot another fighting guard already holds is not free.
+        private static bool Taken(float spot, GuardRVO guard, ContractRVO run)
+        {
+            foreach (GuardRVO other in run.Guards)
+                if (other != guard && other.Alive && other.HasCover && Mathf.Abs(other.CoverSpot - spot) < 0.5f
+                    && Mathf.Abs(other.Position.y - guard.Position.y) < 1f) return true;
+            return false;
+        }
+
+        private float CoverNear(float spot, ContractRVO run)
+        {
+            float best = spot;
+            float gap = float.MaxValue;
+            foreach (Vector2 cover in run.Covers)
+                if (Mathf.Abs(cover.x - spot) < gap) { gap = Mathf.Abs(cover.x - spot); best = cover.x; }
+            return best;
+        }
+
+        // Runs to the nearest guard who does not know yet and tells them - and anyone beside them - where the
+        // player was seen. True while it is busy with that; false once nobody is left to warn.
+        private bool RaiseAlarm(GuardRVO guard, ContractRVO run, float dt)
+        {
+            GuardRVO[] guards = run.Guards;
+            if (guard.Warning < 0 || guard.Warning >= guards.Length || !Unwarned(guards[guard.Warning]))
+            {
+                guard.Warning = -1;
+                float best = float.MaxValue;
+                for (int i = 0; i < guards.Length; i++)
+                {
+                    GuardRVO other = guards[i];
+                    if (other == guard || !Unwarned(other)) continue;
+                    float distance = Mathf.Abs(other.Position.x - guard.Position.x) + Mathf.Abs(other.Position.y - guard.Position.y) * 3f;
+                    if (distance < best) { best = distance; guard.Warning = i; }
+                }
+                if (guard.Warning < 0)
+                {
+                    guard.AlarmDone = true;
+                    return false;
+                }
+            }
+            GuardRVO told = guards[guard.Warning];
+            guard.Crouching = false;
+            guard.HasCover = false;
+            guard.Alerted = true;
+            if (OnFloorOf(guard.Position, told.Position, run) && Mathf.Abs(told.Position.x - guard.Position.x) < 1.4f)
+            {
+                foreach (GuardRVO other in guards)
+                {
+                    if (!other.Alive || other.Faction != Faction.Enemy || other == guard) continue;
+                    if (other != told && (!OnFloorOf(other.Position, told.Position, run) || Mathf.Abs(other.Position.x - told.Position.x) > guard.AlarmRadius)) continue;
+                    other.Alerted = true;
+                    other.Suspicion = 1f;
+                    other.Chase = other.ChaseMemory + 2f;
+                    other.LastSeen = guard.LastSeen;
+                    other.StunRemaining = 0f;
+                    // Told, not seen: they come to fight; only one who saw the player for themselves runs to warn.
+                    other.AlarmDone = true;
+                    Investigate(other, guard.LastSeen);
+                }
+                guard.Warning = -1;
+                return true;
+            }
+            // Keeps the fight alive while it runs: it still knows where the player was.
+            guard.Chase = Mathf.Max(guard.Chase, 1f);
+            Investigate(guard, told.Position);
+            guard.Wait = 1f;
+            float goal = told.Position.x;
+            if (!OnFloorOf(guard.Position, told.Position, run))
+            {
+                StairRVO stair = StairTowards(guard, run);
+                if (stair == null) { guard.AlarmDone = true; return false; }
+                goal = stair.Position.x;
+                if (Mathf.Abs(goal - guard.Position.x) < 0.15f)
+                {
+                    guard.Position = run.Stairs[stair.Link].Position;
+                    return true;
+                }
+            }
+            guard.Facing = goal > guard.Position.x ? 1 : -1;
+            Step(guard, run, dt, guard.AlertSpeed);
+            return true;
+        }
+
+        private static bool Unwarned(GuardRVO other) => other.Alive && other.Faction == Faction.Enemy && other.Suspicion < 1f;
+
         private void Patrol(GuardRVO guard, ContractRVO run, float dt, float speed)
         {
             if (guard.Position.x < guard.Left) guard.Facing = 1;
@@ -138,7 +302,7 @@ namespace Modules.GameplayModule.Controllers
         {
             guard.Investigating = true;
             guard.Target = target;
-            guard.Wait = 1.5f;
+            guard.Wait = guard.InvestigateTime;
         }
         private bool OnFloorOf(Vector2 a, Vector2 b, ContractRVO run) => FloorY(a.y, run) == FloorY(b.y, run);
         private float FloorY(float y, ContractRVO run) => y > run.FloorHeight * 0.5f ? run.FloorHeight : 0f;

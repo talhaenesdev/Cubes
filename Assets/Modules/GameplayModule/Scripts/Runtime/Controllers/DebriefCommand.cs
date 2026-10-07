@@ -25,7 +25,7 @@ namespace Modules.GameplayModule.Controllers
                 step.Start();
                 MissionCVO mission = _model.Missions != null ? _model.Missions.Find(_model.Mission) : null;
                 ContractRVO run = _model.Run;
-                step.Detail((mission != null ? mission.Title + "  -  " : "") + $"{run.Elapsed:0.0}s  -  {run.Shots} shots  -  cash ${_model.Progress.Cash}");
+                step.Detail((mission != null ? mission.Title + "  -  " : "") + $"{run.Elapsed:0.0}s  -  {run.Shots} shots" + (_model.Tuning.UseMoney ? $"  -  cash ${_model.Progress.Cash}" : ""));
                 for (int i = 1; i <= Frames; i++)
                 {
                     await Task.Delay(FrameMilliseconds);

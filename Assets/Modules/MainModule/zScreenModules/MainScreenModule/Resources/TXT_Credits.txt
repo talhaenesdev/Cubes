@@ -1,0 +1,22 @@
+CUBES
+by Talha Enes İslamoğlu
+
+MUSIC
+"Burn the World Waltz" Kevin MacLeod (incompetech.com)
+"Waltz Primordial" Kevin MacLeod (incompetech.com)
+"Boogie Party" Kevin MacLeod (incompetech.com)
+"El Magicia" Kevin MacLeod (incompetech.com)
+"Exhilarate" Kevin MacLeod (incompetech.com)
+"Feelin Good" Kevin MacLeod (incompetech.com)
+"Metalmania" Kevin MacLeod (incompetech.com)
+"Motherlode" Kevin MacLeod (incompetech.com)
+"Noise Attack" Kevin MacLeod (incompetech.com)
+"Sax Rock and Roll" Kevin MacLeod (incompetech.com)
+"Surf Shimmy" Kevin MacLeod (incompetech.com)
+"Twisted" Kevin MacLeod (incompetech.com)
+"Welcome to the Show" Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 4.0 License
+http://creativecommons.org/licenses/by/4.0/
+
+Sound effects made for the game.
+Built with Unity.

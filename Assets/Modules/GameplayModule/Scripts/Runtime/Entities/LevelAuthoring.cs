@@ -17,6 +17,8 @@ namespace Modules.GameplayModule.Entities
         public Enums.LevelDifficulty Difficulty = Enums.LevelDifficulty.Normal;
         [Tooltip("For a level wider than the screen: the camera follows the player instead of framing it all.")]
         public bool FollowCamera;
+        [Tooltip("Which one-off layout passes the asset builder has run on this level. Leave it alone.")]
+        [HideInInspector] public int LayoutVersion;
 
         [Header("Scene")]
         public Camera Camera;
@@ -27,11 +29,16 @@ namespace Modules.GameplayModule.Entities
         public DoorView[] Doors { get; private set; } = new DoorView[0];
         public LightRoomView[] Rooms { get; private set; } = new LightRoomView[0];
         public PropView[] Props { get; private set; } = new PropView[0];
+        public TapeDeckView[] Decks { get; private set; } = new TapeDeckView[0];
+        public StationView[] StationViews { get; private set; } = new StationView[0];
+        public DocumentView Document { get; private set; }
+        public ExitView Exit { get; private set; }
 
         public ContractLevelVO Collect()
         {
             var level = new ContractLevelVO {FloorHeight = FloorHeight, HalfWidth = HalfWidth, Difficulty = Difficulty};
             Props = GetComponentsInChildren<PropView>(true);
+            Decks = GetComponentsInChildren<TapeDeckView>(true);
             level.Props = new PropRVO[Props.Length];
             for (int i = 0; i < Props.Length; i++)
                 level.Props[i] = new PropRVO {Position = Snap(Props[i].transform.position), Kind = Props[i].Kind, Hit = Props[i].HitCenter, Size = Props[i].HitSize};
@@ -66,6 +73,7 @@ namespace Modules.GameplayModule.Entities
             for (int i = 0; i < terminals.Length; i++)
                 level.Terminals[i] = new TerminalRVO {Position = Snap(terminals[i].transform.position), Title = terminals[i].Title, Text = terminals[i].Text};
             StationView[] stations = GetComponentsInChildren<StationView>(true);
+            StationViews = stations;
             level.Stations = new StationRVO[stations.Length];
             for (int i = 0; i < stations.Length; i++)
                 level.Stations[i] = new StationRVO {Position = Snap(stations[i].transform.position), Kind = stations[i].Kind};
@@ -86,7 +94,11 @@ namespace Modules.GameplayModule.Entities
             PlayerSpawn spawn = GetComponentInChildren<PlayerSpawn>(true);
             if (spawn != null) level.PlayerSpawn = Snap(spawn.transform.position);
             ExitView exit = GetComponentInChildren<ExitView>(true);
+            Exit = exit;
             if (exit != null) level.ExitX = exit.transform.position.x;
+            Document = GetComponentInChildren<DocumentView>(true);
+            level.HasDocument = Document != null;
+            if (Document != null) level.Document = Snap(Document.transform.position);
             return level;
         }
 

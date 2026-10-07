@@ -14,14 +14,19 @@ namespace Modules.GameplayModule.Controllers
         public override void Execute()
         {
             ContractRVO run = _model.Run;
-            if (!run.Alive || run.Won || run.Paused || run.InVent) return;
+            // Home is no place for gunplay.
+            if (!run.Alive || run.Won || run.Paused || run.InVent || run.InHideout || run.TrackSwitch > 0f) return;
             Vector2 origin = run.Player + Vector2.up * (run.Crouching ? 0.65f : 1.15f);
             if (_model.Input.Melee && run.MeleeCooldown <= 0)
             {
-                run.MeleeCooldown = 0.45f;
+                run.MeleeCooldown = _model.Tuning.MeleeCooldown;
+                run.MeleeLanded = false;
+                // A swing at nothing still shows the arm going round.
+                run.ShotFrom = origin;
+                run.ShotTo = origin + new Vector2(Mathf.Sign(run.Aim.x - run.Player.x) * _model.Tuning.MeleeRange, 0f);
                 foreach (GuardRVO guard in run.Guards)
                 {
-                    if (!guard.Alive || Vector2.Distance(run.Player, guard.Position) > 1.6f) continue;
+                    if (!guard.Alive || Vector2.Distance(run.Player, guard.Position) > _model.Tuning.MeleeRange) continue;
                     float clear = _functions.Call<TraceContractFunction>().AddParams(origin, guard.Position + Vector2.up).ExecuteAndGetResult<float>();
                     if (clear < 0.99f) continue;
                     // An unaware, turned-away or knocked-down guard dies; a guard squaring up to you is only shoved.
@@ -30,12 +35,15 @@ namespace Modules.GameplayModule.Controllers
                     run.ShotFrom = origin;
                     run.ShotTo = guard.Position + Vector2.up;
                     run.FlashRemaining = 0.12f;
+                    run.MeleeLanded = true;
+                    // The blow drives them back a step, stopping at the walls.
+                    float push = Mathf.Sign(guard.Position.x - run.Player.x) * _model.Tuning.MeleeKnockback;
+                    guard.Position.x = Mathf.Clamp(guard.Position.x + push, 0.4f - run.HalfWidth, run.HalfWidth - 0.4f);
                     if (lethal)
                     {
-                        guard.Alive = false;
-                        run.SilentKills++;
+                        if (_model.DamageGuard(guard, _model.Tuning.MeleeDamage)) run.SilentKills++;
                     }
-                    else guard.StunRemaining = 1.2f;
+                    else guard.StunRemaining = _model.Tuning.MeleeStun;
                     break;
                 }
             }
@@ -49,7 +57,7 @@ namespace Modules.GameplayModule.Controllers
             run.Ammo--;
             run.Shots++;
             run.ShotCooldown = weapon.FireInterval;
-            run.NoiseRemaining = weapon.NoiseRadius > 0f ? 0.65f : 0f;
+            run.NoiseRemaining = weapon.NoiseRadius > 0f ? _model.Tuning.ShotNoiseTime : 0f;
             run.NoiseRadius = weapon.NoiseRadius;
             run.NoisePosition = run.Player;
             run.Hidden = false;

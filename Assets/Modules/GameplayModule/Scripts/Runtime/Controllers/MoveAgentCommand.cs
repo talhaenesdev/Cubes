@@ -43,7 +43,7 @@ namespace Modules.GameplayModule.Controllers
                 run.Vent = -1;
             }
             {
-                float next = Mathf.Clamp(run.Player.x + input.Move * (run.Crouching ? 2.25f : 4.7f) * run.MoveScale * dt, 0.4f - run.HalfWidth, run.HalfWidth - 0.4f);
+                float next = Mathf.Clamp(run.Player.x + input.Move * (run.Crouching ? _model.Tuning.CrouchSpeed : _model.Tuning.WalkSpeed) * run.MoveScale * dt, 0.4f - run.HalfWidth, run.HalfWidth - 0.4f);
                 foreach (DoorRVO door in run.Doors)
                 {
                     if (door.Open || Mathf.Abs(run.Player.y - door.Position.y) > 1.8f) continue;
@@ -52,8 +52,8 @@ namespace Modules.GameplayModule.Controllers
                 }
                 run.Player.x = next;
                 float ground = run.Floor * run.FloorHeight;
-                if (input.Jump && run.Player.y <= ground + 0.02f) run.VerticalSpeed = 7f;
-                run.VerticalSpeed -= 22f * dt;
+                if (input.Jump && run.Player.y <= ground + 0.02f) run.VerticalSpeed = _model.Tuning.JumpSpeed;
+                run.VerticalSpeed -= _model.Tuning.Gravity * dt;
                 run.Player.y = Mathf.Max(ground, run.Player.y + run.VerticalSpeed * dt);
                 if (run.Player.y <= ground) run.VerticalSpeed = 0;
             }

@@ -1,0 +1,120 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09f1eeed67824c14298a1c2565595c35, type: 3}
+  m_Name: CD_Outfits
+  m_EditorClassIdentifier: Modules.Gameplay::Modules.GameplayModule.Data.UnityObjects.CD_Outfits
+  Default: midnight
+  Outfits:
+  - Id: midnight
+    Name: MIDNIGHT
+    Price: 0
+    Coat: {r: 0.13, g: 0.12, b: 0.14, a: 1}
+    Waistcoat: {r: 0.08, g: 0.07, b: 0.08, a: 1}
+    Shirt: {r: 0.9, g: 0.88, b: 0.84, a: 1}
+    Tie: {r: 0.55, g: 0.07, b: 0.1, a: 1}
+    Hat: {r: 0.07, g: 0.06, b: 0.06, a: 1}
+    HatBand: {r: 0.55, g: 0.07, b: 0.1, a: 1}
+    Scarf: {r: 0.9, g: 0.88, b: 0.84, a: 1}
+    WearHat: 1
+    WearScarf: 1
+    Cigarette: 1
+  - Id: bone
+    Name: BONE WHITE
+    Price: 300
+    Coat: {r: 0.78, g: 0.74, b: 0.66, a: 1}
+    Waistcoat: {r: 0.62, g: 0.58, b: 0.5, a: 1}
+    Shirt: {r: 0.9, g: 0.88, b: 0.84, a: 1}
+    Tie: {r: 0.07, g: 0.06, b: 0.06, a: 1}
+    Hat: {r: 0.82, g: 0.78, b: 0.7, a: 1}
+    HatBand: {r: 0.07, g: 0.06, b: 0.06, a: 1}
+    Scarf: {r: 0.07, g: 0.06, b: 0.06, a: 1}
+    WearHat: 1
+    WearScarf: 1
+    Cigarette: 1
+  - Id: oxblood
+    Name: OXBLOOD
+    Price: 450
+    Coat: {r: 0.32, g: 0.07, b: 0.08, a: 1}
+    Waistcoat: {r: 0.12, g: 0.05, b: 0.05, a: 1}
+    Shirt: {r: 0.9, g: 0.88, b: 0.84, a: 1}
+    Tie: {r: 0.72, g: 0.58, b: 0.3, a: 1}
+    Hat: {r: 0.07, g: 0.06, b: 0.06, a: 1}
+    HatBand: {r: 0.72, g: 0.58, b: 0.3, a: 1}
+    Scarf: {r: 0.9, g: 0.88, b: 0.84, a: 1}
+    WearHat: 1
+    WearScarf: 1
+    Cigarette: 1
+  - Id: blue_note
+    Name: BLUE NOTE
+    Price: 600
+    Coat: {r: 0.1, g: 0.14, b: 0.24, a: 1}
+    Waistcoat: {r: 0.06, g: 0.08, b: 0.14, a: 1}
+    Shirt: {r: 0.9, g: 0.88, b: 0.84, a: 1}
+    Tie: {r: 0.7, g: 0.72, b: 0.75, a: 1}
+    Hat: {r: 0.08, g: 0.1, b: 0.16, a: 1}
+    HatBand: {r: 0.7, g: 0.72, b: 0.75, a: 1}
+    Scarf: {r: 0.9, g: 0.88, b: 0.84, a: 1}
+    WearHat: 1
+    WearScarf: 1
+    Cigarette: 1
+  - Id: undertaker
+    Name: UNDERTAKER
+    Price: 750
+    Coat: {r: 0.04, g: 0.04, b: 0.04, a: 1}
+    Waistcoat: {r: 0.02, g: 0.02, b: 0.02, a: 1}
+    Shirt: {r: 0.9, g: 0.88, b: 0.84, a: 1}
+    Tie: {r: 0.04, g: 0.04, b: 0.04, a: 1}
+    Hat: {r: 0.07, g: 0.06, b: 0.06, a: 1}
+    HatBand: {r: 0.04, g: 0.04, b: 0.04, a: 1}
+    Scarf: {r: 0.9, g: 0.88, b: 0.84, a: 1}
+    WearHat: 1
+    WearScarf: 0
+    Cigarette: 0
+  - Id: tobacco
+    Name: TOBACCO ROAD
+    Price: 350
+    Coat: {r: 0.36, g: 0.24, b: 0.14, a: 1}
+    Waistcoat: {r: 0.22, g: 0.14, b: 0.08, a: 1}
+    Shirt: {r: 0.9, g: 0.88, b: 0.84, a: 1}
+    Tie: {r: 0.72, g: 0.58, b: 0.3, a: 1}
+    Hat: {r: 0.3, g: 0.2, b: 0.12, a: 1}
+    HatBand: {r: 0.07, g: 0.06, b: 0.06, a: 1}
+    Scarf: {r: 0.7, g: 0.55, b: 0.3, a: 1}
+    WearHat: 1
+    WearScarf: 1
+    Cigarette: 1
+  - Id: bareheaded
+    Name: BAREHEADED
+    Price: 0
+    Coat: {r: 0.2, g: 0.19, b: 0.2, a: 1}
+    Waistcoat: {r: 0.08, g: 0.07, b: 0.08, a: 1}
+    Shirt: {r: 0.9, g: 0.88, b: 0.84, a: 1}
+    Tie: {r: 0.55, g: 0.07, b: 0.1, a: 1}
+    Hat: {r: 0.07, g: 0.06, b: 0.06, a: 1}
+    HatBand: {r: 0.55, g: 0.07, b: 0.1, a: 1}
+    Scarf: {r: 0.9, g: 0.88, b: 0.84, a: 1}
+    WearHat: 0
+    WearScarf: 0
+    Cigarette: 1
+  - Id: engagement
+    Name: ENGAGEMENT BLACK
+    Price: 0
+    Coat: {r: 0.05, g: 0.05, b: 0.06, a: 1}
+    Waistcoat: {r: 0.03, g: 0.03, b: 0.03, a: 1}
+    Shirt: {r: 0.95, g: 0.95, b: 0.95, a: 1}
+    Tie: {r: 0.04, g: 0.04, b: 0.05, a: 1}
+    Hat: {r: 0.07, g: 0.06, b: 0.06, a: 1}
+    HatBand: {r: 0.04, g: 0.04, b: 0.05, a: 1}
+    Scarf: {r: 0.9, g: 0.88, b: 0.84, a: 1}
+    WearHat: 1
+    WearScarf: 0
+    Cigarette: 0

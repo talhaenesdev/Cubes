@@ -2,6 +2,7 @@
   "name": "Modules.Gameplay.Screen",
   "references": [
     "FlowIoC",
+    "Modules.Localization",
     "UnityEngine.UI",
     "Unity.InputSystem",
     "Modules.Gameplay.Screen.Signals"

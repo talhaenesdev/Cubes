@@ -16,6 +16,46 @@ namespace Modules.GameplayModule.Models
         CD_Characters Characters { get; }
         CD_Missions Missions { get; }
         CD_Upgrades Upgrades { get; }
+        CD_Music Music { get; }
+        CD_Outfits Outfits { get; }
+        // Every gameplay number that is not one weapon's or one character's.
+        CD_Gameplay Tuning { get; }
+        // Wears an owned outfit, or buys it first when the cash is there. False when it could not.
+        bool Wear(string outfit);
+        bool Owns(string outfit);
+        void SaveProgress();
+        // The one way anyone is hurt - bullets, blasts, falling lamps, takedowns. True when the hit killed.
+        bool DamagePlayer(int amount, string cause);
+        bool DamageGuard(GuardRVO guard, int amount);
+        // The contract in progress, written to its own file; read back by RestoreRun when it is the same contract.
+        void SaveRun();
+        bool RestoreRun();
+        void ClearRunSave();
+        // Set by Play on a fresh launch: the next run is restored from the save rather than started anew.
+        bool RestoreNextRun { get; set; }
+        float RunSaveTimer { get; set; }
+        // True while the main menu is open over a paused run.
+        bool MenuOpen { get; set; }
+        bool PausedBeforeMenu { get; set; }
+        // Puts the hand (0) or pocket (1) weapon in the locker.
+        void StoreWeapon(int slot);
+        // Takes a weapon from the locker into the hand; what the hand held goes to the pocket if it is empty, else the locker.
+        void TakeWeapon(string weapon);
+        // The track playing now, so a retry keeps it going instead of starting over.
+        string PlayingTrack { get; set; }
+        // The zoom the player last chose with the mouse wheel; 0 until they do.
+        float PlayerZoom { get; set; }
+        // Whether the opening phone call has been heard, ever; kept in the save.
+        bool CallHeard { get; set; }
+        // Chooses what plays for a contract, or for the hideout when the mission is null; null when there is nothing.
+        MusicTrackCVO TrackFor(string mission);
+        // The track the current intro will start.
+        string QueuedTrack { get; set; }
+        // The hideout tape `step` places from the one loaded, round the list: 0 the loaded one (or the first), 1 the
+        // next, -1 the previous. Null when there are no hideout tracks.
+        MusicTrackCVO Tape(int step);
+        // The tape in the deck is stopped; it stays stopped across runs until played again.
+        bool TapePaused { get; set; }
         ProgressSVO Progress { get; }
         // The contract being played, or null for the hideout.
         string Mission { get; set; }

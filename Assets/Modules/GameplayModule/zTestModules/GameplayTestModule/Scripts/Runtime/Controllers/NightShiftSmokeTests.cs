@@ -216,6 +216,9 @@ namespace Modules.GameplayModule.GameplayTestModule.Controllers
             model.Run.ReloadScale = 1f;
             model.Run.MoveScale = 1f;
             model.Run.Reserve = 12;
+            model.Run.Weapon = "revolver";
+            model.Run.Ammo = 6;
+            model.Run.Holster = null;
             foreach (var guard in model.Run.Guards) guard.StunRemaining = 100;
         }
 

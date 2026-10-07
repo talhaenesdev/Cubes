@@ -8,5 +8,7 @@ namespace Modules.GameplayModule.Enums
         Hexagon = 3,
         Circle = 4,
         Diamond = 5,
+        // Tall and broad-shouldered: the player.
+        Rectangle = 6,
     }
 }

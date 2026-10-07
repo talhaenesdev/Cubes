@@ -16,6 +16,7 @@ namespace Modules.GameplayModule.Editor
         public const string UpgradesAsset = ModuleRoot + "/Scriptables/CD_Upgrades.asset";
         private const string MissionBoard = Prefabs + "/Fixtures/PB_MissionBoard.prefab";
         private const string UpgradeBench = Prefabs + "/Fixtures/PB_UpgradeBench.prefab";
+        private const string CassettePlayer = Prefabs + "/Fixtures/PB_CassettePlayer.prefab";
         private readonly Color _cork = new(0.55f, 0.4f, 0.25f);
         private readonly Color _paper = new(0.9f, 0.88f, 0.8f);
 
@@ -36,7 +37,6 @@ namespace Modules.GameplayModule.Editor
                 }
                 Part("Photo", board.transform, new Vector2(0.55f, 1.95f), new Vector2(0.34f, 0.28f), new Color(0.3f, 0.4f, 0.45f), -18, 6f);
                 Line("String", board.transform, new Vector2(-0.6f, 1.9f), new Vector2(0.55f, 2f), 0.02f, _red, -17);
-                Sign("CONTRACTS", board.transform, new Vector2(0f, 2.55f), 0.16f, _amber);
                 SavePrefab<GameObject>(board, MissionBoard);
             }
             if (ShouldWrite(UpgradeBench))
@@ -54,8 +54,71 @@ namespace Modules.GameplayModule.Editor
                 Part("Vice", bench.transform, new Vector2(0.7f, 1.1f), new Vector2(0.3f, 0.2f), _ink, -19);
                 Part("Parts", bench.transform, new Vector2(-0.4f, 1.08f), new Vector2(0.5f, 0.12f), _amber, -19);
                 Part("Lamp", bench.transform, new Vector2(-0.85f, 1.3f), new Vector2(0.18f, 0.12f), _amber, -18);
-                Sign("UPGRADES", bench.transform, new Vector2(0f, 2.8f), 0.16f, _teal);
                 SavePrefab<GameObject>(bench, UpgradeBench);
+            }
+        }
+
+        // A boombox on a side table: two speakers, a tape window whose reels turn, a red light while it plays.
+        private void BuildCassettePlayer()
+        {
+            if (!ShouldWrite(CassettePlayer)) return;
+            GameObject deck = Node("PB_CassettePlayer", null, Vector2.zero);
+            deck.AddComponent<StationView>().Kind = StationKind.CassettePlayer;
+            var view = deck.AddComponent<TapeDeckView>();
+            Sprite round = _shapes[CharacterShape.Circle];
+            Part("Table", deck.transform, new Vector2(0f, 0.72f), new Vector2(1.1f, 0.08f), _wood, -20);
+            Part("Leg L", deck.transform, new Vector2(-0.45f, 0.36f), new Vector2(0.06f, 0.72f), _wood, -20);
+            Part("Leg R", deck.transform, new Vector2(0.45f, 0.36f), new Vector2(0.06f, 0.72f), _wood, -20);
+            Part("Body", deck.transform, new Vector2(0f, 1.02f), new Vector2(1f, 0.52f), new Color(0.16f, 0.15f, 0.15f), -19);
+            Part("Handle", deck.transform, new Vector2(0f, 1.34f), new Vector2(0.7f, 0.05f), _steel, -19);
+            Part("Handle L", deck.transform, new Vector2(-0.33f, 1.3f), new Vector2(0.04f, 0.1f), _steel, -19);
+            Part("Handle R", deck.transform, new Vector2(0.33f, 1.3f), new Vector2(0.04f, 0.1f), _steel, -19);
+            foreach (float x in new[] {-0.33f, 0.33f})
+            {
+                Part("Speaker", deck.transform, new Vector2(x, 0.99f), new Vector2(0.3f, 0.3f), _ink, -18).sprite = round;
+                Part("Cone", deck.transform, new Vector2(x, 0.99f), new Vector2(0.14f, 0.14f), new Color(0.25f, 0.24f, 0.23f), -17).sprite = round;
+            }
+            Part("Tape window", deck.transform, new Vector2(0f, 1.04f), new Vector2(0.3f, 0.2f), new Color(0.05f, 0.05f, 0.06f), -18);
+            Part("Tape", deck.transform, new Vector2(0f, 1.04f), new Vector2(0.26f, 0.15f), _hatBrass, -17);
+            var reels = new System.Collections.Generic.List<Object>();
+            foreach (float x in new[] {-0.07f, 0.07f})
+            {
+                Transform reel = Node("Reel", deck.transform, new Vector2(x, 1.04f)).transform;
+                Part("Hub", reel, Vector2.zero, new Vector2(0.07f, 0.07f), _ink, -16).sprite = round;
+                Part("Spoke", reel, Vector2.zero, new Vector2(0.07f, 0.015f), _hatBrass, -15);
+                reels.Add(reel);
+            }
+            Part("Buttons", deck.transform, new Vector2(0f, 0.81f), new Vector2(0.4f, 0.05f), _steel, -18);
+            GameObject light = Node("Playing light", deck.transform, new Vector2(0.2f, 1.22f));
+            Part("Light", light.transform, Vector2.zero, new Vector2(0.05f, 0.05f), _crimson, -16).sprite = round;
+            Part("Glow", light.transform, Vector2.zero, new Vector2(0.3f, 0.3f), new Color(1f, 0.2f, 0.2f, 0.3f), -17).sprite = _soft;
+            light.SetActive(false);
+            AssignArray(view, "_reels", reels);
+            Assign(view, "_playingLight", light);
+            SavePrefab<GameObject>(deck, CassettePlayer);
+        }
+
+        public bool HideoutNeedsDeck()
+        {
+            var level = AssetDatabase.LoadAssetAtPath<LevelAuthoring>(HideoutPrefab);
+            return level != null && level.GetComponentsInChildren<TapeDeckView>(true).Length == 0;
+        }
+
+        // The hideout gets its tape deck added in place; nothing else in the prefab is touched.
+        private void DeckForHideout()
+        {
+            if (!HideoutNeedsDeck() || !Exists(CassettePlayer)) return;
+            GameObject contents = PrefabUtility.LoadPrefabContents(HideoutPrefab);
+            try
+            {
+                Transform fixtures = contents.transform.Find("Fixtures") ?? contents.transform;
+                Place(CassettePlayer, fixtures, new Vector2(1.2f, 0f));
+                PrefabUtility.SaveAsPrefabAsset(contents, HideoutPrefab);
+                _report.Add("Put a cassette player in the hideout");
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(contents);
             }
         }
 
@@ -93,13 +156,12 @@ namespace Modules.GameplayModule.Editor
             Rect("Lamp shade", art, 7.2f, 2.05f, 0.5f, 0.35f, _amber, -21);
             Rect("Poster", art, -5.8f, 2.6f, 1f, 1.3f, new Color(0.6f, 0.2f, 0.25f), -40);
             Rect("Poster shape", art, -5.8f, 2.6f, 0.45f, 0.45f, _paper, -39);
-            Sign("SQUARE", art, new Vector2(-5.8f, 2.1f), 0.12f, _paper);
             Rect("Rug", art, 0f, 0.03f, 3.5f, 0.06f, new Color(0.45f, 0.25f, 0.2f), -10);
-            Sign("H O M E", art, new Vector2(0f, 3.7f), 0.2f, _amber);
 
             Transform fixtures = Node("Fixtures", root.transform, Vector2.zero).transform;
             Place(MissionBoard, fixtures, new Vector2(-2.3f, 0f));
             Place(UpgradeBench, fixtures, new Vector2(4.2f, 0f));
+            Place(CassettePlayer, fixtures, new Vector2(1.2f, 0f));
             Place(Cover, fixtures, new Vector2(-1f, 0f)).name = "Practice crate";
 
             Transform spawns = Node("Spawns", root.transform, Vector2.zero).transform;
