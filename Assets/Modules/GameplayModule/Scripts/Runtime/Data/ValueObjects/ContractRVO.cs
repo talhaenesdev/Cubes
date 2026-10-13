@@ -113,6 +113,10 @@ namespace Modules.GameplayModule.Data.ValueObjects
         public bool HasDocument;
         public Vector2 Document;
         public bool DocumentTaken;
+        public bool FirstMissionBossContract;
+        public int BossDialogue;
+        public bool BossDialogueOpen;
+        public bool BossRecruited;
         // The phone call at home: the line being shown, -1 when no call; the time spent on it.
         public int Call = -1;
         // The phone rings until the player answers it.
@@ -185,6 +189,12 @@ namespace Modules.GameplayModule.Data.ValueObjects
         public int Warning = -1;
         public bool AlarmDone;
         public Vector2Int CashDrop;
+        // Non-combatants use the same lightweight character runtime as guards, but never count as enemies.
+        public bool Civilian;
+        public bool Boss;
+        public bool Fleeing;
+        public bool Escaped;
+        public float WorkTimer;
     }
 
     [Serializable]

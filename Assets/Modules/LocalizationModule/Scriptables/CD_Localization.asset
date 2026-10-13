@@ -519,3 +519,48 @@ MonoBehaviour:
   - Key: "E  \u2014  climb out of the vent"
     English: 
     Turkish: "E  \u2014  havaland\u0131rmadan \xE7\u0131k"
+  - Key: BOSS
+    English: 
+    Turkish: PATRON
+  - Key: "Boss: Don't shoot. I can pay."
+    English: 
+    Turkish: "Patron: Ate\u015F etme. \xD6deyebilirim."
+  - Key: "You: Good. From now on you work for us."
+    English: 
+    Turkish: "Sen: G\xFCzel. Bundan sonra bizim i\xE7in \xE7al\u0131\u015Facaks\u0131n."
+  - Key: "You: Every week, an envelope. Miss one and I come back."
+    English: 
+    Turkish: "Sen: Her hafta bir zarf. Birini atlarsan geri gelirim."
+  - Key: "Boss: Every week. You have my word."
+    English: 
+    Turkish: "Patron: Her hafta. S\xF6z veriyorum."
+  - Key: "E  \u2014  next"
+    English: 
+    Turkish: "E  \u2014  devam"
+  - Key: Talk to the boss
+    English: 
+    Turkish: Patronla konu\u015F
+  - Key: The boss is gone
+    English: 
+    Turkish: "Patron art\u0131k yok"
+  - Key: THE BOSS WORKS FOR US NOW
+    English: 
+    Turkish: "PATRON ARTIK B\u0130Z\u0130M \xC7\u0130N \xC7ALI\u015EIYOR"
+  - Key: "CONTRACT COMPLETE  /  heading home"
+    English: 
+    Turkish: "KONTRAT TAMAM  /  eve d\xF6n\xFCl\xFCyor"
+  - Key: "YOU WERE SEEN. ONE SHOT IS ALL IT TAKES.  /  R to retry"
+    English: 
+    Turkish: "G\xD6R\xDCLD\xDCN. TEK MERM\xC4\xB0 YETER.  /  R ile tekrar dene"
+  - Key: WORKING FOR US
+    English: 
+    Turkish: BİZE ÇALIŞIYOR
+  - Key: GUARD DETAIL
+    English: 
+    Turkish: KORUMA AYARLARI
+  - Key: PROTECT THIS LOCATION
+    English: 
+    Turkish: BU KONUMU KORU
+  - Key: (assigned)
+    English: 
+    Turkish: (atanmış)

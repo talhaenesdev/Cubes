@@ -171,6 +171,21 @@ namespace Modules.LocalizationModule.Data.UnityObjects
                 new() {Key = "GOLDEN  CIRCLE / NOTES", Turkish = "GOLDEN  CIRCLE / NOTLAR"},
                 new() {Key = "PRECINCT  13 / NOTES", Turkish = "PRECINCT  13 / NOTLAR"},
                 new() {Key = "T H E   D O N / NOTES", Turkish = "T H E   D O N / NOTLAR"},
+                new() {Key = "WORKING FOR US", Turkish = "BİZE ÇALIŞIYOR"},
+                new() {Key = "GUARD DETAIL", Turkish = "KORUMA AYARLARI"},
+                new() {Key = "PROTECT THIS LOCATION", Turkish = "BU KONUMU KORU"},
+                new() {Key = "(assigned)", Turkish = "(atanmış)"},
+                new() {Key = "BOSS", Turkish = "PATRON"},
+                new() {Key = "Boss: Don't shoot. I can pay.", Turkish = "Patron: Ateş etme. Ödeyebilirim."},
+                new() {Key = "You: Good. From now on you work for us.", Turkish = "Sen: Güzel. Bundan sonra bizim için çalışacaksın."},
+                new() {Key = "You: Every week, an envelope. Miss one and I come back.", Turkish = "Sen: Her hafta bir zarf. Birini atlarsan geri gelirim."},
+                new() {Key = "Boss: Every week. You have my word.", Turkish = "Patron: Her hafta. Söz veriyorum."},
+                new() {Key = "E  —  next", Turkish = "E  —  devam"},
+                new() {Key = "Talk to the boss", Turkish = "Patronla konuş"},
+                new() {Key = "The boss is gone", Turkish = "Patron artık yok"},
+                new() {Key = "THE BOSS WORKS FOR US NOW", Turkish = "PATRON ARTIK BİZİM İÇİN ÇALIŞIYOR"},
+                new() {Key = "CONTRACT COMPLETE  /  heading home", Turkish = "KONTRAT TAMAM  /  eve dönülüyor"},
+                new() {Key = "YOU WERE SEEN. ONE SHOT IS ALL IT TAKES.  /  R to retry", Turkish = "GÖRÜLDÜN. TEK MERMİ YETER.  /  R ile tekrar dene"},
             };
         }
 

@@ -21,8 +21,24 @@ namespace Modules.GameplayModule.Controllers
             StationKind kind = run.Stations[run.Menu].Kind;
             if (kind == StationKind.MissionBoard)
             {
+                if (!string.IsNullOrEmpty(_model.GuardAssignmentMission))
+                {
+                    _model.SetMissionGuardCount(_model.GuardAssignmentMission, _index);
+                    MenuVO guardMenu = _functions.Call<BuildMenuFunction>().AddParams(kind).ExecuteAndGetResult<MenuVO>();
+                    _signals.Outgoing.MenuOpened.Dispatch(guardMenu.Title, guardMenu.Subtitle, guardMenu.Entries);
+                    return;
+                }
                 if (_model.Missions == null || _index < 0 || _index >= _model.Missions.Missions.Count) return;
-                _model.Mission = _model.Missions.Missions[_index].Id;
+                MissionCVO mission = _model.Missions.Missions[_index];
+                if (_model.Progress.Completed.Contains(mission.Id))
+                {
+                    _model.GuardAssignmentMission = mission.Id;
+                    MenuVO guardMenu = _functions.Call<BuildMenuFunction>().AddParams(kind).ExecuteAndGetResult<MenuVO>();
+                    _signals.Outgoing.MenuOpened.Dispatch(guardMenu.Title, guardMenu.Subtitle, guardMenu.Entries);
+                    return;
+                }
+                _model.GuardAssignmentMission = null;
+                _model.Mission = mission.Id;
                 _signals.Incoming.StartContract.Dispatch();
                 return;
             }

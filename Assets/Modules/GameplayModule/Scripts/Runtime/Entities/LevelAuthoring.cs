@@ -86,6 +86,7 @@ namespace Modules.GameplayModule.Entities
                     Right = guards[i].PatrolRight, Facing = guards[i].Facing >= 0 ? 1 : -1,
                     Type = guards[i].CharacterType, Weapon = guards[i].Weapon,
                     Toughness = guards[i].Toughness, Aggression = guards[i].Aggression,
+                    Civilian = guards[i].Civilian, Boss = guards[i].Boss,
                 };
             WeaponSpawn[] weapons = GetComponentsInChildren<WeaponSpawn>(true);
             level.Weapons = new WeaponSpawnVO[weapons.Length];

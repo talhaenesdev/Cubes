@@ -1,0 +1,41 @@
+First mission civilian + boss contract design
+============================================
+
+Scope
+-----
+This note describes the new objective for the first campaign contract, "Laundromat".
+Keep the work inside GameplayModule unless a separate module is explicitly introduced later.
+Do not make another module reach into GameplayModule; use FlowIoC signals/connectors if this ever crosses module boundaries.
+
+Current playable version
+------------------------
+- The first mission no longer uses the document objective at runtime.
+- The player must eliminate every enemy guard.
+- Several circle civilians are added to the first mission runtime cast.
+- Civilians are friendly, unarmed, and do not count toward the enemy clear count.
+- Civilians idle as workers by alternating between crouched "desk/work" poses and slow short patrols.
+- When a civilian hears a gunshot, door kick, explosion or similar gameplay noise, they become frightened.
+- Ordinary civilians run toward the ground-floor exit and disappear when they reach it.
+- One civilian is marked as the boss.
+- The boss is also friendly and unarmed, but he does not leave the map or hide when frightened; he stays available for the end conversation.
+- When all enemies are dead and the boss is alive, standing near the boss opens the same lower conversation card used by the phone call; pressing E advances that short intimidation conversation.
+- Before all enemies are dead, the boss does not show an E prompt and should not create an interactable spot.
+- After the conversation finishes, the mission is marked won and the existing win/loading flow returns the player home.
+
+Implementation map
+------------------
+- Runtime state: ContractRVO.GuardRVO has Civilian, Boss, Fleeing, Escaped and WorkTimer.
+- Level authoring/spawns: GuardSpawnVO and GuardSpawn carry Civilian and Boss so future prefab-authored levels can place them directly.
+- Temporary first-mission placement: NightShiftModel.FirstMissionCast injects the civilians/boss for mission id "laundromat" if the prefab does not already contain a boss spawn.
+- Keep the injected boss away from other interactables. In the current first mission he stands at the far right of the ground floor so computer, light switch, door and exit prompts cannot steal the E press.
+- Civilian behaviour: SimulateGuardsCommand.SimulateFriendly handles worker idles, fleeing civilians, and the boss staying available.
+- Boss interaction and objective replacement: InteractContractCommand.OfferBossTalk handles the "all enemies dead + boss alive + player near + E" dialogue and sets run.Won.
+- Drawing: NightShiftView hides escaped civilians.
+
+Future improvements
+-------------------
+- Replace the runtime-injected first-mission civilians with authored GuardSpawn markers on PB_Level_Laundromat when editing the prefab in Unity.
+- Add dedicated CivilianSpawn/BossSpawn marker classes only if civilian-specific authoring grows beyond the two bools.
+- Add proper worker props/animations for sitting, carrying, typing or cleaning; for now the existing CharacterRig poses are reused.
+- Add localization keys for the boss conversation if the dialogue becomes final text.
+- If the boss escapes in a future version, define a fail state or alternate objective before enabling that behaviour.

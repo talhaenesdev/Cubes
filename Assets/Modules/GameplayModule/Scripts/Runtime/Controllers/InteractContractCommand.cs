@@ -20,11 +20,18 @@ namespace Modules.GameplayModule.Controllers
         public override void Execute()
         {
             ContractRVO run = _model.Run;
-            if (!run.Alive || run.Won || run.Abandoned || run.Paused) return;
+            // A boss conversation intentionally pauses the world, while this command must keep
+            // receiving E so each line can advance and the conversation can finish.
+            if (!run.Alive || run.Won || run.Abandoned || (run.Paused && !run.BossDialogueOpen)) return;
             bool documentNear = run.HasDocument && !run.DocumentTaken && !run.InVent
                 && Mathf.Abs(run.Player.y - run.Document.y) < 0.5f && Mathf.Abs(run.Player.x - run.Document.x) < 1f;
             _press = _model.Input.Interact;
             _hint = null;
+            if (run.FirstMissionBossContract && OfferBossTalk(run))
+            {
+                run.Hint = _hint ?? "";
+                return;
+            }
             CollectRounds(run);
             if (_model.Input.Swap && !run.InVent) SwapWeapons(run);
             // Crouching over a weapon you do not carry makes E pick it up before anything else in reach.
@@ -127,8 +134,66 @@ namespace Modules.GameplayModule.Controllers
                 && Offer(_loc.Get("E  —  give up the job and go home")))
                 run.Abandoned = true;
             if (!run.InHideout && run.HasDocument && !run.DocumentTaken) _hint ??= _loc.Get("Find the documents");
+            if (!run.InHideout && run.FirstMissionBossContract && _model.Remaining == 0 && !run.BossRecruited)
+                _hint ??= _loc.Get("Talk to the boss");
             // Only what the player can do right here; the rest of the time the line stays empty.
             run.Hint = _hint ?? "";
+        }
+
+        private bool OfferBossTalk(ContractRVO run)
+        {
+            GuardRVO boss = null;
+            foreach (GuardRVO guard in run.Guards)
+                if (guard.Boss && guard.Alive && !guard.Escaped) { boss = guard; break; }
+            if (boss == null)
+            {
+                _hint ??= _loc.Get("The boss is gone");
+                return false;
+            }
+            bool near = !run.InVent && Mathf.Abs(run.Player.y - boss.Position.y) < 0.8f && Mathf.Abs(run.Player.x - boss.Position.x) < 2.0f;
+            if (!near)
+            {
+                if (run.BossDialogueOpen)
+                {
+                    run.BossDialogueOpen = false;
+                    run.Paused = false;
+                    _signals.Outgoing.CallEnded.Dispatch();
+                }
+                return false;
+            }
+            // The boss owns this spot. Before the guards are clear, nothing else should show an E prompt here.
+            if (_model.Remaining > 0)
+                return true;
+            string[] lines =
+            {
+                "Boss: Don't shoot. I can pay.",
+                "You: Good. From now on you work for us.",
+                "You: Every week, an envelope. Miss one and I come back.",
+                "Boss: Every week. You have my word.",
+            };
+            int line = Mathf.Clamp(run.BossDialogue, 0, lines.Length - 1);
+            _hint = _loc.Get("E  —  next");
+            if (!run.BossDialogueOpen)
+            {
+                run.BossDialogueOpen = true;
+                run.Paused = true;
+                _signals.Outgoing.CallShown.Dispatch(_loc.Get("BOSS"), _loc.Get(lines[line]));
+            }
+            if (!_press) return true;
+            _press = false;
+            run.BossDialogue++;
+            if (run.BossDialogue < lines.Length)
+            {
+                _signals.Outgoing.CallShown.Dispatch(_loc.Get("BOSS"), _loc.Get(lines[run.BossDialogue]));
+                return true;
+            }
+            run.BossRecruited = true;
+            run.BossDialogueOpen = false;
+            run.Paused = false;
+            run.Won = true;
+            _signals.Outgoing.CallEnded.Dispatch();
+            _signals.Outgoing.BannerShown.Dispatch(_loc.Get("THE BOSS WORKS FOR US NOW"));
+            return true;
         }
         // Walking over a weapon you already carry, in hand or in the pocket, empties its rounds into yours.
         private void CollectRounds(ContractRVO run)

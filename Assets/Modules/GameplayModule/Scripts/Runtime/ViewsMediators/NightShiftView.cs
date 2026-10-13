@@ -93,6 +93,11 @@ namespace Modules.GameplayModule.ViewsMediators
         private bool _hasSnapshot;
         private Vector2 _aim;
         private Vector2 _previousPlayer;
+        private GameObject _hideoutClock;
+        private GameObject _hideoutDesk;
+        private TextMesh _clockText;
+        private TextMesh _calendarText;
+        private string _lastDeviceTime;
 
         public void SetPool(IPoolService pool) => _pool = pool;
 
@@ -169,6 +174,7 @@ namespace Modules.GameplayModule.ViewsMediators
                 level.name = prefab.name;
                 level.gameObject.SetActive(false);
                 _levels[prefab] = level;
+                if (prefab.name == "PB_Level_Hideout") CreateHideoutClock(level);
                 _cameraHomes[prefab] = level.Camera != null ? level.Camera.transform.localPosition : Vector3.zero;
                 _cameraSizes[prefab] = level.Camera != null ? level.Camera.orthographicSize : 9f;
             }
@@ -569,6 +575,7 @@ namespace Modules.GameplayModule.ViewsMediators
 
         private void DrawFixtures(ContractRVO state)
         {
+            UpdateHideoutClock(state);
             for (int i = 0; i < state.Doors.Length && i < _level.Doors.Length; i++)
                 _level.Doors[i].Apply(state.Doors[i].Open);
             for (int i = 0; i < state.Lights.Length && i < _level.Rooms.Length; i++)
@@ -576,13 +583,81 @@ namespace Modules.GameplayModule.ViewsMediators
             for (int i = 0; i < state.Props.Length && i < _level.Props.Length; i++)
                 _level.Props[i].Apply(state.Props[i].Broken, state.Props[i].Lift);
             foreach (TapeDeckView deck in _level.Decks) deck.Apply(state.TapePlaying);
-            if (_level.Document != null) _level.Document.Apply(state.DocumentTaken);
+            if (_level.Document != null) _level.Document.Apply(!state.HasDocument || state.DocumentTaken);
             if (_level.Exit != null) _level.Exit.Apply(state.HasDocument && state.DocumentTaken && state.Alive && !state.Won);
             foreach (StationView station in _level.StationViews)
             {
                 Vector3 at = station.transform.position;
                 station.Apply(!state.InVent && Mathf.Abs(state.Player.x - at.x) < 1f && Mathf.Abs(state.Player.y - at.y) < 0.6f);
             }
+        }
+
+        private void CreateHideoutClock(LevelAuthoring level)
+        {
+            CreateHideoutDesk(level);
+            _hideoutClock = new GameObject("Device Clock and Calendar");
+            _hideoutClock.transform.SetParent(level.transform, false);
+            _hideoutClock.transform.localPosition = new Vector3(3.2f, 0.89f, -0.2f);
+            _clockText = ClockLabel("Clock", _hideoutClock.transform, new Vector3(0f, 0.045f, 0f), 0.03f, new Color(0.75f, 0.95f, 0.86f));
+            _calendarText = ClockLabel("Calendar", _hideoutClock.transform, new Vector3(0f, -0.045f, 0f), 0.02f, new Color(0.9f, 0.78f, 0.5f));
+        }
+
+        private void CreateHideoutDesk(LevelAuthoring level)
+        {
+            _hideoutDesk = new GameObject("Clock Desk");
+            _hideoutDesk.transform.SetParent(level.transform, false);
+            _hideoutDesk.transform.localPosition = new Vector3(3.2f, 0f, 0.1f);
+            DeskPart("Top", new Vector3(0f, 0.82f, 0f), new Vector2(1.5f, 0.14f), new Color(0.24f, 0.13f, 0.08f), -18);
+            DeskPart("Front", new Vector3(0f, 0.58f, 0f), new Vector2(1.25f, 0.34f), new Color(0.17f, 0.09f, 0.06f), -19);
+            DeskPart("Left leg", new Vector3(-0.55f, 0.28f, 0f), new Vector2(0.12f, 0.58f), new Color(0.12f, 0.07f, 0.05f), -20);
+            DeskPart("Right leg", new Vector3(0.55f, 0.28f, 0f), new Vector2(0.12f, 0.58f), new Color(0.12f, 0.07f, 0.05f), -20);
+        }
+
+        private void DeskPart(string name, Vector3 position, Vector2 size, Color color, int order)
+        {
+            GameObject part = new GameObject(name);
+            part.transform.SetParent(_hideoutDesk.transform, false);
+            part.transform.localPosition = position;
+            part.transform.localScale = new Vector3(size.x, size.y, 1f);
+            SpriteRenderer renderer = part.AddComponent<SpriteRenderer>();
+            Texture2D texture = new Texture2D(1, 1);
+            texture.name = "Runtime Desk Pixel";
+            texture.SetPixel(0, 0, Color.white);
+            texture.Apply();
+            renderer.sprite = Sprite.Create(texture, new Rect(0f, 0f, 1f, 1f), new Vector2(0.5f, 0.5f), 1f);
+            renderer.color = color;
+            renderer.sortingOrder = order;
+        }
+
+        private TextMesh ClockLabel(string name, Transform parent, Vector3 position, float size, Color color)
+        {
+            GameObject label = new GameObject(name);
+            label.transform.SetParent(parent, false);
+            label.transform.localPosition = position;
+            TextMesh text = label.AddComponent<TextMesh>();
+            text.anchor = TextAnchor.MiddleCenter;
+            text.alignment = TextAlignment.Center;
+            text.fontSize = 48;
+            text.characterSize = size;
+            text.color = color;
+            text.fontStyle = FontStyle.Bold;
+            MeshRenderer renderer = label.GetComponent<MeshRenderer>();
+            renderer.sortingOrder = 12;
+            return text;
+        }
+
+        private void UpdateHideoutClock(ContractRVO state)
+        {
+            if (_hideoutClock == null) return;
+            bool visible = state.InHideout;
+            if (_hideoutClock.activeSelf != visible) _hideoutClock.SetActive(visible);
+            if (!visible) return;
+            DateTime now = DateTime.Now;
+            string current = now.ToString("HH:mm:ss dd/MM/yyyy");
+            if (current == _lastDeviceTime) return;
+            _lastDeviceTime = current;
+            _clockText.text = now.ToString("HH:mm:ss");
+            _calendarText.text = now.ToString("dd/MM/yyyy");
         }
 
         private const int PlayerSlot = -1;
@@ -676,6 +751,8 @@ namespace Modules.GameplayModule.ViewsMediators
                 GuardRVO guard = state.Guards[i];
                 CharacterRig rig = Rig(i, guard.Type);
                 if (rig == null) continue;
+                rig.gameObject.SetActive(!guard.Escaped);
+                if (guard.Escaped) continue;
                 // A body has let go of its weapon; it lies on the floor as a pickup instead.
                 rig.SetWeapon(guard.Alive ? WeaponPrefab(guard.Weapon) : null);
                 float fall = 1f;

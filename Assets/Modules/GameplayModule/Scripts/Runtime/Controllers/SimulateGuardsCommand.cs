@@ -24,12 +24,12 @@ namespace Modules.GameplayModule.Controllers
             bool playerDark = playerRoom != null && !playerRoom.On;
             foreach (GuardRVO guard in run.Guards)
             {
-                if (!guard.Alive) continue;
+                if (!guard.Alive || guard.Escaped) continue;
                 if (guard.StunRemaining > 0) { guard.StunRemaining -= dt; continue; }
                 // A friendly goes about its patrol and pays the player no attention.
                 if (guard.Faction == Faction.Friendly)
                 {
-                    Patrol(guard, run, dt, guard.WalkSpeed);
+                    SimulateFriendly(guard, run, dt);
                     continue;
                 }
                 Vector2 eye = guard.Position + Vector2.up * 1.15f;
@@ -113,6 +113,52 @@ namespace Modules.GameplayModule.Controllers
                 Step(guard, run, dt, speed);
             }
         }
+
+        private void SimulateFriendly(GuardRVO guard, ContractRVO run, float dt)
+        {
+            if (!guard.Civilian)
+            {
+                Patrol(guard, run, dt, guard.WalkSpeed);
+                return;
+            }
+            bool heard = run.NoiseRemaining > 0f && Mathf.Abs(run.NoisePosition.y - guard.Position.y) < 2f
+                && Vector2.Distance(run.NoisePosition, guard.Position) < run.NoiseRadius * Mathf.Max(0.7f, guard.Hearing);
+            if (heard)
+            {
+                guard.Alerted = true;
+                guard.Fleeing = !guard.Boss;
+                guard.Facing = run.NoisePosition.x < guard.Position.x ? 1 : -1;
+            }
+            if (guard.Boss)
+            {
+                guard.Crouching = false;
+                guard.WorkTimer += dt;
+                return;
+            }
+            if (guard.Fleeing)
+            {
+                guard.Crouching = false;
+                float gap = run.ExitX - guard.Position.x;
+                guard.Facing = gap >= 0f ? 1 : -1;
+                guard.Position.x += Mathf.Sign(gap) * guard.AlertSpeed * dt;
+                if (Mathf.Abs(gap) < 0.5f && guard.Position.y < 0.5f) guard.Escaped = true;
+                return;
+            }
+            Work(guard, run, dt);
+        }
+
+        private void Work(GuardRVO guard, ContractRVO run, float dt)
+        {
+            guard.WorkTimer += dt;
+            guard.Crouching = Mathf.Repeat(guard.WorkTimer, 3.8f) < 1.35f;
+            if (guard.Crouching)
+            {
+                guard.Facing = Mathf.Sin(guard.WorkTimer * 3f) >= 0f ? 1 : -1;
+                return;
+            }
+            Patrol(guard, run, dt, guard.WalkSpeed * 0.65f);
+        }
+
         private void Shoot(GuardRVO guard, ContractRVO run, Vector2 eye, Vector2 target, float dt)
         {
             guard.FireCooldown -= dt;

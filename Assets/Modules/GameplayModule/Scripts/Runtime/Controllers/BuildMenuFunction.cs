@@ -18,6 +18,16 @@ namespace Modules.GameplayModule.Controllers
             var menu = new MenuVO {Subtitle = money ? _loc.Format("CASH  ${0}", _model.Progress.Cash) : ""};
             if (kind == StationKind.MissionBoard)
             {
+                if (!string.IsNullOrEmpty(_model.GuardAssignmentMission))
+                {
+                    menu.Title = _loc.Get("GUARD DETAIL");
+                    menu.Subtitle = _loc.Format("{0}  /  {1}", _loc.Get(_model.Missions.Find(_model.GuardAssignmentMission).Title), _loc.Get("PROTECT THIS LOCATION"));
+                    int current = _model.MissionGuardCount(_model.GuardAssignmentMission);
+                    menu.Entries = new string[6];
+                    for (int i = 0; i < menu.Entries.Length; i++)
+                        menu.Entries[i] = _loc.Format("{0}  {1}", i, i == current ? _loc.Get("(assigned)") : "");
+                    return menu;
+                }
                 menu.Title = _loc.Get("MISSION BOARD");
                 var missions = _model.Missions != null ? _model.Missions.Missions : new System.Collections.Generic.List<MissionCVO>();
                 menu.Entries = new string[missions.Count];
@@ -25,7 +35,7 @@ namespace Modules.GameplayModule.Controllers
                 {
                     MissionCVO mission = missions[i];
                     bool done = _model.Progress.Completed.Contains(mission.Id);
-                    menu.Entries[i] = _loc.Get(mission.Title) + "   " + (done ? _loc.Get("DONE") : money && _model.Tuning.MissionsPay ? "$" + mission.Reward : "") + "\n" + _loc.Get(mission.Briefing);
+                    menu.Entries[i] = _loc.Get(mission.Title) + "   " + (done ? _loc.Get("WORKING FOR US") : money && _model.Tuning.MissionsPay ? "$" + mission.Reward : "") + "\n" + _loc.Get(mission.Briefing);
                 }
                 return menu;
             }

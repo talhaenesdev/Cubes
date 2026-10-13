@@ -43,6 +43,22 @@ namespace Modules.GameplayModule.Models
             OutfitCVO found = Outfits != null ? Outfits.Find(outfit) : null;
             return found != null && (found.Price <= 0 || !Tuning.UseMoney || !Tuning.OutfitsCost || Progress.OwnedOutfits.Contains(outfit));
         }
+        public int MissionGuardCount(string mission)
+        {
+            MissionGuardSVO entry = Progress.MissionGuards.Find(item => item.Mission == mission);
+            return entry != null ? entry.Count : 0;
+        }
+        public void SetMissionGuardCount(string mission, int count)
+        {
+            MissionGuardSVO entry = Progress.MissionGuards.Find(item => item.Mission == mission);
+            if (entry == null)
+            {
+                entry = new MissionGuardSVO {Mission = mission};
+                Progress.MissionGuards.Add(entry);
+            }
+            entry.Count = Mathf.Clamp(count, 0, 5);
+            SaveProgress();
+        }
         public bool MenuOpen { get; set; }
         public bool PausedBeforeMenu { get; set; }
         public void StoreWeapon(int slot)
@@ -126,6 +142,7 @@ namespace Modules.GameplayModule.Models
         }
         public ProgressSVO Progress { get; private set; } = new();
         public string Mission { get; set; }
+        public string GuardAssignmentMission { get; set; }
         public Entities.LevelAuthoring RequestedLevel
         {
             get
@@ -239,6 +256,7 @@ namespace Modules.GameplayModule.Models
             // Saves from before the locker kept one of each lose their duplicates.
             progress.Locker = new System.Collections.Generic.List<string>(new System.Collections.Generic.HashSet<string>(progress.Locker));
             progress.OwnedOutfits ??= new System.Collections.Generic.List<string>();
+            progress.MissionGuards ??= new System.Collections.Generic.List<MissionGuardSVO>();
             return progress;
         }
 
@@ -353,10 +371,11 @@ namespace Modules.GameplayModule.Models
         public void Reset()
         {
             ContractLevelVO level = Level;
-            var guards = new GuardRVO[level.Guards.Length];
+            GuardSpawnVO[] spawns = Mission == "laundromat" ? FirstMissionCast(level) : level.Guards;
+            var guards = new GuardRVO[spawns.Length];
             for (int i = 0; i < guards.Length; i++)
             {
-                GuardSpawnVO spawn = level.Guards[i];
+                GuardSpawnVO spawn = spawns[i];
                 CharacterTypeCVO type = CharacterType(spawn.Type);
                 guards[i] = new GuardRVO
                 {
@@ -369,7 +388,21 @@ namespace Modules.GameplayModule.Models
                     SightRange = type.SightRange, ReactionTime = type.ReactionTime,
                     UsesCover = type.UsesCover, CoverSearch = type.CoverSearch, PeekTime = type.PeekTime, HideTime = type.HideTime,
                     RaisesAlarm = type.RaisesAlarm, AlarmRadius = type.AlarmRadius, CashDrop = type.CashDrop,
+                    Civilian = spawn.Civilian || spawn.Boss,
+                    Boss = spawn.Boss,
+                    WorkTimer = i * 0.37f,
                 };
+                if (guards[i].Civilian)
+                {
+                    guards[i].Faction = Faction.Friendly;
+                    guards[i].Weapon = "";
+                    guards[i].AlertSpeed = Mathf.Max(guards[i].AlertSpeed, 2.6f);
+                    guards[i].WalkSpeed = Mathf.Max(guards[i].WalkSpeed, 0.75f);
+                    guards[i].CashDrop = Vector2Int.zero;
+                    guards[i].DropChance = 0f;
+                    guards[i].UsesCover = false;
+                    guards[i].RaisesAlarm = false;
+                }
                 ApplyDifficulty(guards[i], level.Difficulty, spawn);
             }
             var doors = new DoorRVO[level.Doors.Length];
@@ -401,8 +434,9 @@ namespace Modules.GameplayModule.Models
                 Covers = (Vector2[]) level.Covers.Clone(),
                 Stairs = stairs,
                 Terminals = terminals,
-                HasDocument = level.HasDocument,
+                HasDocument = level.HasDocument && Mission != "laundromat",
                 Document = level.Document,
+                FirstMissionBossContract = Mission == "laundromat",
             };
             CharacterTypeCVO player = CharacterType(Characters != null ? Characters.PlayerType : null);
             Run.PlayerType = player.Id;
@@ -444,6 +478,19 @@ namespace Modules.GameplayModule.Models
                 if (weapon != null) Drop(spawn.Position, weapon.Id, weapon.Magazine, weapon.Reserve);
             }
             Input = new ContractInputVO {Aim = Run.Aim};
+        }
+
+        private GuardSpawnVO[] FirstMissionCast(ContractLevelVO level)
+        {
+            var cast = new System.Collections.Generic.List<GuardSpawnVO>(level.Guards);
+            bool hasBoss = false;
+            foreach (GuardSpawnVO spawn in cast) hasBoss |= spawn.Boss;
+            if (hasBoss) return cast.ToArray();
+            cast.Add(new GuardSpawnVO {Position = new Vector2(-6.5f, 0f), Left = -7.1f, Right = -5.8f, Facing = 1, Type = "circle", Civilian = true});
+            cast.Add(new GuardSpawnVO {Position = new Vector2(1.5f, 0f), Left = 0.9f, Right = 2.4f, Facing = -1, Type = "circle", Civilian = true});
+            cast.Add(new GuardSpawnVO {Position = new Vector2(3.6f, 0f), Left = 3.0f, Right = 4.5f, Facing = 1, Type = "circle", Civilian = true});
+            cast.Add(new GuardSpawnVO {Position = new Vector2(11.35f, 0f), Left = 10.9f, Right = 11.6f, Facing = -1, Type = "circle", Civilian = true, Boss = true});
+            return cast.ToArray();
         }
         // Health added; reaction, sight and fire rate scaled; guard bullets sped up - by the level, then by the spawn.
         private void ApplyDifficulty(GuardRVO guard, LevelDifficulty difficulty, GuardSpawnVO spawn)

@@ -19,10 +19,18 @@ namespace Modules.GameplayModule.Data.ValueObjects
         public List<string> Locker = new();
         // Outfit Ids bought at the wardrobe; free ones are owned without being listed.
         public List<string> OwnedOutfits = new();
+        public List<MissionGuardSVO> MissionGuards = new();
         // The contract in progress when the game was left; empty means home. Play picks it up again.
         public string CurrentMission;
         // The broker's first call has been answered and heard; it never rings again.
         public bool CallHeard;
+    }
+
+    [Serializable]
+    public class MissionGuardSVO
+    {
+        public string Mission;
+        public int Count;
     }
 
     [Serializable]

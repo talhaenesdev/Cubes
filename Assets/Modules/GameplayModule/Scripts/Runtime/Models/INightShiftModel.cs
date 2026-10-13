@@ -59,6 +59,7 @@ namespace Modules.GameplayModule.Models
         ProgressSVO Progress { get; }
         // The contract being played, or null for the hideout.
         string Mission { get; set; }
+        string GuardAssignmentMission { get; set; }
         // The level prefab the next run is played in: the mission's, or the hideout.
         Entities.LevelAuthoring RequestedLevel { get; }
         int UpgradeLevel(string id);
@@ -66,6 +67,8 @@ namespace Modules.GameplayModule.Models
         bool Buy(string id);
         // Pays the current mission's reward the first time it is finished.
         void CompleteMission();
+        int MissionGuardCount(string mission);
+        void SetMissionGuardCount(string mission, int count);
         // The weapon by Id, or null for unarmed or an Id CD_Weapons does not list.
         WeaponCVO Weapon(string id);
         void Drop(Vector2 position, string weapon, int ammo, int reserve);

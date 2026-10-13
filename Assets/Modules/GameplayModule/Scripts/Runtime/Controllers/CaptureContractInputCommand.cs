@@ -20,7 +20,8 @@ namespace Modules.GameplayModule.Controllers
                 _signals.Incoming.StartContract.Dispatch();
                 return;
             }
-            if (_input.Pause && _model.Run.Call < 0) _model.Run.Paused = !_model.Run.Paused;
+            // Boss dialogue pauses movement, but still needs fresh input so E can advance it.
+            if (_input.Pause && _model.Run.Call < 0 && !_model.Run.BossDialogueOpen) _model.Run.Paused = !_model.Run.Paused;
             _model.Capture(_input);
         }
     }

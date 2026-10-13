@@ -17,6 +17,10 @@ namespace Modules.GameplayModule.Entities
         [Tooltip("World X the patrol turns back at.")]
         public float PatrolLeft = -1f;
         public float PatrolRight = 1f;
+        [Tooltip("A non-combatant: works until frightened, then hides or flees.")]
+        public bool Civilian;
+        [Tooltip("The civilian the player can talk to after every enemy is gone.")]
+        public bool Boss;
 
         private void OnDrawGizmos()
         {

@@ -73,6 +73,7 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
         private Text _callCaller;
         private Text _callLine;
         private Image _callPhone;
+        private GameObject _callPortrait;
         private Text _callNext;
         private Text _callIncoming;
         private bool _callRinging;
@@ -300,9 +301,6 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
         {
             RectTransform layer = CreateRect("Touch Controls", transform, 0f, 0f, 1f, .84f);
             _touch = layer.gameObject;
-            // The stick's corner of the screen is the stick's: a thumb that misses the knob there must not fire.
-            Image guard = CreatePanel("Stick Zone", layer, 0f, 0f, .32f, .62f, new Color(0f, 0f, 0f, 0f));
-            guard.raycastTarget = true;
             // Off while the controls are made: an on-screen control binds its path as it is enabled.
             _touch.SetActive(false);
             // The stick: a ring the knob is dragged around in.
@@ -323,7 +321,7 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             TouchButton("Melee", "F", "<Keyboard>/f", layer, new Vector2(-.07f, .12f), 96f, new Color32(220, 70, 70, 255));
             TouchButton("Reload", "R", "<Keyboard>/r", layer, new Vector2(-.18f, .38f), 80f, _cream);
             TouchButton("Swap", "Q", "<Keyboard>/q", layer, new Vector2(-.29f, .13f), 80f, _cream);
-            TouchButton("Next Song", "\u266A", "<Keyboard>/t", layer, new Vector2(-.07f, .48f), 70f, _mint);
+            TouchButton("Next Song", "\u266A", "<Keyboard>/t", layer, new Vector2(-.07f, .76f), 70f, _mint);
             SetTouchControls(Application.isMobilePlatform);
         }
 
@@ -359,6 +357,15 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             _callPhone = phone;
             CreatePanel("Screen", phone.transform, .14f, .3f, .86f, .88f, new Color32(150, 210, 230, 255));
             CreatePanel("Earpiece", phone.transform, .35f, .91f, .65f, .95f, _mint);
+            Image portrait = CreatePanel("Boss Portrait", card.transform, .025f, .12f, .115f, .88f, new Color32(30, 24, 22, 255));
+            _callPortrait = portrait.gameObject;
+            Circle("Face", portrait.transform, .14f, .08f, .86f, .92f, new Color32(196, 160, 92, 255));
+            Circle("Eye L", portrait.transform, .34f, .56f, .45f, .67f, new Color32(10, 8, 8, 255));
+            Circle("Eye R", portrait.transform, .58f, .56f, .69f, .67f, new Color32(10, 8, 8, 255));
+            CreatePanel("Mouth", portrait.transform, .35f, .34f, .68f, .4f, new Color32(10, 8, 8, 255));
+            CreatePanel("Hat", portrait.transform, .2f, .79f, .8f, .9f, new Color32(10, 8, 8, 255));
+            CreatePanel("Brim", portrait.transform, .08f, .74f, .92f, .8f, new Color32(10, 8, 8, 255));
+            _callPortrait.SetActive(false);
             _callCaller = CreateText("Caller", card.transform, "", .13f, .66f, .7f, .92f, 18, _mint);
             _callCaller.fontStyle = FontStyle.Bold;
             _callIncoming = Label(CreateText("Incoming", card.transform, "", .7f, .66f, .97f, .92f, 13, new Color32(200, 60, 60, 255)), "INCOMING CALL");
@@ -374,6 +381,7 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
         public void ShowCallRinging(string caller)
         {
             _callRinging = true;
+            SetCallPortrait(caller);
             _callCaller.text = caller ?? string.Empty;
             _callLine.text = _t("Click, E or Space to answer");
             _callIncoming.gameObject.SetActive(true);
@@ -385,6 +393,7 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
         public void ShowCall(string caller, string line)
         {
             _callRinging = false;
+            SetCallPortrait(caller);
             _callIncoming.gameObject.SetActive(false);
             _callNext.gameObject.SetActive(true);
             _callCaller.text = caller ?? string.Empty;
@@ -395,12 +404,20 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
 
         public void HideCall() => _call.SetActive(false);
 
+        private void SetCallPortrait(string caller)
+        {
+            bool boss = caller == "BOSS" || caller == _t("BOSS");
+            if (_callPhone != null) _callPhone.gameObject.SetActive(!boss);
+            if (_callPortrait != null) _callPortrait.SetActive(boss);
+        }
+
         private void AnimateCall()
         {
             if (_call == null || !_call.activeSelf) return;
             // Shakes in bursts while it rings, still once answered; the prompt pulses until then.
             bool burst = _callRinging && Mathf.Repeat(Time.unscaledTime, 1.4f) < 0.8f;
-            _callPhone.rectTransform.localEulerAngles = new Vector3(0f, 0f, burst ? Mathf.Sin(Time.unscaledTime * 40f) * 8f : 0f);
+            if (_callPhone != null && _callPhone.gameObject.activeSelf)
+                _callPhone.rectTransform.localEulerAngles = new Vector3(0f, 0f, burst ? Mathf.Sin(Time.unscaledTime * 40f) * 8f : 0f);
             if (_callRinging) _callLine.color = Color.Lerp(_cream, _mint, 0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * 5f));
             else _callLine.color = _cream;
         }

@@ -16,6 +16,7 @@ namespace Modules.GameplayModule.Data.ValueObjects
         // The file the contract is after; with one, the exit opens once it is taken rather than once the building is clear.
         public bool HasDocument;
         public Vector2 Document;
+        public bool FirstMissionBossContract;
         public GuardSpawnVO[] Guards =
         {
             new() {Position = new Vector2(-5f, 0f), Left = -6.5f, Right = -4f, Facing = 1, Type = "triangle"},
@@ -75,6 +76,10 @@ namespace Modules.GameplayModule.Data.ValueObjects
         public int Toughness;
         [Tooltip("1 is its type's pace. 2 reacts and fires twice as fast; 0.5 half as fast.")]
         public float Aggression = 1f;
+        [Tooltip("A non-combatant: works until frightened, then hides or flees.")]
+        public bool Civilian;
+        [Tooltip("The civilian the player talks to after all enemies are gone.")]
+        public bool Boss;
     }
 
     [Serializable]
