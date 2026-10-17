@@ -275,7 +275,8 @@ namespace Modules.GameplayModule.Editor
             Group("Money  -  enemies drop cash; upgrades cost it", Gold, "UseMoney", "MissionsPay", "OutfitsCost", "LootReach");
             Group("Damage  -  everything takes it off Health, nothing kills outright", Crimson, "BlastDamage", "CrushDamage", "MeleeDamage");
             Group("Contract", Violet, "ExitReach");
-            Group("Camera  -  how big the game looks", Gold, "CameraZoom", "ZoomMin", "ZoomMax", "ZoomStep");
+            Group("Camera  -  how big the game looks", Gold, "CameraZoom", "ZoomMin", "ZoomMax", "ZoomStep",
+                "PixelArtCamera", "PixelArtAssetsPPU", "PixelArtReferenceWidth", "PixelArtReferenceHeight", "PixelArtUpscaleRenderTexture");
             serializedObject.ApplyModifiedProperties();
         }
 

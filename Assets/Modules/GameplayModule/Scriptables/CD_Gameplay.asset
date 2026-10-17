@@ -47,6 +47,11 @@ MonoBehaviour:
   ZoomMin: 0.8
   ZoomMax: 3
   ZoomStep: 0.15
+  PixelArtCamera: 1
+  PixelArtAssetsPPU: 4
+  PixelArtReferenceWidth: 320
+  PixelArtReferenceHeight: 180
+  PixelArtUpscaleRenderTexture: 1
   RunSaveInterval: 3
   MapRefreshInterval: 1
   PhoneInputGrace: 0.4

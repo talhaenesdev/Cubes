@@ -93,6 +93,9 @@ gameplay, run, Night Shift, stealth, guards, shooting, cover, stairwell doors, c
   desaturated, warm, vignette, grain) added to every level by the asset builder. The ReturnHome loading set
   ends on a Continue step that WaitForKeyCommand holds until a key or mouse button; the loading screen
   pulses its message while its bar is full and the set still runs.
+- Pixel-art presentation uses Unity's official 2D Pixel Perfect package. CD_Gameplay owns the camera toggle,
+  assets PPU and reference resolution; the editor setup applies those values to every level prefab camera.
+  GameplayModule/Art textures import with Point filtering, no mipmaps and no compression.
 - Difficulty: LevelAuthoring.Difficulty (Easy/Normal/Hard/Brutal) scales every enemy's health, reaction,
   sight, fire rate, bullet speed and chase speed at Reset (NightShiftModel.ApplyDifficulty); each GuardSpawn
   adds Toughness (hits) and Aggression (pace).

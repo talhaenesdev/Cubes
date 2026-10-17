@@ -73,6 +73,16 @@ namespace Modules.GameplayModule.Data.UnityObjects
         [Range(0.5f, 4f)] public float ZoomMax = 3f;
         [Tooltip("How much one notch of the mouse wheel zooms.")]
         [Range(0.02f, 1f)] public float ZoomStep = 0.15f;
+        [Tooltip("Adds Unity's Pixel Perfect Camera component to every authored gameplay level camera.")]
+        public bool PixelArtCamera = true;
+        [Tooltip("World-art pixels in one Unity unit. Keep authored pixel sprites on this same PPU.")]
+        [Min(1)] public int PixelArtAssetsPPU = 4;
+        [Tooltip("The horizontal resolution the pixel-art composition is authored against.")]
+        [Min(1)] public int PixelArtReferenceWidth = 320;
+        [Tooltip("The vertical resolution the pixel-art composition is authored against.")]
+        [Min(1)] public int PixelArtReferenceHeight = 180;
+        [Tooltip("Renders close to the reference resolution and scales it to the display with crisp pixels.")]
+        public bool PixelArtUpscaleRenderTexture = true;
 
         [Header("Interface and saving")]
         [Tooltip("Seconds between automatic contract saves.")]
