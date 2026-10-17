@@ -134,6 +134,8 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
         private Image _cardDanger;
         private GameObject _cardGuards;
         private Text _cardGuardCount;
+        private Button _cardFewer;
+        private Button _cardMore;
         private Button _cardAction;
         private Text _cardActionLabel;
         private Text _mapLegend;
@@ -153,6 +155,16 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
         private void Awake()
         {
             _font = Serif(_fontAsset != null ? _fontAsset : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf"));
+            if (transform.childCount > 0)
+            {
+                BindAuthoredLayout();
+                return;
+            }
+            BuildLayout();
+        }
+
+        internal void BuildLayout()
+        {
             PrefabPanel(_headerPrefab, "Header", transform, 0, .84f, 1, 1, _ink);
             CreatePanel("HeaderRule", transform, .025f, .84f, .975f, .843f, _mint);
             _location = CreateText("Location", transform, "", .03f, .87f, .27f, .985f, 28, _cream);
@@ -173,6 +185,119 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             BuildCall();
             BuildBanner();
         }
+
+        private void BindAuthoredLayout()
+        {
+            _location = Named<Text>(transform, "Location");
+            _status = Named<Text>(transform, "Status");
+            _objective = Named<Text>(transform, "Objective");
+            _retryButton = Named<Button>(transform, "Retry");
+            _menuButton = Named<Button>(transform, "Menu");
+
+            Transform terminal = Named(transform, "Terminal");
+            _terminal = terminal.gameObject;
+            _terminalTitle = Named<Text>(terminal, "Title");
+            _terminalText = Named<InputField>(terminal, "Field");
+            _terminalSave = Named<Button>(terminal, "Save");
+            _terminalClose = Named<Button>(terminal, "Close");
+
+            Transform station = Named(transform, "Station");
+            _menu = station.gameObject;
+            _menuFrame = (RectTransform) station;
+            _menuTitle = Named<Text>(station, "Title");
+            _menuSubtitle = Named<Text>(station, "Cash");
+            _menuViewport = (RectTransform) Named(station, "Viewport");
+            _menuContent = (RectTransform) Named(_menuViewport, "Content");
+            _menuScroll = station.GetComponent<ScrollRect>();
+            _menuScrollbar = Named(station, "Scrollbar").gameObject;
+            _menuClose = Named<Button>(station, "Close");
+            Transform cityMap = Named(station, "City Map");
+            _cityMap = cityMap.gameObject;
+            _mapCity = (RectTransform) Named(cityMap, "City");
+            Transform shopCard = Named(cityMap, "Shop Card");
+            _cardName = Named<Text>(shopCard, "Name");
+            _cardSwatch = Named<Image>(shopCard, "Swatch");
+            _cardOwner = Named<Text>(shopCard, "Owner");
+            _cardStatus = Named<Text>(shopCard, "Status");
+            _cardIncome = Named<Text>(shopCard, "Income");
+            _cardRisk = Named<Text>(shopCard, "Risk");
+            _cardDanger = Named<Image>(shopCard, "Danger");
+            _cardGuards = Named(shopCard, "Guards").gameObject;
+            _cardGuardCount = Named<Text>(_cardGuards.transform, "Count");
+            _cardFewer = Named<Button>(_cardGuards.transform, "Fewer");
+            _cardMore = Named<Button>(_cardGuards.transform, "More");
+            _cardAction = Named<Button>(shopCard, "Action");
+            _cardActionLabel = _cardAction.GetComponentInChildren<Text>(true);
+            _mapLegend = Named<Text>(cityMap, "Legend");
+
+            Transform nowPlaying = Named(transform, "Now Playing");
+            _card = (RectTransform) nowPlaying;
+            _cardFade = nowPlaying.GetComponent<CanvasGroup>();
+            _cardTitle = Named<Text>(nowPlaying, "Title");
+            _cardArtist = Named<Text>(nowPlaying, "Artist");
+            _cardReels[0] = (RectTransform) Named(nowPlaying, "Reel L");
+            _cardReels[1] = (RectTransform) Named(nowPlaying, "Reel R");
+
+            Transform deck = Named(transform, "Tape Deck");
+            _deck = deck.gameObject;
+            _deckTitle = Named<Text>(deck, "Title");
+            _deckArtist = Named<Text>(deck, "Artist");
+            _deckState = Named<Text>(deck, "State");
+            _deckReels[0] = (RectTransform) Named(deck, "Reel L");
+            _deckReels[1] = (RectTransform) Named(deck, "Reel R");
+            _deckLight = Named<Image>(deck, "Light");
+            _deckVolume = deck.GetComponentInChildren<DeckKnob>(true);
+            _deckPrevious = Named<Button>(deck, "Previous");
+            _deckPlay = Named<Button>(deck, "Play");
+            _deckPlayLabel = _deckPlay.GetComponentInChildren<Text>(true);
+            _deckNext = Named<Button>(deck, "Next");
+            _deckClose = Named<Button>(deck, "Close");
+            _deckVolume.Changed = volume => DeckVolumeChanged?.Invoke(volume);
+
+            _touch = Named(transform, "Touch Controls").gameObject;
+            Transform call = Named(transform, "Phone Call");
+            _call = call.gameObject;
+            _callPhone = Named<Image>(call, "Phone");
+            _callPortrait = Named(call, "Boss Portrait").gameObject;
+            _callCaller = Named<Text>(call, "Caller");
+            _callLine = Named<Text>(call, "Line");
+            _callNext = Named<Text>(call, "Next");
+            _callIncoming = Named<Text>(call, "Incoming");
+            Transform banner = Named(transform, "Banner");
+            _bannerFade = banner.GetComponent<CanvasGroup>();
+            _banner = Named<Text>(banner, "Text");
+            _ui = GetComponent<AudioSource>() ?? gameObject.AddComponent<AudioSource>();
+            _ui.playOnAwake = false;
+            _ui.ignoreListenerPause = true;
+            if (_click == null) _click = Resources.Load<AudioClip>("SND_UI_HudClick");
+        }
+
+#if UNITY_EDITOR
+        internal GameObject BuildMenuRowTemplate()
+        {
+            BindAuthoredLayout();
+            _menuRowPrefab = null;
+            AddMenuRow();
+            return _menuButtons[_menuButtons.Count - 1].gameObject;
+        }
+
+        internal GameObject BuildMapPinTemplate()
+        {
+            BindAuthoredLayout();
+            _mapPinPrefab = null;
+            AddMapPin();
+            return _mapPins[_mapPins.Count - 1].Button.gameObject;
+        }
+#endif
+
+        private static Transform Named(Transform root, string objectName)
+        {
+            foreach (Transform child in root.GetComponentsInChildren<Transform>(true))
+                if (child.name == objectName) return child;
+            return null;
+        }
+
+        private static T Named<T>(Transform root, string objectName) where T : Component => Named(root, objectName).GetComponent<T>();
 
         // Round shapes for the reels and speakers, drawn once: a filled disc and a ring.
         private Sprite Round(float inner)
@@ -322,10 +447,6 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             _deckPlayLabel = _deckPlay.GetComponentInChildren<Text>();
             _deckNext = CreateButton("Next", "NEXT  >|", .54f, .05f, .74f, .17f, body.transform);
             _deckClose = CreateButton("Close", "CLOSE", .78f, .05f, .92f, .17f, body.transform);
-            _deckPlay.onClick.AddListener(() => DeckButtonClicked?.Invoke(0));
-            _deckNext.onClick.AddListener(() => DeckButtonClicked?.Invoke(1));
-            _deckPrevious.onClick.AddListener(() => DeckButtonClicked?.Invoke(2));
-            _deckClose.onClick.AddListener(() => DeckCloseClicked?.Invoke());
             _deck.SetActive(false);
         }
 
@@ -614,7 +735,6 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             _menuScroll.verticalScrollbar = bar;
             _menuScroll.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
             _menuClose = CreateButton("Close", "CLOSE", .78f, .03f, .96f, .1f, frame.transform);
-            _menuClose.onClick.AddListener(() => MenuCloseClicked?.Invoke());
             BuildCityMap(frame.transform);
             _menu.SetActive(false);
         }
@@ -691,11 +811,11 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             _cardGuards = guards.gameObject;
             Label(CreateText("Guards Label", guards, "", 0f, .55f, 1f, 1f, 13, _mint), "OUR MEN HERE");
             Button fewer = CreateButton("Fewer", "-", 0f, 0f, .22f, .55f, guards);
-            fewer.onClick.AddListener(() => MapAction(1));
+            _cardFewer = fewer;
             _cardGuardCount = CreateText("Count", guards, "", .24f, 0f, .76f, .55f, 22, _cream);
             _cardGuardCount.alignment = TextAnchor.MiddleCenter;
             Button more = CreateButton("More", "+", .78f, 0f, 1f, .55f, guards);
-            more.onClick.AddListener(() => MapAction(2));
+            _cardMore = more;
 
             _cardAction = CreateButton("Action", "", .07f, .06f, .93f, .16f, card.transform);
             _cardActionLabel = _cardAction.GetComponentInChildren<Text>();
@@ -705,7 +825,6 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             colors.highlightedColor = new Color32(190, 40, 40, 255);
             colors.selectedColor = colors.highlightedColor;
             _cardAction.colors = colors;
-            _cardAction.onClick.AddListener(() => MapAction(0));
 
             _mapLegend = CreateText("Legend", root, "", 0f, -.09f, .66f, -.015f, 13, _cream);
             _mapLegend.supportRichText = true;
@@ -797,6 +916,20 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
                 if (_click != null) _ui.PlayOneShot(_click, 0.6f);
                 ShowMapCard();
             });
+            if (rect.childCount > 0)
+            {
+                _mapPins.Add(new MapPin
+                {
+                    Button = button,
+                    Rect = rect,
+                    Roof = Named<Image>(rect, "Roof"),
+                    Ring = Named<Image>(rect, "Ring"),
+                    Selected = Named<Image>(rect, "Selected"),
+                    Name = Named<Text>(rect, "Name"),
+                    Badge = Named<Text>(rect, "Badge"),
+                });
+                return;
+            }
             Image selected = CreatePanel("Selected", rect, -.08f, -.08f, 1.08f, 1.08f, _mint);
             selected.enabled = false;
             Image ring = CreatePanel("Ring", rect, .17f, .3f, .83f, .98f, Color.black);
@@ -960,6 +1093,14 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             _menuButton.onClick.AddListener(OnMenuClicked);
             _terminalSave.onClick.AddListener(OnTerminalSave);
             _terminalClose.onClick.AddListener(OnTerminalClose);
+            _deckPlay.onClick.AddListener(OnDeckPlay);
+            _deckNext.onClick.AddListener(OnDeckNext);
+            _deckPrevious.onClick.AddListener(OnDeckPrevious);
+            _deckClose.onClick.AddListener(OnDeckClose);
+            _menuClose.onClick.AddListener(OnMenuClose);
+            _cardFewer.onClick.AddListener(OnMapFewer);
+            _cardMore.onClick.AddListener(OnMapMore);
+            _cardAction.onClick.AddListener(OnMapAction);
         }
 
         private void OnDisable()
@@ -968,6 +1109,14 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             _menuButton.onClick.RemoveListener(OnMenuClicked);
             _terminalSave.onClick.RemoveListener(OnTerminalSave);
             _terminalClose.onClick.RemoveListener(OnTerminalClose);
+            _deckPlay.onClick.RemoveListener(OnDeckPlay);
+            _deckNext.onClick.RemoveListener(OnDeckNext);
+            _deckPrevious.onClick.RemoveListener(OnDeckPrevious);
+            _deckClose.onClick.RemoveListener(OnDeckClose);
+            _menuClose.onClick.RemoveListener(OnMenuClose);
+            _cardFewer.onClick.RemoveListener(OnMapFewer);
+            _cardMore.onClick.RemoveListener(OnMapMore);
+            _cardAction.onClick.RemoveListener(OnMapAction);
         }
 
         public override void BeforeScreenActivation()
@@ -998,6 +1147,14 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
         private void OnMenuClicked() => MenuClicked?.Invoke();
         private void OnTerminalSave() => TerminalSaveClicked?.Invoke(_terminalText.text);
         private void OnTerminalClose() => TerminalCloseClicked?.Invoke();
+        private void OnDeckPlay() => DeckButtonClicked?.Invoke(0);
+        private void OnDeckNext() => DeckButtonClicked?.Invoke(1);
+        private void OnDeckPrevious() => DeckButtonClicked?.Invoke(2);
+        private void OnDeckClose() => DeckCloseClicked?.Invoke();
+        private void OnMenuClose() => MenuCloseClicked?.Invoke();
+        private void OnMapFewer() => MapAction(1);
+        private void OnMapMore() => MapAction(2);
+        private void OnMapAction() => MapAction(0);
 
         // Writes every fixed label again in the language the translator returns.
         public void Localize(Func<string, string> translate)
@@ -1081,7 +1238,10 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             button.colors = colors;
             button.navigation = new Navigation {mode = Navigation.Mode.None};
             button.onClick.AddListener(() => { if (_click != null) _ui.PlayOneShot(_click, 0.8f); });
-            Label(CreateText("Label", panel.transform, caption, .08f, .05f, .92f, .95f, 20, _cream), caption).alignment = TextAnchor.MiddleCenter;
+            Text label = Named(panel.transform, "Label")?.GetComponent<Text>();
+            if (label == null) label = CreateText("Label", panel.transform, caption, .08f, .05f, .92f, .95f, 20, _cream);
+            label.text = caption;
+            Label(label, caption).alignment = TextAnchor.MiddleCenter;
             return button;
         }
     }

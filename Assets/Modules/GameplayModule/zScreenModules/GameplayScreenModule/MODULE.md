@@ -7,10 +7,11 @@ The screen a run is played on, opened when the player presses Play.
 gameplay screen, run, HUD
 
 ## Presentation contract
-The NIGHT SHIFT HUD instantiates editable panel prefabs once in Awake under the ScreenManager-owned
-screen, then fills their dynamic rows and labels. The panel prefabs live in `Prefabs/Panels`; the
-editor builder creates a missing prefab once and never overwrites an existing one, so authored
-layout, sprites, materials and colours survive. It creates no canvas of its own.
+The NIGHT SHIFT HUD is authored as a visible hierarchy in `GameplayScreen.prefab`. Its panel
+prefabs live in `Prefabs/Panels`; the editor builder creates and bakes only a missing hierarchy,
+then leaves it for drag-and-drop authoring. Runtime code binds the authored Image, Text and Button
+components and only instantiates genuinely variable menu rows and map pins from their prefabs.
+It creates no canvas of its own.
 RefreshHud(status, objective) displays both strings verbatim while shown; gameplay owns
 all mission, death and pause wording. Send a fresh update after each opening: pooled
 screens unsubscribe and reset their old text before activation. RetryRequested and

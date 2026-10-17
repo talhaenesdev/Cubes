@@ -57,10 +57,61 @@ namespace Modules.GameplayModule.GameplayScreenModule.Editor
                 property.objectReferenceValue = asset;
                 changed = true;
             }
-            if (!changed) return;
-            serialized.ApplyModifiedPropertiesWithoutUndo();
-            EditorUtility.SetDirty(screen);
-            AssetDatabase.SaveAssets();
+            if (changed)
+            {
+                serialized.ApplyModifiedPropertiesWithoutUndo();
+                EditorUtility.SetDirty(screen);
+                AssetDatabase.SaveAssets();
+            }
+            BakeScreenLayout();
+            BakeDynamicTemplates();
+        }
+
+        private static void BakeScreenLayout()
+        {
+            GameObject contents = PrefabUtility.LoadPrefabContents(Screen);
+            try
+            {
+                if (contents.transform.childCount > 0) return;
+                GameplayScreenView view = contents.GetComponent<GameplayScreenView>();
+                view.BuildLayout();
+                PrefabUtility.SaveAsPrefabAsset(contents, Screen);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(contents);
+            }
+        }
+
+        private static void BakeDynamicTemplates()
+        {
+            string rowPath = Folder + "/PB_UI_MenuRow.prefab";
+            string pinPath = Folder + "/PB_UI_MapPin.prefab";
+            GameObject rowAsset = AssetDatabase.LoadAssetAtPath<GameObject>(rowPath);
+            GameObject pinAsset = AssetDatabase.LoadAssetAtPath<GameObject>(pinPath);
+            bool rowMissing = rowAsset == null || rowAsset.transform.childCount == 0;
+            bool pinMissing = pinAsset == null || pinAsset.transform.childCount == 0;
+            if (!rowMissing && !pinMissing) return;
+
+            GameObject contents = PrefabUtility.LoadPrefabContents(Screen);
+            try
+            {
+                GameplayScreenView view = contents.GetComponent<GameplayScreenView>();
+                if (rowMissing)
+                {
+                    GameObject row = view.BuildMenuRowTemplate();
+                    PrefabUtility.SaveAsPrefabAsset(row, rowPath);
+                }
+                if (pinMissing)
+                {
+                    GameObject pin = view.BuildMapPinTemplate();
+                    PrefabUtility.SaveAsPrefabAsset(pin, pinPath);
+                }
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(contents);
+            }
         }
 
         private static GameObject Create(Panel panel, string path)
