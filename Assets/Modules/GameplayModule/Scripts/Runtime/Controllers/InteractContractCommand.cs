@@ -2,6 +2,7 @@ using FlowIoC.BaseModule.Controller;
 using FlowIoC.BaseModule.Injectable.Attributes;
 using FlowIoC.BaseModule.Function.Provider;
 using Modules.GameplayModule.Data.ValueObjects;
+using Modules.GameplayModule.Enums;
 using Modules.GameplayModule.Models;
 using Modules.GameplayModule.Signals;
 using Modules.LocalizationModule.Services;
@@ -27,7 +28,7 @@ namespace Modules.GameplayModule.Controllers
                 && Mathf.Abs(run.Player.y - run.Document.y) < 0.5f && Mathf.Abs(run.Player.x - run.Document.x) < 1f;
             _press = _model.Input.Interact;
             _hint = null;
-            if (run.FirstMissionBossContract && OfferBossTalk(run))
+            if (run.LocationTakeover && OfferBossTalk(run))
             {
                 run.Hint = _hint ?? "";
                 return;
@@ -90,7 +91,7 @@ namespace Modules.GameplayModule.Controllers
                 run.Menu = i;
                 run.Paused = true;
                 MenuVO menu = _functions.Call<BuildMenuFunction>().AddParams(station.Kind).ExecuteAndGetResult<MenuVO>();
-                _signals.Outgoing.MenuOpened.Dispatch(menu.Title, menu.Subtitle, menu.Entries);
+                _signals.Outgoing.MenuOpened.Dispatch(menu.Title, menu.Subtitle, menu.Entries, menu.IsMap);
             }
             for (int i = 0; i < run.Terminals.Length; i++)
             {
@@ -118,7 +119,7 @@ namespace Modules.GameplayModule.Controllers
             WeaponCVO held = _model.Weapon(run.Weapon);
             if (_model.Input.Reload && held != null && run.Ammo < held.Magazine && run.Reserve > 0 && run.ReloadRemaining == 0)
                 run.ReloadRemaining = held.ReloadTime * run.ReloadScale;
-            bool exitOpen = run.HasDocument ? run.DocumentTaken : _model.Remaining == 0;
+            bool exitOpen = !run.LocationTakeover && !run.IsLocationDefense && (run.HasDocument ? run.DocumentTaken : _model.Remaining == 0);
             if (!run.InHideout && exitOpen && !run.InVent)
             {
                 // With the file in hand, stepping through the exit takes the player straight home.
@@ -134,66 +135,82 @@ namespace Modules.GameplayModule.Controllers
                 && Offer(_loc.Get("E  —  give up the job and go home")))
                 run.Abandoned = true;
             if (!run.InHideout && run.HasDocument && !run.DocumentTaken) _hint ??= _loc.Get("Find the documents");
-            if (!run.InHideout && run.FirstMissionBossContract && _model.Remaining == 0 && !run.BossRecruited)
+            if (!run.InHideout && run.LocationTakeover && _model.Remaining == 0 && !run.BossRecruited)
                 _hint ??= _loc.Get("Talk to the boss");
             // Only what the player can do right here; the rest of the time the line stays empty.
             run.Hint = _hint ?? "";
         }
 
+        // The owner, once their men are down: E starts the talk, and the lines come as bubbles over whoever says them -
+        // on E, or on their own after a while. The world holds still meanwhile; the player keeps the gun on them.
         private bool OfferBossTalk(ContractRVO run)
         {
-            GuardRVO boss = null;
-            foreach (GuardRVO guard in run.Guards)
-                if (guard.Boss && guard.Alive && !guard.Escaped) { boss = guard; break; }
-            if (boss == null)
+            int bossIndex = -1;
+            for (int i = 0; i < run.Guards.Length; i++)
+                if (run.Guards[i].Boss && run.Guards[i].Alive && !run.Guards[i].Escaped) { bossIndex = i; break; }
+            if (bossIndex < 0)
             {
                 _hint ??= _loc.Get("The boss is gone");
                 return false;
             }
-            bool near = !run.InVent && Mathf.Abs(run.Player.y - boss.Position.y) < 0.8f && Mathf.Abs(run.Player.x - boss.Position.x) < 2.0f;
-            if (!near)
-            {
-                if (run.BossDialogueOpen)
-                {
-                    run.BossDialogueOpen = false;
-                    run.Paused = false;
-                    _signals.Outgoing.CallEnded.Dispatch();
-                }
-                return false;
-            }
+            GuardRVO boss = run.Guards[bossIndex];
+            bool near = !run.InVent && Mathf.Abs(run.Player.y - boss.Position.y) < 0.8f && Mathf.Abs(run.Player.x - boss.Position.x) < 2.2f;
+            if (!near && !run.BossDialogueOpen) return false;
             // The boss owns this spot. Before the guards are clear, nothing else should show an E prompt here.
-            if (_model.Remaining > 0)
-                return true;
-            string[] lines =
+            if (_model.Remaining > 0) return near;
+            var lines = _model.Territory.Config.Persuasion;
+            if (lines == null || lines.Count == 0)
             {
-                "Boss: Don't shoot. I can pay.",
-                "You: Good. From now on you work for us.",
-                "You: Every week, an envelope. Miss one and I come back.",
-                "Boss: Every week. You have my word.",
-            };
-            int line = Mathf.Clamp(run.BossDialogue, 0, lines.Length - 1);
-            _hint = _loc.Get("E  —  next");
+                Recruit(run);
+                return true;
+            }
             if (!run.BossDialogueOpen)
             {
+                _hint = _loc.Get("E  —  talk to the boss");
+                if (!_press) return true;
+                _press = false;
                 run.BossDialogueOpen = true;
+                run.BossDialogue = 0;
                 run.Paused = true;
-                _signals.Outgoing.CallShown.Dispatch(_loc.Get("BOSS"), _loc.Get(lines[line]));
-            }
-            if (!_press) return true;
-            _press = false;
-            run.BossDialogue++;
-            if (run.BossDialogue < lines.Length)
-            {
-                _signals.Outgoing.CallShown.Dispatch(_loc.Get("BOSS"), _loc.Get(lines[run.BossDialogue]));
+                Say(run, lines[0], bossIndex);
                 return true;
             }
+            // Facing them down: the boss cowers, the gun stays on them.
+            boss.Crouching = true;
+            boss.Facing = run.Player.x < boss.Position.x ? -1 : 1;
+            run.Aim = boss.Position + Vector2.up * 1.1f;
+            run.SpeechTimer += Mathf.Min(Time.deltaTime, 0.05f);
+            _hint = _loc.Get("E  —  next");
+            bool next = _press || run.SpeechTimer >= _model.Territory.Config.BubbleTime;
+            if (!next) return true;
+            _press = false;
+            run.BossDialogue++;
+            if (run.BossDialogue < lines.Count)
+            {
+                Say(run, lines[run.BossDialogue], bossIndex);
+                return true;
+            }
+            Recruit(run);
+            return true;
+        }
+
+        private void Say(ContractRVO run, DialogueLineCVO line, int bossIndex)
+        {
+            run.SpeechSpeaker = line.Speaker == DialogueSpeaker.Player ? -1 : bossIndex;
+            string family = _loc.Get(_model.Territory.FamilyName(_model.Missions?.Find(_model.Mission)?.OwnerFamily));
+            run.SpeechText = _loc.Format(line.Text, family);
+            run.SpeechTimer = 0f;
+        }
+
+        private void Recruit(ContractRVO run)
+        {
             run.BossRecruited = true;
             run.BossDialogueOpen = false;
+            run.SpeechSpeaker = -2;
+            run.SpeechText = "";
             run.Paused = false;
             run.Won = true;
-            _signals.Outgoing.CallEnded.Dispatch();
             _signals.Outgoing.BannerShown.Dispatch(_loc.Get("THE BOSS WORKS FOR US NOW"));
-            return true;
         }
         // Walking over a weapon you already carry, in hand or in the pocket, empties its rounds into yours.
         private void CollectRounds(ContractRVO run)

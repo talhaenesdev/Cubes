@@ -5,6 +5,7 @@ using Modules.GameplayModule.Data.ValueObjects;
 using Modules.GameplayModule.Enums;
 using Modules.GameplayModule.Models;
 using Modules.GameplayModule.Signals;
+using Modules.LocalizationModule.Services;
 namespace Modules.GameplayModule.Controllers
 {
     // A line picked at a hideout station: a contract starts it, an upgrade buys its next level.
@@ -13,36 +14,20 @@ namespace Modules.GameplayModule.Controllers
         [Inject] private INightShiftModel _model { get; set; }
         [Inject] private IFunctionProvider _functions { get; set; }
         [InjectSignal] private GameplaySignals _signals { get; set; }
+        [Inject] private ILocalizationService _loc { get; set; }
         [SignalParam] private int _index { get; set; }
         public override void Execute()
         {
             ContractRVO run = _model.Run;
             if (run.Menu < 0 || run.Menu >= run.Stations.Length) return;
             StationKind kind = run.Stations[run.Menu].Kind;
-            if (kind == StationKind.MissionBoard)
+            // The map is worked through its own buttons (MapActionCommand); a plain pick on it does nothing.
+            if (kind == StationKind.MissionBoard) return;
+            if (kind == StationKind.FamilyBoard)
             {
-                if (!string.IsNullOrEmpty(_model.GuardAssignmentMission))
-                {
-                    _model.SetMissionGuardCount(_model.GuardAssignmentMission, _index);
-                    MenuVO guardMenu = _functions.Call<BuildMenuFunction>().AddParams(kind).ExecuteAndGetResult<MenuVO>();
-                    _signals.Outgoing.MenuOpened.Dispatch(guardMenu.Title, guardMenu.Subtitle, guardMenu.Entries);
-                    return;
-                }
-                if (_model.Missions == null || _index < 0 || _index >= _model.Missions.Missions.Count) return;
-                MissionCVO mission = _model.Missions.Missions[_index];
-                if (_model.Progress.Completed.Contains(mission.Id))
-                {
-                    _model.GuardAssignmentMission = mission.Id;
-                    MenuVO guardMenu = _functions.Call<BuildMenuFunction>().AddParams(kind).ExecuteAndGetResult<MenuVO>();
-                    _signals.Outgoing.MenuOpened.Dispatch(guardMenu.Title, guardMenu.Subtitle, guardMenu.Entries);
-                    return;
-                }
-                _model.GuardAssignmentMission = null;
-                _model.Mission = mission.Id;
-                _signals.Incoming.StartContract.Dispatch();
-                return;
+                // Informational panel: selecting a row changes nothing.
             }
-            if (kind == StationKind.Wardrobe)
+            else if (kind == StationKind.Wardrobe)
             {
                 if (_index >= 0 && _index < _model.Outfits.Outfits.Count) _model.Wear(_model.Outfits.Outfits[_index].Id);
             }
@@ -68,7 +53,7 @@ namespace Modules.GameplayModule.Controllers
                 _model.Buy(_model.Upgrades.Upgrades[_index].Id);
             }
             MenuVO menu = _functions.Call<BuildMenuFunction>().AddParams(kind).ExecuteAndGetResult<MenuVO>();
-            _signals.Outgoing.MenuOpened.Dispatch(menu.Title, menu.Subtitle, menu.Entries);
+            _signals.Outgoing.MenuOpened.Dispatch(menu.Title, menu.Subtitle, menu.Entries, menu.IsMap);
         }
     }
 }

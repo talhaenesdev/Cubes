@@ -117,6 +117,8 @@ MonoBehaviour:
     - CD_Music
     - CD_Outfits
     - CD_Gameplay
+    - CD_Families
+    - CD_Territory
     m_Values:
     - {fileID: 11400000, guid: ffeb05d41afa3194f96d308a338dabec, type: 2}
     - {fileID: 11400000, guid: dba58ee85bd234846bb360c96149ac17, type: 2}
@@ -125,6 +127,8 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 059a51a9a5c32624894107a0246d3ef0, type: 2}
     - {fileID: 11400000, guid: 055b2f14870a9124f88091cb901eeffb, type: 2}
     - {fileID: 11400000, guid: 7f37d37b1602f6e419784048e94ff22c, type: 2}
+    - {fileID: 11400000, guid: e2999df83cc245b291f2a25707f77b52, type: 2}
+    - {fileID: 11400000, guid: eeaec80fb77fe844aadab1301d87a365, type: 2}
   _sharedScriptableMap:
     m_Keys: []
     m_Values: []

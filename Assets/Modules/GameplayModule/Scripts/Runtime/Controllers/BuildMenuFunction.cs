@@ -1,9 +1,11 @@
 using FlowIoC.BaseModule.Function.ReturnableFunctions;
 using FlowIoC.BaseModule.Injectable.Attributes;
+using Modules.GameplayModule.Data.UnityObjects;
 using Modules.GameplayModule.Data.ValueObjects;
 using Modules.GameplayModule.Enums;
 using Modules.GameplayModule.Models;
 using Modules.LocalizationModule.Services;
+using UnityEngine;
 namespace Modules.GameplayModule.Controllers
 {
     // The lines a hideout station shows: one per contract or upgrade, with the player's cash on top.
@@ -12,33 +14,88 @@ namespace Modules.GameplayModule.Controllers
         [Inject] private INightShiftModel _model { get; set; }
         [Inject] private ILocalizationService _loc { get; set; }
         private string Name(string weapon) => _model.Weapon(weapon) != null ? _loc.Get(_model.Weapon(weapon).DisplayName) : null;
+        // One line per shop, its fields joined by MapFieldSeparator in the order the screen's map reads them:
+        // name, owner, owner colour, state, income, status, guards, max guards, risk, danger, x, y, main action.
+        public const char MapFieldSeparator = '\u001f';
+
+        private MenuVO CityMap(MenuVO menu)
+        {
+            ITerritoryModel territory = _model.Territory;
+            menu.IsMap = true;
+            menu.Title = _loc.Get("CITY MAP");
+            menu.Subtitle = _loc.Format("{0} / {1} SHOPS  ·  ${2} / HOUR", territory.OwnedCount, territory.LocationCount, territory.IncomePerHour)
+                            + (_model.Tuning.UseMoney ? "  ·  " + _loc.Format("CASH  ${0}", _model.Progress.Cash) : "");
+            var missions = _model.Missions != null ? _model.Missions.Missions : new System.Collections.Generic.List<MissionCVO>();
+            menu.Entries = new string[missions.Count];
+            long now = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            for (int i = 0; i < missions.Count; i++)
+            {
+                MissionCVO mission = missions[i];
+                WorkingLocationSVO location = territory.Location(mission.Id);
+                bool ours = territory.IsOurs(mission.Id);
+                bool attacked = territory.IsUnderAttack(mission.Id);
+                bool lost = !ours && location != null && location.Status == WorkingLocationStatus.Lost;
+                int state = attacked ? 2 : ours ? 1 : lost ? 3 : 0;
+                string owner = territory.OwnerOf(mission);
+                string status = "";
+                if (attacked)
+                {
+                    long left = System.Math.Max(0L, location.AttackExpiresUnixMilliseconds - now);
+                    status = _loc.Format("UNDER ATTACK BY {0} {1}:{2:00}", _loc.Get(territory.FamilyName(location.AttackingFamily)), left / 60000, left / 1000 % 60);
+                }
+                else if (ours) status = _loc.Get("WORKS FOR US");
+                else status = _loc.Format("WORKS FOR {0}", _loc.Get(territory.FamilyName(owner)));
+                float perMinute = territory.IncomePerMinute(mission);
+                string income = _model.Tuning.UseMoney && perMinute > 0f ? _loc.Format("${0} / HOUR", Mathf.RoundToInt(perMinute * 60f)) : "—";
+                float danger = territory.Wealth(mission);
+                RaidVO raid = territory.RaidOn(mission.Id);
+                string risk = _loc.Format("RAIDS: {0}  ·  {1} ATTACKERS", _loc.Get(danger < 0.34f ? "LOW" : danger < 0.67f ? "MEDIUM" : "HIGH"), raid.Attackers);
+                string action = attacked ? _loc.Get("GO AND HELP") : ours ? "" : _loc.Get("TAKE IT OVER");
+                string translated = _loc.Get(mission.Title);
+                string name = translated.Contains("/") ? translated[(translated.IndexOf('/') + 1)..].Trim() : translated;
+                Color color = territory.FamilyColor(owner);
+                menu.Entries[i] = string.Join(MapFieldSeparator.ToString(), name, _loc.Get(territory.FamilyName(owner)), "#" + ColorUtility.ToHtmlStringRGB(color),
+                    state.ToString(), income, status, territory.Guards(mission.Id).ToString(), territory.MaxGuards.ToString(), risk,
+                    danger.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture),
+                    mission.MapPosition.x.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture),
+                    mission.MapPosition.y.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture), action);
+            }
+            return menu;
+        }
+
         public override MenuVO Execute(StationKind kind)
         {
             bool money = _model.Tuning.UseMoney;
             var menu = new MenuVO {Subtitle = money ? _loc.Format("CASH  ${0}", _model.Progress.Cash) : ""};
-            if (kind == StationKind.MissionBoard)
+            if (kind == StationKind.FamilyBoard)
             {
-                if (!string.IsNullOrEmpty(_model.GuardAssignmentMission))
+                menu.Title = _loc.Get("FAMILY BOARD");
+                menu.Subtitle = _loc.Get("INTER-FAMILY RELATIONS");
+                var families = _model.Families != null ? _model.Families.Families : new System.Collections.Generic.List<CD_Family>();
+                menu.Entries = new string[families.Count];
+                for (int i = 0; i < families.Count; i++)
                 {
-                    menu.Title = _loc.Get("GUARD DETAIL");
-                    menu.Subtitle = _loc.Format("{0}  /  {1}", _loc.Get(_model.Missions.Find(_model.GuardAssignmentMission).Title), _loc.Get("PROTECT THIS LOCATION"));
-                    int current = _model.MissionGuardCount(_model.GuardAssignmentMission);
-                    menu.Entries = new string[6];
-                    for (int i = 0; i < menu.Entries.Length; i++)
-                        menu.Entries[i] = _loc.Format("{0}  {1}", i, i == current ? _loc.Get("(assigned)") : "");
-                    return menu;
-                }
-                menu.Title = _loc.Get("MISSION BOARD");
-                var missions = _model.Missions != null ? _model.Missions.Missions : new System.Collections.Generic.List<MissionCVO>();
-                menu.Entries = new string[missions.Count];
-                for (int i = 0; i < missions.Count; i++)
-                {
-                    MissionCVO mission = missions[i];
-                    bool done = _model.Progress.Completed.Contains(mission.Id);
-                    menu.Entries[i] = _loc.Get(mission.Title) + "   " + (done ? _loc.Get("WORKING FOR US") : money && _model.Tuning.MissionsPay ? "$" + mission.Reward : "") + "\n" + _loc.Get(mission.Briefing);
+                    CD_Family family = families[i];
+                    var friends = new System.Collections.Generic.List<string>();
+                    var enemies = new System.Collections.Generic.List<string>();
+                    if (family != null)
+                    {
+                        foreach (CD_Family other in families)
+                        {
+                            if (other == null || other.Id == family.Id) continue;
+                            string name = _loc.Get(other.DisplayName);
+                            if (_model.Territory.RelationBetween(family.Id, other.Id) == FamilyDiplomacy.Friendly) friends.Add(name);
+                            else enemies.Add(name);
+                        }
+                    }
+                    menu.Entries[i] = _loc.Format("{0} / FRIENDS: {1} / ENEMIES: {2}",
+                        family != null ? _loc.Get(family.DisplayName) : "—",
+                        friends.Count > 0 ? string.Join(", ", friends) : "—",
+                        enemies.Count > 0 ? string.Join(", ", enemies) : "—");
                 }
                 return menu;
             }
+            if (kind == StationKind.MissionBoard) return CityMap(menu);
             if (kind == StationKind.Wardrobe)
             {
                 menu.Title = _loc.Get("WARDROBE");

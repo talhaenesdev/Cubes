@@ -31,14 +31,25 @@ namespace Modules.GameplayModule.Controllers
                 float nearest = length;
                 GuardRVO hitGuard = null;
                 bool hitPlayer = false;
-                if (bullet.FromPlayer)
+                if (bullet.FromPlayer || bullet.FromAlly)
                 {
                     foreach (GuardRVO guard in run.Guards)
-                        if (guard.Alive && !guard.Escaped && Crosses(bullet.Position, direction, guard.Position, guard.Crouching ? 1.0f : 1.9f, ref nearest))
+                        if (guard.Alive && !guard.Escaped && guard.Faction == Faction.Enemy
+                            && Crosses(bullet.Position, direction, guard.Position, guard.Crouching ? 1.0f : 1.9f, ref nearest))
                             hitGuard = guard;
                 }
-                else if (!run.InVent)
-                    hitPlayer = Crosses(bullet.Position, direction, run.Player, run.Crouching ? 1.15f : 1.9f, ref nearest);
+                else
+                {
+                    if (!run.InVent) hitPlayer = Crosses(bullet.Position, direction, run.Player, run.Crouching ? 1.15f : 1.9f, ref nearest);
+                    if (run.IsLocationDefense)
+                        foreach (GuardRVO guard in run.Guards)
+                            if (guard.Alive && !guard.Escaped && guard.Faction == Faction.Friendly
+                                && Crosses(bullet.Position, direction, guard.Position, guard.Crouching ? 1.0f : 1.9f, ref nearest))
+                            {
+                                hitGuard = guard;
+                                hitPlayer = false;
+                            }
+                }
                 // A prop nearer than any body takes the bullet instead.
                 PropRVO hitProp = null;
                 foreach (PropRVO prop in run.Props)

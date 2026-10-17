@@ -30,6 +30,13 @@ MonoBehaviour:
   CrushHalfWidth: 0.7
   UseMoney: 1
   MissionsPay: 0
+  WorkingLocationsPay: 1
+  WorkingLocationAttacks: 1
+  WorkingLocationAttackRollMinutes: 30
+  WorkingLocationResponseMinutes: 5
+  EasyLocationAttackers: 3
+  MediumLocationAttackers: 5
+  HardLocationAttackers: 8
   OutfitsCost: 0
   LootReach: 0.8
   BlastDamage: 3
@@ -40,3 +47,6 @@ MonoBehaviour:
   ZoomMin: 0.8
   ZoomMax: 3
   ZoomStep: 0.15
+  RunSaveInterval: 3
+  MapRefreshInterval: 1
+  PhoneInputGrace: 0.4

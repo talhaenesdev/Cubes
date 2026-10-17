@@ -247,7 +247,8 @@ namespace Modules.GameplayModule.Editor
             if (missions == null || missions.Find("docks_massacre") != null) return;
             missions.Missions.Add(new MissionCVO
             {
-                Id = "docks_massacre", Title = "DOCKS MASSACRE  /  SHAPE & SONS", Reward = 2500,
+                Id = "docks_massacre", Title = "DOCKS MASSACRE  /  SHAPE & SONS", Reward = 2500, WorkPayment = 250,
+                OwnerFamily = "rival", LocationDifficulty = LocationDifficulty.Hard, AttackChance = 30f, AttackingFamily = "rival",
                 Level = AssetDatabase.LoadAssetAtPath<LevelAuthoring>(DocksPrefab),
                 Briefing = "Twenty-two of the family hold the waterfront warehouse. Brutal. Barrels are live - use them.",
             });

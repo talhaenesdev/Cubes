@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6e327f071a443d8b0cb7b8264c87cb0, type: 3}
+  m_Name: CD_Family_Diamond
+  m_EditorClassIdentifier: Modules.Gameplay::Modules.GameplayModule.Data.UnityObjects.CD_Family
+  Id: diamond
+  DisplayName: DIAMOND FAMILY
+  RelationToPlayer: 2
+  Relations:
+  - {Family: player, Relation: 1}
+  - {Family: rival, Relation: 1}
+  - {Family: circle, Relation: 0}
+  - {Family: pentagon, Relation: 1}
+  - {Family: hexagon, Relation: 1}
+  Don: {CharacterType: diamond, Prefab: {fileID: 748040947343931460, guid: d023584b89c3940499186b16df71f6b7, type: 3}, Names: [Elmas Han]}
+  Consigliere: {CharacterType: diamond, Prefab: {fileID: 748040947343931460, guid: d023584b89c3940499186b16df71f6b7, type: 3}, Names: [Nadir, Serra]}
+  Caporegime: {CharacterType: diamond, Prefab: {fileID: 748040947343931460, guid: d023584b89c3940499186b16df71f6b7, type: 3}, Names: [Rana, Tarık]}
+  Soldiers: {CharacterType: diamond, Prefab: {fileID: 748040947343931460, guid: d023584b89c3940499186b16df71f6b7, type: 3}, Names: [Arel, Ekin, Işıl, Uraz]}
+  Associates: {CharacterType: diamond, Prefab: {fileID: 748040947343931460, guid: d023584b89c3940499186b16df71f6b7, type: 3}, Names: [Deniz, İpek, Poyraz, Rüzgar]}

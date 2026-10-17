@@ -10,10 +10,40 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
     [RequireComponent(typeof(ViewInjector))]
     public class GameplayScreenView : ScreenView
     {
-        // Noir: ivory on near-black, gold for what matters, crimson for danger.
-        private readonly Color _cream = new Color32(226, 214, 190, 255);
-        private readonly Color _mint = new Color32(196, 160, 92, 255);
-        private readonly Color _ink = new Color32(10, 8, 8, 242);
+        // Authored on GameplayScreen.prefab so presentation can be tuned without changing code.
+        [Header("Theme")]
+        [SerializeField] private Color _cream = new Color32(226, 214, 190, 255);
+        [SerializeField] private Color _mint = new Color32(196, 160, 92, 255);
+        [SerializeField] private Color _ink = new Color32(10, 8, 8, 242);
+        [SerializeField] private Color _danger = new Color32(200, 60, 40, 255);
+        [SerializeField] private Color _warning = new Color32(255, 150, 60, 255);
+        [SerializeField] private Color _success = new Color32(120, 220, 150, 255);
+
+        [Header("Assets")]
+        [SerializeField] private Font _fontAsset;
+        [SerializeField] private AudioClip _click;
+        [SerializeField] private Sprite _disc;
+        [SerializeField] private Sprite _ring;
+        [SerializeField] private Sprite _thinRing;
+
+        [Header("Panel Prefabs")]
+        [SerializeField] private GameObject _headerPrefab;
+        [SerializeField] private GameObject _terminalPrefab;
+        [SerializeField] private GameObject _menuPrefab;
+        [SerializeField] private GameObject _cityMapPrefab;
+        [SerializeField] private GameObject _nowPlayingPrefab;
+        [SerializeField] private GameObject _deckPrefab;
+        [SerializeField] private GameObject _touchControlsPrefab;
+        [SerializeField] private GameObject _phoneCallPrefab;
+        [SerializeField] private GameObject _bannerPrefab;
+        [SerializeField] private GameObject _menuRowPrefab;
+        [SerializeField] private GameObject _mapPinPrefab;
+
+        [Header("Layout and Timing")]
+        [Min(0.01f)] [SerializeField] private float _cardIn = 0.7f;
+        [Min(0f)] [SerializeField] private float _cardHold = 4.5f;
+        [Min(0.01f)] [SerializeField] private float _cardOut = 0.8f;
+        [Min(24f)] [SerializeField] private float _menuRowHeight = 62f;
         private Font _font;
         private Text _location;
         private Text _status;
@@ -39,17 +69,12 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
         public Action MenuCloseClicked;
 
         // The now-playing card is a cassette: slides in from the right edge, holds with its reels turning, slides out.
-        private const float CardIn = 0.7f;
-        private const float CardHold = 4.5f;
-        private const float CardOut = 0.8f;
         private RectTransform _card;
         private CanvasGroup _cardFade;
         private Text _cardTitle;
         private Text _cardArtist;
         private readonly RectTransform[] _cardReels = new RectTransform[2];
         private float _cardAge = -1f;
-        private Sprite _disc;
-        private Sprite _ring;
 
         // The tape deck panel: a boombox with the loaded cassette in its window and transport buttons.
         private GameObject _deck;
@@ -69,7 +94,6 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
         public Action<float> DeckVolumeChanged;
         private GameObject _call;
         private AudioSource _ui;
-        private AudioClip _click;
         private Text _callCaller;
         private Text _callLine;
         private Image _callPhone;
@@ -82,23 +106,54 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
         private float _bannerAge = -1f;
         private DeckKnob _deckVolume;
         private GameObject _touch;
-        private Sprite _thinRing;
-
-        private const float MenuRowHeight = 62f;
         private GameObject _menu;
+        private RectTransform _menuFrame;
         private Text _menuTitle;
         private Text _menuSubtitle;
         // As many rows as the longest list needed so far; the list scrolls - wheel, drag or the bar.
         private readonly System.Collections.Generic.List<Button> _menuButtons = new();
         private readonly System.Collections.Generic.List<Text> _menuLabels = new();
         private RectTransform _menuContent;
+        private RectTransform _menuViewport;
         private ScrollRect _menuScroll;
+        private GameObject _menuScrollbar;
         private Button _menuClose;
+        // ---- the city map: the city on the left, the picked shop's card on the right
+        public Action<int, int> MapActionClicked;
+        private GameObject _cityMap;
+        private RectTransform _mapCity;
+        private readonly System.Collections.Generic.List<MapPin> _mapPins = new();
+        private string[][] _mapFields = new string[0][];
+        private int _mapSelected = -1;
+        private Text _cardName;
+        private Image _cardSwatch;
+        private Text _cardOwner;
+        private Text _cardStatus;
+        private Text _cardIncome;
+        private Text _cardRisk;
+        private Image _cardDanger;
+        private GameObject _cardGuards;
+        private Text _cardGuardCount;
+        private Button _cardAction;
+        private Text _cardActionLabel;
+        private Text _mapLegend;
+
+        private class MapPin
+        {
+            public Button Button;
+            public RectTransform Rect;
+            public Image Roof;
+            public Image Ring;
+            public Image Selected;
+            public Text Name;
+            public Text Badge;
+            public int State;
+        }
 
         private void Awake()
         {
-            _font = Serif(Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf"));
-            CreatePanel("Header", transform, 0, .84f, 1, 1, _ink);
+            _font = Serif(_fontAsset != null ? _fontAsset : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf"));
+            PrefabPanel(_headerPrefab, "Header", transform, 0, .84f, 1, 1, _ink);
             CreatePanel("HeaderRule", transform, .025f, .84f, .975f, .843f, _mint);
             _location = CreateText("Location", transform, "", .03f, .87f, .27f, .985f, 28, _cream);
             _status = CreateText("Status", transform, "AWAITING CONTRACT", .29f, .925f, .80f, .985f, 23, _mint);
@@ -112,7 +167,7 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             _ui = gameObject.AddComponent<AudioSource>();
             _ui.playOnAwake = false;
             _ui.ignoreListenerPause = true;
-            _click = Resources.Load<AudioClip>("SND_UI_HudClick");
+            if (_click == null) _click = Resources.Load<AudioClip>("SND_UI_HudClick");
             BuildDeck();
             BuildTouchControls();
             BuildCall();
@@ -182,9 +237,9 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
 
         private void BuildNowPlaying()
         {
-            _disc = Round(0f);
-            _ring = Round(0.35f);
-            RectTransform holder = CreateRect("Now Playing", transform, .7f, .125f, .985f, .3f);
+            _disc ??= Round(0f);
+            _ring ??= Round(0.35f);
+            RectTransform holder = PrefabRect(_nowPlayingPrefab, "Now Playing", transform, .7f, .125f, .985f, .3f);
             _card = holder;
             _cardFade = holder.gameObject.AddComponent<CanvasGroup>();
             _cardFade.blocksRaycasts = false;
@@ -210,14 +265,14 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             _cardAge += Time.unscaledDeltaTime;
             float width = _card.rect.width + 40f;
             float shown;
-            if (_cardAge < CardIn) shown = Mathf.SmoothStep(0f, 1f, _cardAge / CardIn);
-            else if (_cardAge < CardIn + CardHold) shown = 1f;
-            else shown = 1f - Mathf.SmoothStep(0f, 1f, (_cardAge - CardIn - CardHold) / CardOut);
+            if (_cardAge < _cardIn) shown = Mathf.SmoothStep(0f, 1f, _cardAge / _cardIn);
+            else if (_cardAge < _cardIn + _cardHold) shown = 1f;
+            else shown = 1f - Mathf.SmoothStep(0f, 1f, (_cardAge - _cardIn - _cardHold) / _cardOut);
             float eased = 1f - Mathf.Pow(1f - shown, 3f);
             _card.anchoredPosition = new Vector2((1f - eased) * width, 0f);
             _cardFade.alpha = shown;
             Spin(_cardReels, 1f);
-            if (_cardAge < CardIn + CardHold + CardOut) return;
+            if (_cardAge < _cardIn + _cardHold + _cardOut) return;
             _cardAge = -1f;
             _card.gameObject.SetActive(false);
         }
@@ -234,7 +289,7 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
 
         private void BuildDeck()
         {
-            Image body = CreatePanel("Tape Deck", transform, .2f, .2f, .8f, .78f, new Color32(18, 15, 14, 250));
+            Image body = PrefabPanel(_deckPrefab, "Tape Deck", transform, .2f, .2f, .8f, .78f, new Color32(18, 15, 14, 250));
             body.raycastTarget = true;
             _deck = body.gameObject;
             CreatePanel("Chrome top", body.transform, 0f, .955f, 1f, 1f, new Color32(120, 110, 95, 255));
@@ -299,7 +354,7 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
         // and firing is a finger anywhere else on the game, which the game reads itself.
         private void BuildTouchControls()
         {
-            RectTransform layer = CreateRect("Touch Controls", transform, 0f, 0f, 1f, .84f);
+            RectTransform layer = PrefabRect(_touchControlsPrefab, "Touch Controls", transform, 0f, 0f, 1f, .84f);
             _touch = layer.gameObject;
             // Off while the controls are made: an on-screen control binds its path as it is enabled.
             _touch.SetActive(false);
@@ -350,7 +405,7 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
         // A call card along the bottom: a phone that shakes while it speaks, who is calling, and the line.
         private void BuildCall()
         {
-            Image card = CreatePanel("Phone Call", transform, .18f, .04f, .82f, .25f, new Color32(16, 12, 11, 245));
+            Image card = PrefabPanel(_phoneCallPrefab, "Phone Call", transform, .18f, .04f, .82f, .25f, new Color32(16, 12, 11, 245));
             _call = card.gameObject;
             CreatePanel("Rule", card.transform, 0f, .97f, 1f, 1f, new Color32(140, 22, 28, 255));
             Image phone = CreatePanel("Phone", card.transform, .03f, .14f, .1f, .86f, new Color32(30, 24, 22, 255));
@@ -428,7 +483,7 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
 
         private void BuildBanner()
         {
-            RectTransform holder = CreateRect("Banner", transform, 0f, .55f, 1f, .7f);
+            RectTransform holder = PrefabRect(_bannerPrefab, "Banner", transform, 0f, .55f, 1f, .7f);
             _bannerFade = holder.gameObject.AddComponent<CanvasGroup>();
             _bannerFade.blocksRaycasts = false;
             CreatePanel("Band", holder, 0f, .1f, 1f, .9f, new Color32(10, 8, 8, 220));
@@ -516,15 +571,17 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
         // A hideout station's list: a title, the player's cash, and one button per contract or upgrade.
         private void BuildMenu()
         {
-            Image frame = CreatePanel("Station", transform, .22f, .14f, .78f, .82f, new Color32(14, 10, 10, 246));
+            Image frame = PrefabPanel(_menuPrefab, "Station", transform, .22f, .14f, .78f, .82f, new Color32(14, 10, 10, 246));
             frame.raycastTarget = true;
             _menu = frame.gameObject;
+            _menuFrame = frame.rectTransform;
             CreatePanel("Rule", frame.transform, 0f, .994f, 1f, 1f, _mint);
             _menuTitle = CreateText("Title", frame.transform, "", .04f, .9f, .7f, .97f, 26, _mint);
             _menuSubtitle = CreateText("Cash", frame.transform, "", .6f, .9f, .96f, .97f, 20, _cream);
             _menuSubtitle.alignment = TextAnchor.MiddleRight;
             // The list: a masked viewport over a column that grows with the entries, and a thin bar beside it.
             RectTransform viewport = CreateRect("Viewport", frame.transform, .04f, .12f, .93f, .88f);
+            _menuViewport = viewport;
             viewport.gameObject.AddComponent<RectMask2D>();
             Image hit = viewport.gameObject.AddComponent<Image>();
             hit.color = new Color(0f, 0f, 0f, 0f);
@@ -538,6 +595,7 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             column.childForceExpandHeight = false;
             _menuContent.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             Image track = CreatePanel("Scrollbar", frame.transform, .945f, .12f, .96f, .88f, new Color32(40, 30, 28, 255));
+            _menuScrollbar = track.gameObject;
             track.raycastTarget = true;
             Image handle = CreatePanel("Handle", track.transform, 0f, 0f, 1f, 1f, _mint);
             handle.raycastTarget = true;
@@ -557,14 +615,243 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             _menuScroll.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
             _menuClose = CreateButton("Close", "CLOSE", .78f, .03f, .96f, .1f, frame.transform);
             _menuClose.onClick.AddListener(() => MenuCloseClicked?.Invoke());
+            BuildCityMap(frame.transform);
             _menu.SetActive(false);
         }
 
-        public void ShowMenu(string title, string subtitle, string[] entries)
+        // Map field order, as BuildMenuFunction writes them.
+        private const int FName = 0, FOwner = 1, FColor = 2, FState = 3, FIncome = 4, FStatus = 5, FGuards = 6, FMaxGuards = 7,
+            FRisk = 8, FDanger = 9, FX = 10, FY = 11, FAction = 12;
+
+        // Where shops stand when CD_Missions gives them no place of their own: spread over the districts.
+        private static readonly Vector2[] MapSpots =
+        {
+            new(.12f, .22f), new(.30f, .14f), new(.50f, .20f), new(.70f, .13f), new(.88f, .24f), new(.18f, .50f),
+            new(.40f, .44f), new(.62f, .52f), new(.84f, .55f), new(.26f, .80f), new(.54f, .82f), new(.80f, .84f),
+        };
+
+        private void BuildCityMap(Transform frame)
+        {
+            RectTransform root = PrefabRect(_cityMapPrefab, "City Map", frame, .02f, .1f, .98f, .885f);
+            _cityMap = root.gameObject;
+
+            // ---- the city: water, parks, avenues, blocks and district names, seen from above at night
+            Image city = CreatePanel("City", root, 0f, 0f, .66f, 1f, new Color32(18, 22, 24, 255));
+            _mapCity = city.rectTransform;
+            CreatePanel("Harbour", city.transform, 0f, 0f, 1f, .1f, new Color32(14, 30, 40, 255));
+            for (int i = 0; i < 9; i++)
+                CreatePanel("Ripple", city.transform, .04f + i * .11f, .03f + (i % 3) * .02f, .09f + i * .11f, .036f + (i % 3) * .02f, new Color32(40, 70, 86, 180));
+            CreatePanel("River", city.transform, .58f, .1f, .64f, 1f, new Color32(16, 34, 46, 255));
+            CreatePanel("Park", city.transform, .06f, .62f, .2f, .74f, new Color32(22, 40, 28, 255));
+            CreatePanel("Park", city.transform, .72f, .36f, .86f, .46f, new Color32(22, 40, 28, 255));
+            Color road = new Color32(48, 46, 42, 255);
+            foreach (float x in new[] {.24f, .46f, .78f})
+                CreatePanel("Avenue", city.transform, x - .008f, .1f, x + .008f, 1f, road);
+            foreach (float y in new[] {.34f, .66f})
+                CreatePanel("Street", city.transform, 0f, y - .012f, 1f, y + .012f, road);
+            CreatePanel("Bridge", city.transform, .57f, .655f, .65f, .675f, new Color32(70, 64, 56, 255));
+            CreatePanel("Bridge", city.transform, .57f, .325f, .65f, .345f, new Color32(70, 64, 56, 255));
+            // Blocks between the roads, a little lighter than the night.
+            float[] xs = {0f, .24f, .46f, .58f, .64f, .78f, 1f};
+            float[] ys = {.1f, .34f, .66f, 1f};
+            for (int yi = 0; yi < ys.Length - 1; yi++)
+                for (int xi = 0; xi < xs.Length - 1; xi++)
+                {
+                    if (xi == 3) continue; // the river
+                    CreatePanel("Block", city.transform, xs[xi] + .015f, ys[yi] + .025f, xs[xi + 1] - .015f, ys[yi + 1] - .025f, new Color32(26, 30, 32, 255));
+                }
+            Color label = new Color32(226, 214, 190, 40);
+            foreach ((string name, float x, float y) in new[] {("THE DOCKS", .3f, .045f), ("OLD TOWN", .12f, .9f), ("MARKET", .35f, .55f), ("UPTOWN", .82f, .94f)})
+            {
+                Text district = CreateText("District", city.transform, name, x - .14f, y - .04f, x + .14f, y + .04f, 20, label);
+                district.alignment = TextAnchor.MiddleCenter;
+                district.fontStyle = FontStyle.Bold;
+            }
+            CreatePanel("Frame", city.transform, 0f, 0f, 1f, .006f, _mint);
+            CreatePanel("Frame", city.transform, 0f, .994f, 1f, 1f, _mint);
+
+            // ---- the card for the picked shop
+            Image card = CreatePanel("Shop Card", root, .68f, 0f, 1f, 1f, new Color32(20, 15, 14, 255));
+            card.raycastTarget = true;
+            CreatePanel("Rule", card.transform, 0f, .992f, 1f, 1f, _mint);
+            _cardName = CreateText("Name", card.transform, "", .07f, .86f, .95f, .97f, 26, _cream);
+            _cardName.fontStyle = FontStyle.Bold;
+            _cardSwatch = CreatePanel("Swatch", card.transform, .07f, .8f, .12f, .84f, Color.gray);
+            _cardOwner = CreateText("Owner", card.transform, "", .15f, .79f, .95f, .85f, 16, _mint);
+            _cardStatus = CreateText("Status", card.transform, "", .07f, .7f, .95f, .78f, 15, _cream);
+            Label(CreateText("Income Label", card.transform, "", .07f, .62f, .5f, .68f, 13, _mint), "INCOME");
+            _cardIncome = CreateText("Income", card.transform, "", .07f, .55f, .95f, .63f, 20, _cream);
+            Label(CreateText("Risk Label", card.transform, "", .07f, .47f, .5f, .53f, 13, _mint), "RAID RISK");
+            CreatePanel("Danger Track", card.transform, .07f, .43f, .93f, .455f, new Color32(50, 40, 36, 255));
+            _cardDanger = CreatePanel("Danger", card.transform, .07f, .43f, .5f, .455f, _danger);
+            _cardRisk = CreateText("Risk", card.transform, "", .07f, .36f, .95f, .42f, 13, _cream);
+
+            // Guards: how many of our men watch the shop, one more or fewer.
+            RectTransform guards = CreateRect("Guards", card.transform, .07f, .2f, .93f, .33f);
+            _cardGuards = guards.gameObject;
+            Label(CreateText("Guards Label", guards, "", 0f, .55f, 1f, 1f, 13, _mint), "OUR MEN HERE");
+            Button fewer = CreateButton("Fewer", "-", 0f, 0f, .22f, .55f, guards);
+            fewer.onClick.AddListener(() => MapAction(1));
+            _cardGuardCount = CreateText("Count", guards, "", .24f, 0f, .76f, .55f, 22, _cream);
+            _cardGuardCount.alignment = TextAnchor.MiddleCenter;
+            Button more = CreateButton("More", "+", .78f, 0f, 1f, .55f, guards);
+            more.onClick.AddListener(() => MapAction(2));
+
+            _cardAction = CreateButton("Action", "", .07f, .06f, .93f, .16f, card.transform);
+            _cardActionLabel = _cardAction.GetComponentInChildren<Text>();
+            _cardActionLabel.fontStyle = FontStyle.Bold;
+            ColorBlock colors = _cardAction.colors;
+            colors.normalColor = new Color32(140, 22, 28, 255);
+            colors.highlightedColor = new Color32(190, 40, 40, 255);
+            colors.selectedColor = colors.highlightedColor;
+            _cardAction.colors = colors;
+            _cardAction.onClick.AddListener(() => MapAction(0));
+
+            _mapLegend = CreateText("Legend", root, "", 0f, -.09f, .66f, -.015f, 13, _cream);
+            _mapLegend.supportRichText = true;
+            _cityMap.SetActive(false);
+        }
+
+        private void MapAction(int action)
+        {
+            if (_mapSelected >= 0) MapActionClicked?.Invoke(_mapSelected, action);
+        }
+
+        private void ShowCityMap(string[] entries)
+        {
+            int count = entries?.Length ?? 0;
+            _mapFields = new string[count][];
+            for (int i = 0; i < count; i++) _mapFields[i] = entries[i].Split('\u001f');
+            while (_mapPins.Count < count) AddMapPin();
+            var legend = new System.Collections.Generic.Dictionary<string, string>();
+            for (int i = 0; i < _mapPins.Count; i++)
+            {
+                MapPin pin = _mapPins[i];
+                bool used = i < count;
+                pin.Button.gameObject.SetActive(used);
+                if (!used) continue;
+                string[] f = _mapFields[i];
+                pin.State = Int(f, FState);
+                Vector2 at = new(Float(f, FX), Float(f, FY));
+                if (at.sqrMagnitude < 0.0001f) at = MapSpots[i % MapSpots.Length] + new Vector2(0f, i / MapSpots.Length * .05f);
+                pin.Rect.anchorMin = pin.Rect.anchorMax = at;
+                pin.Roof.color = ParseColor(Field(f, FColor));
+                pin.Name.text = Field(f, FName);
+                pin.Badge.text = pin.State switch {1 => "\u2713", 2 => "!", 3 => "\u00D7", _ => "$"};
+                pin.Ring.color = pin.State switch
+                {
+                    1 => new Color32(90, 210, 140, 255),
+                    2 => new Color32(255, 140, 40, 255),
+                    _ => new Color32(0, 0, 0, 160),
+                };
+                legend[Field(f, FOwner)] = Field(f, FColor);
+            }
+            // The first time: the shop under attack if there is one, else the first.
+            if (_mapSelected < 0 || _mapSelected >= count)
+            {
+                _mapSelected = 0;
+                for (int i = 0; i < count; i++) if (Int(_mapFields[i], FState) == 2) { _mapSelected = i; break; }
+            }
+            var parts = new System.Collections.Generic.List<string>();
+            foreach (var pair in legend) parts.Add($"<color={pair.Value}>\u25A0</color> {pair.Key}");
+            _mapLegend.text = string.Join("     ", parts);
+            ShowMapCard();
+        }
+
+        private void ShowMapCard()
+        {
+            if (_mapSelected < 0 || _mapSelected >= _mapFields.Length) return;
+            string[] f = _mapFields[_mapSelected];
+            for (int i = 0; i < _mapPins.Count; i++) _mapPins[i].Selected.enabled = i == _mapSelected;
+            int state = Int(f, FState);
+            _cardName.text = Field(f, FName);
+            _cardSwatch.color = ParseColor(Field(f, FColor));
+            _cardOwner.text = Field(f, FOwner);
+            _cardStatus.text = Field(f, FStatus);
+            _cardStatus.color = state == 2 ? _warning : state == 1 ? _success : _cream;
+            _cardIncome.text = Field(f, FIncome);
+            _cardRisk.text = Field(f, FRisk);
+            RectTransform bar = _cardDanger.rectTransform;
+            bar.anchorMax = new Vector2(Mathf.Lerp(.07f, .93f, Mathf.Clamp01(Float(f, FDanger))), bar.anchorMax.y);
+            // Men can be posted only at a shop that works for us.
+            _cardGuards.SetActive(state == 1 || state == 2);
+            _cardGuardCount.text = Field(f, FGuards) + " / " + Field(f, FMaxGuards);
+            string action = Field(f, FAction);
+            _cardAction.gameObject.SetActive(!string.IsNullOrEmpty(action));
+            _cardActionLabel.text = action;
+        }
+
+        private void AddMapPin()
+        {
+            int index = _mapPins.Count;
+            RectTransform rect = PrefabRect(_mapPinPrefab, "Shop " + index, _mapCity, .5f, .5f, .5f, .5f);
+            rect.sizeDelta = new Vector2(92f, 70f);
+            Image hit = rect.GetComponent<Image>() ?? rect.gameObject.AddComponent<Image>();
+            hit.color = new Color(0f, 0f, 0f, 0f);
+            Button button = rect.GetComponent<Button>() ?? rect.gameObject.AddComponent<Button>();
+            button.targetGraphic = hit;
+            button.navigation = new Navigation {mode = Navigation.Mode.None};
+            button.onClick.AddListener(() =>
+            {
+                _mapSelected = index;
+                if (_click != null) _ui.PlayOneShot(_click, 0.6f);
+                ShowMapCard();
+            });
+            Image selected = CreatePanel("Selected", rect, -.08f, -.08f, 1.08f, 1.08f, _mint);
+            selected.enabled = false;
+            Image ring = CreatePanel("Ring", rect, .17f, .3f, .83f, .98f, Color.black);
+            // A little building: a coloured roof, a lit front with a door, and a badge on top.
+            Image roof = CreatePanel("Roof", rect, .2f, .72f, .8f, .95f, Color.gray);
+            CreatePanel("Front", rect, .23f, .33f, .77f, .72f, new Color32(34, 30, 28, 255));
+            CreatePanel("Window", rect, .3f, .52f, .44f, .64f, new Color32(220, 180, 100, 255));
+            CreatePanel("Window", rect, .56f, .52f, .7f, .64f, new Color32(220, 180, 100, 255));
+            CreatePanel("Door", rect, .44f, .33f, .56f, .48f, new Color32(12, 10, 10, 255));
+            Text badge = CreateText("Badge", rect, "$", .62f, .78f, 1f, 1.12f, 18, _cream);
+            badge.alignment = TextAnchor.MiddleCenter;
+            badge.fontStyle = FontStyle.Bold;
+            Text name = CreateText("Name", rect, "", -.3f, 0f, 1.3f, .3f, 12, _cream);
+            name.alignment = TextAnchor.UpperCenter;
+            _mapPins.Add(new MapPin {Button = button, Rect = rect, Roof = roof, Ring = ring, Selected = selected, Name = name, Badge = badge});
+        }
+
+        // Shops under attack throb; the picked one breathes.
+        private void AnimateMap()
+        {
+            if (_cityMap == null || !_cityMap.activeInHierarchy) return;
+            float pulse = 0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * 6f);
+            foreach (MapPin pin in _mapPins)
+            {
+                if (!pin.Button.gameObject.activeSelf) continue;
+                float scale = pin.State == 2 ? 1f + 0.12f * pulse : 1f;
+                pin.Rect.localScale = new Vector3(scale, scale, 1f);
+                if (pin.State == 2) pin.Ring.color = Color.Lerp(new Color32(255, 70, 30, 255), new Color32(255, 190, 60, 255), pulse);
+            }
+        }
+
+        private static string Field(string[] fields, int index) => index < fields.Length ? fields[index] : "";
+        private static int Int(string[] fields, int index) => int.TryParse(Field(fields, index), out int value) ? value : 0;
+        private static float Float(string[] fields, int index) =>
+            float.TryParse(Field(fields, index), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float value) ? value : 0f;
+        private static Color ParseColor(string hex) => ColorUtility.TryParseHtmlString(hex, out Color color) ? color : Color.gray;
+
+        public void ShowMenu(string title, string subtitle, string[] entries, bool isMap)
         {
             _menuTitle.text = title ?? string.Empty;
             _menuSubtitle.text = subtitle ?? string.Empty;
             int count = entries?.Length ?? 0;
+            _menuFrame.anchorMin = isMap ? new Vector2(.03f, .05f) : new Vector2(.22f, .14f);
+            _menuFrame.anchorMax = isMap ? new Vector2(.97f, .93f) : new Vector2(.78f, .82f);
+            _menuViewport.gameObject.SetActive(!isMap);
+            _menuScrollbar.SetActive(!isMap);
+            _cityMap.SetActive(isMap);
+            if (isMap)
+            {
+                ShowCityMap(entries);
+                _menu.SetActive(true);
+                _menuShownTitle = _menuTitle.text;
+                _menuShownCount = count;
+                return;
+            }
             while (_menuButtons.Count < count) AddMenuRow();
             for (int i = 0; i < _menuButtons.Count; i++)
             {
@@ -590,10 +877,10 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
         private void AddMenuRow()
         {
             int index = _menuButtons.Count;
-            Button button = CreateButton("Entry " + index, "", 0f, 1f, 1f, 1f, _menuContent);
+            Button button = CreateButton("Entry " + index, "", 0f, 1f, 1f, 1f, _menuContent, _menuRowPrefab);
             var rect = (RectTransform) button.transform;
-            rect.sizeDelta = new Vector2(0f, MenuRowHeight);
-            button.gameObject.AddComponent<LayoutElement>().preferredHeight = MenuRowHeight;
+            rect.sizeDelta = new Vector2(0f, _menuRowHeight);
+            button.gameObject.AddComponent<LayoutElement>().preferredHeight = _menuRowHeight;
             Text label = button.GetComponentInChildren<Text>();
             label.alignment = TextAnchor.MiddleLeft;
             label.fontSize = 16;
@@ -606,13 +893,15 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
         public void HideMenu()
         {
             _menu.SetActive(false);
+            if (_cityMap != null) _cityMap.SetActive(false);
+            _mapSelected = -1;
             _menuShownTitle = null;
         }
 
         // The computer screen: its title, the text on it, and the player's edits to it.
         private void BuildTerminal()
         {
-            Image frame = CreatePanel("Terminal", transform, .2f, .16f, .8f, .8f, new Color32(12, 9, 6, 246));
+            Image frame = PrefabPanel(_terminalPrefab, "Terminal", transform, .2f, .16f, .8f, .8f, new Color32(12, 9, 6, 246));
             frame.raycastTarget = true;
             _terminal = frame.gameObject;
             CreatePanel("Bezel", frame.transform, .0f, .0f, 1f, .006f, _mint);
@@ -656,6 +945,7 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
         {
             AnimateCard();
             AnimateDeck();
+            AnimateMap();
             AnimateCall();
             AnimateBanner();
             if (Keyboard.current == null || !Keyboard.current.escapeKey.wasPressedThisFrame) return;
@@ -744,6 +1034,22 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             return panel;
         }
 
+        private RectTransform PrefabRect(GameObject prefab, string objectName, Transform parent, float left, float bottom, float right, float top)
+        {
+            if (prefab == null) return CreateRect(objectName, parent, left, bottom, right, top);
+            GameObject instance = Instantiate(prefab, parent, false);
+            instance.name = objectName;
+            instance.layer = gameObject.layer;
+            return instance.GetComponent<RectTransform>();
+        }
+
+        private Image PrefabPanel(GameObject prefab, string objectName, Transform parent, float left, float bottom, float right, float top, Color color)
+        {
+            if (prefab == null) return CreatePanel(objectName, parent, left, bottom, right, top, color);
+            RectTransform rect = PrefabRect(prefab, objectName, parent, left, bottom, right, top);
+            return rect.GetComponent<Image>() ?? rect.gameObject.AddComponent<Image>();
+        }
+
         private Text CreateText(string objectName, Transform parent, string content, float left, float bottom, float right, float top, int size, Color color)
         {
             Text label = CreateRect(objectName, parent, left, bottom, right, top).gameObject.AddComponent<Text>();
@@ -760,11 +1066,12 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             return label;
         }
 
-        private Button CreateButton(string objectName, string caption, float left, float bottom, float right, float top, Transform parent = null)
+        private Button CreateButton(string objectName, string caption, float left, float bottom, float right, float top, Transform parent = null,
+            GameObject prefab = null)
         {
-            Image panel = CreatePanel(objectName, parent != null ? parent : transform, left, bottom, right, top, Color.white);
+            Image panel = PrefabPanel(prefab, objectName, parent != null ? parent : transform, left, bottom, right, top, Color.white);
             panel.raycastTarget = true;
-            Button button = panel.gameObject.AddComponent<Button>();
+            Button button = panel.GetComponent<Button>() ?? panel.gameObject.AddComponent<Button>();
             button.targetGraphic = panel;
             ColorBlock colors = button.colors;
             colors.normalColor = new Color32(40, 30, 28, 255);

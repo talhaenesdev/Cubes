@@ -20,10 +20,10 @@ namespace Modules.GameplayModule.Data.UnityObjects
         [TextArea(2, 4)] public List<string> PhoneCall = new()
         {
             "It's me. Don't talk, just listen.",
-            "Every family in this city keeps its secrets on paper. Ledgers, contracts, names.",
-            "Each job on the board hides one file. Find it, take it, get out.",
-            "You don't need to kill them all. You need the papers - and your skin.",
-            "Bring every file home. When I have them all, this city is ours.",
+            "Every place on that board makes money for a family.",
+            "Clear their armed men, but leave the civilians alone.",
+            "Find the boss and make an offer they cannot refuse.",
+            "Once the boss agrees to work for us, the place is ours.",
         };
         [Tooltip("Seconds a line stays before the next one comes on its own.")]
         [Min(1f)] public float PhoneLineTime = 6f;

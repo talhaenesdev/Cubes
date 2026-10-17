@@ -288,6 +288,57 @@ namespace Modules.GameplayModule.Editor
         }
     }
 
+    [CustomEditor(typeof(CD_Families))]
+    public class FamiliesInspector : ConfigInspector
+    {
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+            Banner("FAMILIES", "Register every CD_Family here. Missions refer to a family's Id.", Crimson);
+            RootFields("PlayerFamily", "Families");
+            serializedObject.ApplyModifiedProperties();
+        }
+    }
+
+    [CustomEditor(typeof(CD_Territory))]
+    public class TerritoryInspector : ConfigInspector
+    {
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+            Banner("TERRITORY", "Holding the city: shop income, the men posted there, raids live and while the game is closed, and talking an owner round.", Teal);
+            Group("Income", Gold, "LocationsPay");
+            Group("Our men at a shop  -  their own type, weaker than the player", Leaf, "MaxGuardsPerLocation", "DefenderType", "DefenderHealth",
+                "DefenderFirePace", "DefenderReaction", "DefenderSight", "DefenderBulletSpeed");
+            Group("Raids while playing", Ember, "Raids", "RaidRollMinutes", "RaidResponseMinutes", "RichShopRaidBonus");
+            Group("Raid strength  -  richer shops are hit harder", Crimson, "MinAttackers", "MaxAttackers", "AttackerAggression", "RichShopToughness");
+            Group("A raid nobody answers", Violet, "GuardStrength", "GuardLosses");
+            Group("While the game is closed", Sky, "HoursPerLostShop", "GuardKeepWeight");
+            Group("Talking the owner round", Gold, "Persuasion", "BubbleTime");
+            serializedObject.ApplyModifiedProperties();
+        }
+
+        private void Group(string title, Color color, params string[] names)
+        {
+            Section(title, color);
+            EditorGUI.indentLevel++;
+            RootFields(names);
+            EditorGUI.indentLevel--;
+        }
+    }
+
+    [CustomEditor(typeof(CD_Family))]
+    public class FamilyInspector : ConfigInspector
+    {
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+            Banner("FAMILY", "Names, combat type and directly-instantiated prefab for every rank.", Ember);
+            RootFields("Id", "DisplayName", "Color", "RelationToPlayer", "Relations", "Don", "Consigliere", "Caporegime", "Soldiers", "Associates");
+            serializedObject.ApplyModifiedProperties();
+        }
+    }
+
     [CustomEditor(typeof(CD_Missions))]
     public class MissionsInspector : ConfigInspector
     {
@@ -315,12 +366,13 @@ namespace Modules.GameplayModule.Editor
                     _ => Crimson,
                 };
                 int index = i;
-                string summary = (level == null ? "NO LEVEL" : level.Difficulty.ToString().ToUpperInvariant()) + $"   ${m.Reward}   " + (level != null ? level.name : "");
+                string summary = m.LocationDifficulty.ToString().ToUpperInvariant() + $"   ${m.Reward}   {m.AttackChance:0.#}% RAID   " + (level != null ? level.name : "NO LEVEL");
                 bool open = Card("ns.mission." + i, (i + 1) + ".  " + m.Title, summary, tint, header => CardButtons(header, index, ref _remove, ref _duplicate));
                 if (!open) continue;
                 EditorGUI.indentLevel++;
                 StatBar("Reward", m.Reward, top, Gold, "$" + m.Reward);
-                Fields(list.GetArrayElementAtIndex(i), "Id", "Title", "Briefing", "Level", "Reward", "Music");
+                Fields(list.GetArrayElementAtIndex(i), "Id", "Title", "Briefing", "Level", "Reward", "WorkPayment", "WorkPaymentInterval", "MapPosition",
+                    "OwnerFamily", "CivilianCount", "LocationDifficulty", "AttackChance", "AttackingFamily", "AttackingFamilies", "Music");
                 EditorGUI.indentLevel--;
                 GUILayout.Space(6f);
             }

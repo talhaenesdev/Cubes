@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using Modules.GameplayModule.Data.ValueObjects;
 using Modules.GameplayModule.Entities;
+using Modules.GameplayModule.Enums;
 using UnityEditor;
 using UnityEngine;
 
@@ -22,7 +23,7 @@ namespace Modules.GameplayModule.Editor
 
         private void BuildFixtures()
         {
-            if (ShouldWrite(Door))
+            if (ShouldWrite(Door) || DoorNeedsShapeGrid())
             {
                 GameObject door = Node("PB_Door", null, Vector2.zero);
                 var view = door.AddComponent<DoorView>();
@@ -30,6 +31,7 @@ namespace Modules.GameplayModule.Editor
                 GameObject closed = Node("Closed", door.transform, Vector2.zero);
                 Part("Slab", closed.transform, new Vector2(0f, 1.25f), new Vector2(0.4f, 2.5f), _steel, 21);
                 Part("Trim", closed.transform, new Vector2(-0.12f, 1.25f), new Vector2(0.045f, 2.35f), _amber, 22);
+                DoorShapeGrid(closed.transform, CharacterShape.Square);
                 Part("Knob", closed.transform, new Vector2(0.08f, 1.15f), new Vector2(0.12f, 0.08f), _ink, 23);
                 GameObject open = Node("Open", door.transform, Vector2.zero);
                 Part("Leaf", open.transform, new Vector2(0f, 1.25f), new Vector2(0.085f, 2.5f), _teal, 21);
@@ -114,6 +116,36 @@ namespace Modules.GameplayModule.Editor
                 Part("Glow", exit.transform, new Vector2(-0.42f, 1.23f), new Vector2(0.055f, 2.46f), green, -20);
                 Sign("EXIT", exit.transform, new Vector2(0f, 2.75f), 0.22f, green);
                 SavePrefab<GameObject>(exit, Exit);
+            }
+        }
+
+        private bool DoorNeedsShapeGrid()
+        {
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(Door);
+            return prefab != null && prefab.transform.Find("Closed/Shape Grid") == null;
+        }
+
+        private void DoorShapeGrid(Transform parent, CharacterShape shape)
+        {
+            const int gridSize = 5;
+            const float cellSize = 0.035f;
+            const float cellStep = 0.046f;
+            Vector2 centre = new(0f, 1.72f);
+            Transform grid = Node("Shape Grid", parent, centre).transform;
+            Part("Screen", grid, Vector2.zero, new Vector2(0.29f, 0.29f), _ink, 23);
+
+            float half = (gridSize - 1) * 0.5f;
+            for (int row = 0; row < gridSize; row++)
+            {
+                for (int column = 0; column < gridSize; column++)
+                {
+                    Vector2 cell = new((column - half) * cellStep, (row - half) * cellStep);
+                    Part($"Grid {column} {row}", grid, cell, new Vector2(cellSize, cellSize), new Color(0.16f, 0.22f, 0.22f), 24);
+                    float x = (column - half) / 1.7f;
+                    float y = (row - half) / 1.7f;
+                    if (Inside(shape, x, y))
+                        Part($"Shape {column} {row}", grid, cell, new Vector2(cellSize, cellSize), _teal, 25);
+                }
             }
         }
 

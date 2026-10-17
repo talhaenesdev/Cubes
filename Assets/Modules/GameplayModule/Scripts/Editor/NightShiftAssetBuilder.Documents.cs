@@ -28,11 +28,6 @@ namespace Modules.GameplayModule.Editor
             if (exit != null && exit.transform.Find("Guide") == null) return true;
             var hero = AssetDatabase.LoadAssetAtPath<GameObject>(CharacterPath(CharacterShape.Rectangle));
             if (hero != null && hero.GetComponentInChildren<CharacterRig>(true).transform.Find("Pose/Body/Torso/Headphones") == null) return true;
-            foreach (string path in DocumentLevels())
-            {
-                var level = AssetDatabase.LoadAssetAtPath<LevelAuthoring>(path);
-                if (level != null && level.GetComponentInChildren<DocumentView>(true) == null) return true;
-            }
             return false;
         }
 
@@ -41,7 +36,6 @@ namespace Modules.GameplayModule.Editor
             BuildDocumentPrefab();
             GuideForExit();
             HeadphonesForHero();
-            foreach (string path in DocumentLevels()) PlaceDocument(path);
         }
 
         private void BuildDocumentPrefab()

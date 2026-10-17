@@ -26,6 +26,8 @@ namespace Modules.GameplayModule.Data.ValueObjects
         public bool Abandoned;
         public bool Paused;
         public bool Active;
+        // A defence launched from an attacked working location rather than a normal contract.
+        public bool IsLocationDefense;
         // The player's character type and weapon, by Id in CD_Characters and CD_Weapons.
         public string PlayerType = "square";
         public string Outfit;
@@ -113,10 +115,15 @@ namespace Modules.GameplayModule.Data.ValueObjects
         public bool HasDocument;
         public Vector2 Document;
         public bool DocumentTaken;
-        public bool FirstMissionBossContract;
+        // A location is taken by clearing its armed guards and making its owner agree to work for the player.
+        public bool LocationTakeover;
         public int BossDialogue;
         public bool BossDialogueOpen;
         public bool BossRecruited;
+        // The bubble on screen: who says it (-1 the player, else a guard's index; -2 nobody), what, and for how long.
+        public int SpeechSpeaker = -2;
+        public string SpeechText = "";
+        public float SpeechTimer;
         // The phone call at home: the line being shown, -1 when no call; the time spent on it.
         public int Call = -1;
         // The phone rings until the player answers it.
@@ -192,6 +199,9 @@ namespace Modules.GameplayModule.Data.ValueObjects
         // Non-combatants use the same lightweight character runtime as guards, but never count as enemies.
         public bool Civilian;
         public bool Boss;
+        public string Family;
+        public FamilyRank FamilyRank;
+        public string Name;
         public bool Fleeing;
         public bool Escaped;
         public float WorkTimer;
@@ -277,6 +287,7 @@ namespace Modules.GameplayModule.Data.ValueObjects
         public Vector2 Position;
         public Vector2 Velocity;
         public bool FromPlayer;
+        public bool FromAlly;
         public int Damage = 1;
         public float Life = 1f;
     }

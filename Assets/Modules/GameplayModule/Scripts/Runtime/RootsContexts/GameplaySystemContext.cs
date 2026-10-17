@@ -32,6 +32,7 @@ namespace Modules.GameplayModule.RootsContexts
         {
             base.CommandBindings();
             CommandBinder.Bind(_signals.Incoming.StartContract)
+                .ToSequence<CatchUpTerritoryCommand>()
                 .ToSequence<RequestLevelCommand>()
                 .ToSequence<ResumeFromMenuCommand>()
                 .ToSequence<StartContractCommand>()
@@ -40,6 +41,7 @@ namespace Modules.GameplayModule.RootsContexts
                 .ToSequence<ApplyMusicVolumeCommand>()
                 .ToSequence<RingPhoneCommand>()
                 .ToSequence<SignalDispatchCommand>(_signals.Outgoing.OpenHud)
+                .ToSequence<ReportAbsenceCommand>()
                 .ToSequence<SignalDispatchCommand>(_signals.Outgoing.TerminalClosed)
                 .ToSequence<SignalDispatchCommand>(_signals.Outgoing.MenuClosed)
                 .ToSequence<SignalDispatchCommand>(_signals.Outgoing.DeckClosed)
@@ -56,6 +58,7 @@ namespace Modules.GameplayModule.RootsContexts
                 .ToSequence<SignalDispatchCommand>(_signals.Outgoing.OpenHud);
             CommandBinder.Bind(_signals.Incoming.SaveTerminal).ToSequence<SaveTerminalCommand>();
             CommandBinder.Bind(_signals.Incoming.ChooseMenu).ToSequence<ChooseMenuCommand>();
+            CommandBinder.Bind(_signals.Incoming.MapAction).ToSequence<MapActionCommand>();
             CommandBinder.Bind(_signals.Incoming.ControlTape).ToSequence<ControlTapeCommand>();
             CommandBinder.Bind(_signals.Incoming.SetMusicVolume)
                 .ToSequence<SetMusicVolumeCommand>()
@@ -87,6 +90,12 @@ namespace Modules.GameplayModule.RootsContexts
                 .ToSequence<ZoomCameraCommand>()
                 .ToSequence<CaptureContractInputCommand>();
             CommandBinder.Bind(_internalSignals.Tick)
+#if UNITY_EDITOR
+                .ToSequence<GameplayDebugShortcutsCommand>()
+#endif
+                .ToSequence<ProcessWorkingLocationAttacksCommand>()
+                .ToSequence<PayWorkingLocationsCommand>()
+                .ToSequence<RefreshMapCommand>()
                 .ToSequence<PhoneCallCommand>()
                 .ToSequence<IntroCommand>()
                 .ToSequence<SwitchTrackCommand>()

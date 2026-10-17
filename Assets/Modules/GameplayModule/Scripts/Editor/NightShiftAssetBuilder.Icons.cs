@@ -19,6 +19,7 @@ namespace Modules.GameplayModule.Editor
         private readonly Dictionary<StationKind, (string path, float height)> _stationIcons = new()
         {
             {StationKind.MissionBoard, (Prefabs + "/Fixtures/PB_MissionBoard.prefab", 2.75f)},
+            {StationKind.FamilyBoard, (Prefabs + "/Fixtures/PB_FamilyBoard.prefab", 2.75f)},
             {StationKind.UpgradeBench, (Prefabs + "/Fixtures/PB_UpgradeBench.prefab", 2.95f)},
             {StationKind.CassettePlayer, (Prefabs + "/Fixtures/PB_CassettePlayer.prefab", 1.75f)},
             {StationKind.Wardrobe, (Prefabs + "/Fixtures/PB_Wardrobe.prefab", 3.15f)},
@@ -125,6 +126,7 @@ namespace Modules.GameplayModule.Editor
             Color tint = kind switch
             {
                 StationKind.MissionBoard => new Color(0.85f, 0.15f, 0.18f),
+                StationKind.FamilyBoard => new Color(0.3f, 0.9f, 0.83f),
                 StationKind.WeaponLocker => new Color(0.85f, 0.68f, 0.3f),
                 StationKind.CassettePlayer => new Color(0.95f, 0.85f, 0.6f),
                 _ => new Color(0.85f, 0.75f, 0.55f),
@@ -139,6 +141,11 @@ namespace Modules.GameplayModule.Editor
                     Part("Pin collar", icon, new Vector2(0f, -0.02f), new Vector2(0.1f, 0.04f), tint * 0.8f, -6);
                     Part("Pin needle", icon, new Vector2(0f, -0.09f), new Vector2(0.02f, 0.11f), new Color(0.8f, 0.8f, 0.8f), -6);
                     Part("Pin shine", icon, new Vector2(-0.03f, 0.09f), new Vector2(0.03f, 0.03f), Color.white, -5).sprite = round;
+                    break;
+                case StationKind.FamilyBoard: // two connected families
+                    Part("Family L", icon, new Vector2(-0.07f, 0f), new Vector2(0.11f, 0.11f), tint, -6).sprite = round;
+                    Part("Family R", icon, new Vector2(0.07f, 0f), new Vector2(0.11f, 0.11f), tint, -6).sprite = round;
+                    Part("Relation", icon, Vector2.zero, new Vector2(0.14f, 0.025f), tint, -5);
                     break;
                 case StationKind.UpgradeBench: // a wrench
                     Part("Wrench handle", icon, new Vector2(0.03f, -0.03f), new Vector2(0.05f, 0.24f), tint, -6, -40f);

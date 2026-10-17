@@ -11,5 +11,7 @@ namespace Modules.GameplayModule.Enums
         Wardrobe = 3,
         // Puts the carried weapons away and hands back the stored ones.
         WeaponLocker = 4,
+        // Shows every family's current relationship with Square.
+        FamilyBoard = 5,
     }
 }

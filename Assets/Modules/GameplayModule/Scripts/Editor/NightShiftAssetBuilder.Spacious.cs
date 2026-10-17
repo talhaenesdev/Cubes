@@ -16,6 +16,8 @@ namespace Modules.GameplayModule.Editor
         private const int VentlessVersion = 2;
         // Vents came back as hiding places; this pass puts them back where the builder first placed them.
         private const int VentsBackVersion = 3;
+        // The document objective gave way to taking shops over; this pass takes the folders out of the levels.
+        private const int NoDocumentsVersion = 4;
         private const float Widen = 1.25f;
         // A room gets another guard when each guard in it would have more than this much floor to themselves.
         private const float FloorPerGuard = 5.5f;
@@ -25,7 +27,7 @@ namespace Modules.GameplayModule.Editor
             foreach (string path in DocumentLevels())
             {
                 var level = AssetDatabase.LoadAssetAtPath<LevelAuthoring>(path);
-                if (level != null && level.LayoutVersion < VentsBackVersion) return true;
+                if (level != null && level.LayoutVersion < NoDocumentsVersion) return true;
             }
             return false;
         }
@@ -65,6 +67,28 @@ namespace Modules.GameplayModule.Editor
                     contents.GetComponent<LevelAuthoring>().LayoutVersion = VentsBackVersion;
                     PrefabUtility.SaveAsPrefabAsset(contents, path);
                     _report.Add("Put " + spots.Length + " vents back in " + System.IO.Path.GetFileNameWithoutExtension(path));
+                }
+                finally
+                {
+                    PrefabUtility.UnloadPrefabContents(contents);
+                }
+            }
+        }
+
+        private void RemoveDocuments()
+        {
+            foreach (string path in DocumentLevels())
+            {
+                var asset = AssetDatabase.LoadAssetAtPath<LevelAuthoring>(path);
+                if (asset == null || asset.LayoutVersion >= NoDocumentsVersion) continue;
+                GameObject contents = PrefabUtility.LoadPrefabContents(path);
+                try
+                {
+                    DocumentView[] documents = contents.GetComponentsInChildren<DocumentView>(true);
+                    foreach (DocumentView document in documents) Object.DestroyImmediate(document.gameObject);
+                    contents.GetComponent<LevelAuthoring>().LayoutVersion = NoDocumentsVersion;
+                    PrefabUtility.SaveAsPrefabAsset(contents, path);
+                    _report.Add("Took the documents out of " + System.IO.Path.GetFileNameWithoutExtension(path));
                 }
                 finally
                 {

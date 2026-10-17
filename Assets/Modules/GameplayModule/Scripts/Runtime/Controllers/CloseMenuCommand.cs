@@ -9,7 +9,6 @@ namespace Modules.GameplayModule.Controllers
         public override void Execute()
         {
             _model.Run.Menu = -1;
-            _model.GuardAssignmentMission = null;
             _model.Run.Paused = false;
             _model.ClearEdges();
         }

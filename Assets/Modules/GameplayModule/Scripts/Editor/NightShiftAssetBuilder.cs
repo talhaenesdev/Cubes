@@ -65,6 +65,7 @@ namespace Modules.GameplayModule.Editor
             BuildLevel();
             BuildHideout();
             DeckForHideout();
+            FamilyBoardForHideout();
             BuildHome();
             TakeDownPictures();
             IconsForHideout();
@@ -72,10 +73,10 @@ namespace Modules.GameplayModule.Editor
             BuildCampaign();
             RegisterDocks();
             BuildContracts();
-            BuildDocuments();
             MakeLevelsSpacious();
             RemoveVents();
             PutVentsBack();
+            RemoveDocuments();
             BuildSounds();
             BuildMood();
             RetireLadder();
@@ -103,8 +104,8 @@ namespace Modules.GameplayModule.Editor
                 if (Exists(path)) return true;
             foreach (CharacterShape shape in System.Enum.GetValues(typeof(CharacterShape)))
                 if (!Exists(CharacterPath(shape)) || NeedsRestyle(CharacterPath(shape)) || NeedsPhone(CharacterPath(shape))) return true;
-            if (!Exists(CassettePlayer) || HideoutNeedsDeck()) return true;
-            if (!Exists(GameplayAsset) || ContractsMissing() || DocumentsMissing() || SoundsMissing() || !Exists(CashPrefab) || LevelsNeedSpace()) return true;
+            if (!Exists(CassettePlayer) || HideoutNeedsDeck() || !Exists(FamilyBoard) || HideoutNeedsFamilyBoard() || DoorNeedsShapeGrid()) return true;
+            if (!Exists(GameplayAsset) || !Exists(TerritoryAsset) || TerritoryNotFiled() || !Exists(FamiliesAsset) || !Exists(RivalFamilyAsset) || !Exists(PlayerFamilyAsset) || ContractsMissing() || SoundsMissing() || !Exists(CashPrefab) || LevelsNeedSpace()) return true;
             if (!Exists(OutfitsAsset) || !Exists(Wardrobe) || !Exists(WeaponLocker) || !Exists(Cat) || HideoutNeedsHome()) return true;
             if (NeedsRestyle(CharacterPath(CharacterShape.Rectangle)) || HideoutHasPictures() || NeedsIcons()) return true;
             var outfits = AssetDatabase.LoadAssetAtPath<Data.UnityObjects.CD_Outfits>(OutfitsAsset);
@@ -112,7 +113,7 @@ namespace Modules.GameplayModule.Editor
             var cast = AssetDatabase.LoadAssetAtPath<Data.UnityObjects.CD_Characters>(CharactersAsset);
             if (cast != null && cast.Find("rectangle") == null) return true;
             if (!Exists(MusicAsset) || !AssetDatabase.IsValidFolder(HideoutMusicFolder) || !AssetDatabase.IsValidFolder(ContractMusicFolder)) return true;
-            foreach (string path in new[] {HideoutPrefab, MissionsAsset, UpgradesAsset, MissionBoard, UpgradeBench, DocksPrefab,
+            foreach (string path in new[] {HideoutPrefab, MissionsAsset, UpgradesAsset, MissionBoard, FamilyBoard, UpgradeBench, DocksPrefab,
                          Prefabs + "/FX/PB_FX_Explosion.prefab", Prefabs + "/Decals/PB_Decal_Scorch.prefab"})
                 if (!Exists(path)) return true;
             foreach (PropKind kind in System.Enum.GetValues(typeof(PropKind)))

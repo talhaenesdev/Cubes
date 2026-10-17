@@ -1,6 +1,6 @@
 namespace Modules.GameplayModule.Enums
 {
-    // Enemy hunts and shoots the player and counts towards clearing the building; Friendly only goes about its patrol.
+    // Enemy hunts the player and friendly guards; Friendly patrols normally and fights enemies during a location defence.
     public enum Faction
     {
         Enemy = 0,

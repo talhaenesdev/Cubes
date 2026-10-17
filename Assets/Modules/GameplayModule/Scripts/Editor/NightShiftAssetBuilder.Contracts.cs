@@ -18,7 +18,7 @@ namespace Modules.GameplayModule.Editor
         private class ContractRecipe
         {
             public string Id, Title, Briefing, Sign, Lore;
-            public int Seed, Floors, Reward;
+            public int Seed, Floors, Reward, WorkPayment;
             public float Half;
             public LevelDifficulty Difficulty;
             public Color Wall, Trim, Sky, Glow;
@@ -38,43 +38,43 @@ namespace Modules.GameplayModule.Editor
         private readonly ContractRecipe[] _contracts =
         {
             new() {Id = "Laundromat", Title = "SPIN CYCLE  /  LUCKY SUDS", Briefing = "Two lookouts wash the family's money at night. Quiet job - nobody upstairs.",
-                   Sign = "LUCKY  SUDS", Lore = "Cash in drum 4. Rinse twice.", Seed = 101, Floors = 1, Half = 12f, Reward = 300, Difficulty = LevelDifficulty.Easy,
+                   Sign = "LUCKY  SUDS", Lore = "Cash in drum 4. Rinse twice.", Seed = 101, Floors = 1, Half = 12f, Reward = 300, WorkPayment = 30, Difficulty = LevelDifficulty.Easy,
                    Wall = new Color(0.12f, 0.16f, 0.17f), Trim = new Color(0.4f, 0.75f, 0.75f), Sky = new Color(0.03f, 0.04f, 0.06f), Glow = new Color(0.3f, 0.8f, 0.8f), Rain = true,
                    Cast = new[] {("triangle", 1f)}, GuardsPerRoom = 1, Aggression = 0.7f, Barrels = 0f, Lamps = 0.5f, Clutter = 1f, Pickups = new[] {"silenced_pistol"}},
             new() {Id = "Diner", Title = "LAST ORDERS  /  ROSIE'S DINER", Briefing = "A back-room card game. The dealers are slow and the coffee is worse.",
-                   Sign = "R O S I E ' S", Lore = "Table 3 owes 400. Don't serve the Square.", Seed = 202, Floors = 1, Half = 15f, Reward = 450, Difficulty = LevelDifficulty.Easy,
+                   Sign = "R O S I E ' S", Lore = "Table 3 owes 400. Don't serve the Square.", Seed = 202, Floors = 1, Half = 15f, Reward = 450, WorkPayment = 45, Difficulty = LevelDifficulty.Easy,
                    Wall = new Color(0.2f, 0.11f, 0.1f), Trim = new Color(0.85f, 0.35f, 0.4f), Sky = new Color(0.05f, 0.03f, 0.05f), Glow = new Color(0.95f, 0.35f, 0.45f), Rain = false,
                    Cast = new[] {("triangle", 3f), ("pentagon", 1f)}, GuardsPerRoom = 1, Aggression = 0.8f, Barrels = 0.2f, Lamps = 0.7f, Clutter = 1.2f, Pickups = new[] {"pistol"}},
             new() {Id = "PawnShop", Title = "HOT GOODS  /  GOLDMAN PAWN", Briefing = "The pawnbroker keeps two floors of stolen goods and a nervous guard on each.",
-                   Sign = "GOLDMAN  PAWN", Lore = "Rings in the safe. Guns under the counter.", Seed = 303, Floors = 2, Half = 13f, Reward = 600, Difficulty = LevelDifficulty.Easy,
+                   Sign = "GOLDMAN  PAWN", Lore = "Rings in the safe. Guns under the counter.", Seed = 303, Floors = 2, Half = 13f, Reward = 600, WorkPayment = 60, Difficulty = LevelDifficulty.Easy,
                    Wall = new Color(0.15f, 0.13f, 0.08f), Trim = new Color(0.8f, 0.65f, 0.25f), Sky = new Color(0.04f, 0.035f, 0.03f), Glow = new Color(0.95f, 0.75f, 0.3f), Rain = true,
                    Cast = new[] {("triangle", 2f), ("pentagon", 1f)}, GuardsPerRoom = 1, Aggression = 0.85f, Barrels = 0.2f, Lamps = 0.8f, Clutter = 1.5f, Pickups = new[] {"revolver"}},
             new() {Id = "Gym", Title = "GLASS JAW  /  IRON BOX GYM", Briefing = "Hexagons train here after hours. They hit hard and hear everything.",
-                   Sign = "IRON  BOX", Lore = "Fight fixed for round 3.", Seed = 404, Floors = 2, Half = 15f, Reward = 800, Difficulty = LevelDifficulty.Normal,
+                   Sign = "IRON  BOX", Lore = "Fight fixed for round 3.", Seed = 404, Floors = 2, Half = 15f, Reward = 800, WorkPayment = 80, Difficulty = LevelDifficulty.Normal,
                    Wall = new Color(0.1f, 0.1f, 0.12f), Trim = new Color(0.85f, 0.2f, 0.2f), Sky = new Color(0.03f, 0.03f, 0.04f), Glow = new Color(0.95f, 0.25f, 0.2f), Rain = false,
                    Cast = new[] {("hexagon", 2f), ("triangle", 2f)}, GuardsPerRoom = 1, Aggression = 1f, Barrels = 0.3f, Lamps = 0.8f, Clutter = 1f, Pickups = new[] {"shotgun"}},
             new() {Id = "Cinema", Title = "MATINEE  /  THE ORPHEUM", Briefing = "The projectionist runs the family's film reels. Dark halls, long sightlines.",
-                   Sign = "O R P H E U M", Lore = "Reel 2 is the ledger. Burn reel 1.", Seed = 505, Floors = 2, Half = 18f, Reward = 1000, Difficulty = LevelDifficulty.Normal,
+                   Sign = "O R P H E U M", Lore = "Reel 2 is the ledger. Burn reel 1.", Seed = 505, Floors = 2, Half = 18f, Reward = 1000, WorkPayment = 100, Difficulty = LevelDifficulty.Normal,
                    Wall = new Color(0.18f, 0.06f, 0.08f), Trim = new Color(0.9f, 0.7f, 0.3f), Sky = new Color(0.04f, 0.02f, 0.03f), Glow = new Color(0.95f, 0.8f, 0.4f), Rain = true,
                    Cast = new[] {("triangle", 2f), ("pentagon", 2f), ("diamond", 1f)}, GuardsPerRoom = 1, Aggression = 1f, Barrels = 0.2f, Lamps = 1f, Clutter = 0.8f, Pickups = new[] {"smg", "pistol"}},
             new() {Id = "Hotel", Title = "ROOM SERVICE  /  HOTEL MERIDIAN", Briefing = "A lieutenant hides on the top floor. Corridors full of doors, guards that check them.",
-                   Sign = "HOTEL  MERIDIAN", Lore = "Suite 12. He orders at midnight.", Seed = 606, Floors = 2, Half = 20f, Reward = 1250, Difficulty = LevelDifficulty.Normal,
+                   Sign = "HOTEL  MERIDIAN", Lore = "Suite 12. He orders at midnight.", Seed = 606, Floors = 2, Half = 20f, Reward = 1250, WorkPayment = 125, Difficulty = LevelDifficulty.Normal,
                    Wall = new Color(0.14f, 0.12f, 0.16f), Trim = new Color(0.65f, 0.5f, 0.85f), Sky = new Color(0.03f, 0.03f, 0.06f), Glow = new Color(0.7f, 0.5f, 0.95f), Rain = true,
                    Cast = new[] {("triangle", 2f), ("pentagon", 2f), ("hexagon", 1f)}, GuardsPerRoom = 2, Aggression = 1.05f, Barrels = 0.2f, Lamps = 1.2f, Clutter = 1.2f, Pickups = new[] {"silenced_pistol", "smg"}},
             new() {Id = "Distillery", Title = "PROOF  /  BLACKWATER DISTILLERY", Briefing = "The family's still. Barrels everywhere - and every barrel burns.",
-                   Sign = "BLACKWATER", Lore = "Batch 9 goes out Friday. Mind the fumes.", Seed = 707, Floors = 2, Half = 21f, Reward = 1500, Difficulty = LevelDifficulty.Hard,
+                   Sign = "BLACKWATER", Lore = "Batch 9 goes out Friday. Mind the fumes.", Seed = 707, Floors = 2, Half = 21f, Reward = 1500, WorkPayment = 150, Difficulty = LevelDifficulty.Hard,
                    Wall = new Color(0.16f, 0.11f, 0.06f), Trim = new Color(0.9f, 0.5f, 0.15f), Sky = new Color(0.04f, 0.03f, 0.02f), Glow = new Color(1f, 0.55f, 0.15f), Rain = false,
                    Cast = new[] {("pentagon", 2f), ("hexagon", 2f), ("triangle", 1f)}, GuardsPerRoom = 2, Aggression = 1.15f, Toughness = 0, Barrels = 1.6f, Lamps = 0.8f, Clutter = 0.6f, Pickups = new[] {"shotgun", "smg"}},
             new() {Id = "Casino", Title = "HOUSE EDGE  /  THE GOLDEN CIRCLE", Briefing = "The family's casino. Diamonds on the floor, sharpshooters on the balcony.",
-                   Sign = "GOLDEN  CIRCLE", Lore = "The house always wins. Count room upstairs.", Seed = 808, Floors = 2, Half = 23f, Reward = 1800, Difficulty = LevelDifficulty.Hard,
+                   Sign = "GOLDEN  CIRCLE", Lore = "The house always wins. Count room upstairs.", Seed = 808, Floors = 2, Half = 23f, Reward = 1800, WorkPayment = 180, Difficulty = LevelDifficulty.Hard,
                    Wall = new Color(0.08f, 0.13f, 0.09f), Trim = new Color(0.95f, 0.8f, 0.3f), Sky = new Color(0.02f, 0.04f, 0.03f), Glow = new Color(0.4f, 0.95f, 0.5f), Rain = true,
                    Cast = new[] {("diamond", 2f), ("pentagon", 2f), ("triangle", 1f)}, GuardsPerRoom = 2, Aggression = 1.2f, Toughness = 1, Barrels = 0.4f, Lamps = 1.4f, Clutter = 1.2f, Pickups = new[] {"rifle", "smg"}},
             new() {Id = "Precinct", Title = "BOUGHT BADGES  /  PRECINCT 13", Briefing = "Crooked cops on the family's payroll. They react fast and never stop looking.",
-                   Sign = "PRECINCT  13", Lore = "Evidence room key: under the mug.", Seed = 909, Floors = 2, Half = 25f, Reward = 2100, Difficulty = LevelDifficulty.Brutal,
+                   Sign = "PRECINCT  13", Lore = "Evidence room key: under the mug.", Seed = 909, Floors = 2, Half = 25f, Reward = 2100, WorkPayment = 210, Difficulty = LevelDifficulty.Brutal,
                    Wall = new Color(0.1f, 0.12f, 0.16f), Trim = new Color(0.3f, 0.5f, 0.95f), Sky = new Color(0.02f, 0.03f, 0.06f), Glow = new Color(0.35f, 0.55f, 1f), Rain = true,
                    Cast = new[] {("triangle", 2f), ("diamond", 2f), ("hexagon", 2f), ("pentagon", 1f)}, GuardsPerRoom = 2, Aggression = 1.35f, Toughness = 1, Barrels = 0.3f, Lamps = 1f, Clutter = 1f, Pickups = new[] {"shotgun", "rifle"}},
             new() {Id = "Penthouse", Title = "TOP FLOOR  /  THE DON'S PENTHOUSE", Briefing = "The Don himself, two floors of his best. Nothing on this list is harder.",
-                   Sign = "T H E   D O N", Lore = "After the docks, the Square comes for me. Let him.", Seed = 1010, Floors = 2, Half = 27f, Reward = 2400, Difficulty = LevelDifficulty.Brutal,
+                   Sign = "T H E   D O N", Lore = "After the docks, the Square comes for me. Let him.", Seed = 1010, Floors = 2, Half = 27f, Reward = 2400, WorkPayment = 240, Difficulty = LevelDifficulty.Brutal,
                    Wall = new Color(0.13f, 0.08f, 0.1f), Trim = new Color(0.9f, 0.15f, 0.25f), Sky = new Color(0.03f, 0.015f, 0.025f), Glow = new Color(1f, 0.2f, 0.3f), Rain = true,
                    Cast = new[] {("diamond", 2f), ("hexagon", 2f), ("pentagon", 2f), ("triangle", 1f)}, GuardsPerRoom = 3, Aggression = 1.5f, Toughness = 1, Barrels = 0.6f, Lamps = 1.2f, Clutter = 1f, Pickups = new[] {"rifle", "shotgun", "smg"}},
         };
@@ -291,7 +291,19 @@ namespace Modules.GameplayModule.Editor
                 if (missions.Find(id) != null) { at = missions.Missions.FindIndex(m => m.Id == id) + 1; continue; }
                 missions.Missions.Insert(at++, new MissionCVO
                 {
-                    Id = id, Title = r.Title, Briefing = r.Briefing, Reward = r.Reward,
+                    Id = id, Title = r.Title, Briefing = r.Briefing, Reward = r.Reward, WorkPayment = r.WorkPayment,
+                    LocationDifficulty = r.Difficulty >= LevelDifficulty.Hard ? LocationDifficulty.Hard
+                        : r.Difficulty == LevelDifficulty.Normal ? LocationDifficulty.Medium : LocationDifficulty.Easy,
+                    AttackChance = r.Difficulty >= LevelDifficulty.Hard ? 30f : r.Difficulty == LevelDifficulty.Normal ? 20f : 10f,
+                    OwnerFamily = id switch
+                    {
+                        "laundromat" or "diner" => "circle",
+                        "pawnshop" => "pentagon",
+                        "gym" => "hexagon",
+                        "casino" => "diamond",
+                        _ => "rival",
+                    },
+                    AttackingFamily = "rival",
                     Level = AssetDatabase.LoadAssetAtPath<LevelAuthoring>(ContractPath(r.Id)),
                 });
                 _report.Add("Added the " + r.Title + " contract to CD_Missions");

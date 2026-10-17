@@ -69,3 +69,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 730989afb14ba9149b7fb48c184c5677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.GameplayScreenView
+  _cream: {r: 0.8862745, g: 0.8392157, b: 0.74509805, a: 1}
+  _mint: {r: 0.76862746, g: 0.627451, b: 0.36078432, a: 1}
+  _ink: {r: 0.039215688, g: 0.03137255, b: 0.03137255, a: 0.9490196}
+  _danger: {r: 0.78431374, g: 0.23529412, b: 0.15686275, a: 1}
+  _warning: {r: 1, g: 0.5882353, b: 0.23529412, a: 1}
+  _success: {r: 0.47058824, g: 0.8627451, b: 0.5882353, a: 1}
+  _fontAsset: {fileID: 0}
+  _click: {fileID: 0}
+  _disc: {fileID: 0}
+  _ring: {fileID: 0}
+  _thinRing: {fileID: 0}
+  _headerPrefab: {fileID: 8100057060870574336, guid: 5334da0c23c071f4abed2e4a34f994d4, type: 3}
+  _terminalPrefab: {fileID: 4180993992031793860, guid: 47e25916e4bf48344b2966004212079a, type: 3}
+  _menuPrefab: {fileID: 3725641660197126944, guid: 039a55340b3b5f44b8e901689f88dc87, type: 3}
+  _cityMapPrefab: {fileID: 8176013394404203735, guid: 11dbf6a89cc0ec447a3f4faf242091f9, type: 3}
+  _nowPlayingPrefab: {fileID: 4777094753126266822, guid: caf7435bd57054043aac5574eed6191c, type: 3}
+  _deckPrefab: {fileID: 9164995291638405943, guid: 51cbd99ed8fccb547aad9a240d3f4064, type: 3}
+  _touchControlsPrefab: {fileID: 388705360241087391, guid: 24a74ea259c20be4ab20a2ddfe632dcc, type: 3}
+  _phoneCallPrefab: {fileID: 8926574602113041715, guid: 1c4b6836571d1754982c5d3969330c7c, type: 3}
+  _bannerPrefab: {fileID: 5295026966480203255, guid: 47177722e9d7e1e45847f4635f8fed25, type: 3}
+  _menuRowPrefab: {fileID: 2739230354099123941, guid: 5bec73c93b100e145a0bd274de80969b, type: 3}
+  _mapPinPrefab: {fileID: 5848900325342674449, guid: 448695855fb902844a2e1e5965becb4d, type: 3}
+  _cardIn: 0.7
+  _cardHold: 4.5
+  _cardOut: 0.8
+  _menuRowHeight: 62

@@ -2107,6 +2107,8 @@ MonoBehaviour:
   Facing: 1
   PatrolLeft: -0.6081408
   PatrolRight: 6.097238
+  Civilian: 0
+  Boss: 0
 --- !u!1 &687204727435482464
 GameObject:
   m_ObjectHideFlags: 0
@@ -2158,6 +2160,8 @@ MonoBehaviour:
   Facing: -1
   PatrolLeft: 0.60895395
   PatrolRight: 6.924193
+  Civilian: 0
+  Boss: 0
 --- !u!1 &692166293950928823
 GameObject:
   m_ObjectHideFlags: 0
@@ -2792,6 +2796,8 @@ MonoBehaviour:
   Facing: -1
   PatrolLeft: -19.61205
   PatrolRight: -12.7098255
+  Civilian: 0
+  Boss: 0
 --- !u!1 &920092250990259751
 GameObject:
   m_ObjectHideFlags: 0
@@ -3571,6 +3577,8 @@ MonoBehaviour:
   Facing: -1
   PatrolLeft: 10.909638
   PatrolRight: 14.624226
+  Civilian: 0
+  Boss: 0
 --- !u!1 &1252063744188365377
 GameObject:
   m_ObjectHideFlags: 0
@@ -4013,7 +4021,6 @@ Transform:
   - {fileID: 6424368681186755293}
   - {fileID: 4648883485853397783}
   - {fileID: 7950233887354843363}
-  - {fileID: 2881196037596913648}
   - {fileID: 5461337515781081907}
   - {fileID: 6341099767020629433}
   m_Father: {fileID: 3564937702781183710}
@@ -4342,6 +4349,8 @@ MonoBehaviour:
   Facing: 1
   PatrolLeft: -10.674268
   PatrolRight: -6.1077223
+  Civilian: 0
+  Boss: 0
 --- !u!1 &1549251432089207636
 GameObject:
   m_ObjectHideFlags: 0
@@ -11033,6 +11042,8 @@ MonoBehaviour:
   Facing: -1
   PatrolLeft: 14.189966
   PatrolRight: 18.27717
+  Civilian: 0
+  Boss: 0
 --- !u!1 &4378098006161751192
 GameObject:
   m_ObjectHideFlags: 0
@@ -19285,6 +19296,8 @@ MonoBehaviour:
   Facing: 1
   PatrolLeft: 4.9544606
   PatrolRight: 9.709638
+  Civilian: 0
+  Boss: 0
 --- !u!1 &5529382422618688634
 GameObject:
   m_ObjectHideFlags: 0
@@ -20038,7 +20051,7 @@ MonoBehaviour:
   HalfWidth: 22.5
   Difficulty: 1
   FollowCamera: 1
-  LayoutVersion: 3
+  LayoutVersion: 4
   Camera: {fileID: 1584091517969469243}
   Dynamic: {fileID: 737402427788580075}
   Crosshair: {fileID: 7425343010848861886}
@@ -21780,6 +21793,8 @@ MonoBehaviour:
   Facing: -1
   PatrolLeft: 11.76708
   PatrolRight: 15.157448
+  Civilian: 0
+  Boss: 0
 --- !u!1 &6331123837528510819
 GameObject:
   m_ObjectHideFlags: 0
@@ -22832,6 +22847,8 @@ MonoBehaviour:
   Facing: -1
   PatrolLeft: -8.780775
   PatrolRight: -3.445466
+  Civilian: 0
+  Boss: 0
 --- !u!1 &6746707532227231205
 GameObject:
   m_ObjectHideFlags: 0
@@ -23611,6 +23628,8 @@ MonoBehaviour:
   Facing: 1
   PatrolLeft: -14.24897
   PatrolRight: -11.335393
+  Civilian: 0
+  Boss: 0
 --- !u!1 &7037530001607329410
 GameObject:
   m_ObjectHideFlags: 0
@@ -25924,6 +25943,8 @@ MonoBehaviour:
   Facing: -1
   PatrolLeft: 12.895081
   PatrolRight: 19.040112
+  Civilian: 0
+  Boss: 0
 --- !u!1 &7680943082066691657
 GameObject:
   m_ObjectHideFlags: 0
@@ -29555,6 +29576,8 @@ MonoBehaviour:
   Facing: -1
   PatrolLeft: 7.3014135
   PatrolRight: 10.56708
+  Civilian: 0
+  Boss: 0
 --- !u!1 &9010489409632891640
 GameObject:
   m_ObjectHideFlags: 0
@@ -30257,68 +30280,6 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 5682947027654956997, guid: 34ad6237356e2ca409a8f35bd6ac941d, type: 3}
   m_PrefabInstance: {fileID: 1379630325933048282}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &1754791857843536356
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 3346365774915017800}
-    m_Modifications:
-    - target: {fileID: 1264070933734163081, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
-      propertyPath: m_Name
-      value: Document
-      objectReference: {fileID: 0}
-    - target: {fileID: 4586447151272893972, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 17.332094
-      objectReference: {fileID: 0}
-    - target: {fileID: 4586447151272893972, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 4.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4586447151272893972, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4586447151272893972, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4586447151272893972, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4586447151272893972, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4586447151272893972, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4586447151272893972, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4586447151272893972, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4586447151272893972, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
---- !u!4 &2881196037596913648 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4586447151272893972, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
-  m_PrefabInstance: {fileID: 1754791857843536356}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1932925931921034726
 PrefabInstance:

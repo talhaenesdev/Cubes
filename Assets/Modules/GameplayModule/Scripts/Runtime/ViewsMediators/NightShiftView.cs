@@ -54,6 +54,7 @@ namespace Modules.GameplayModule.ViewsMediators
         private readonly List<int> _gonePickups = new();
         private readonly HashSet<int> _livePickups = new();
         private CD_Characters _characters;
+        private CD_Families _families;
         private CD_Weapons _weapons;
         private CD_Outfits _outfits;
         private readonly Dictionary<BulletRVO, BulletView> _bullets = new();
@@ -151,10 +152,11 @@ namespace Modules.GameplayModule.ViewsMediators
 
         public void SetOutfits(CD_Outfits outfits) => _outfits = outfits;
 
-        public void SetRoster(CD_Characters characters, CD_Weapons weapons)
+        public void SetRoster(CD_Characters characters, CD_Weapons weapons, CD_Families families)
         {
             _characters = characters;
             _weapons = weapons;
+            _families = families;
         }
 
         private readonly Dictionary<LevelAuthoring, LevelAuthoring> _levels = new();
@@ -401,6 +403,7 @@ namespace Modules.GameplayModule.ViewsMediators
             DrawDecals(state);
             DrawPickups(state);
             DrawLoot(state);
+            DrawSpeech(state);
             PlaySounds(state, reset);
 
             _shots = state.Shots;
@@ -663,26 +666,28 @@ namespace Modules.GameplayModule.ViewsMediators
         private const int PlayerSlot = -1;
 
         // The rig for a slot, made from the prefab its character type names and remade if the type changed.
-        private CharacterRig Rig(int slot, string type)
+        private CharacterRig Rig(int slot, string type, string appearance = null, GameObject familyPrefab = null)
         {
-            if (_rigs.TryGetValue(slot, out CharacterRig rig) && _rigTypes[slot] == type) return rig;
+            string key = string.IsNullOrEmpty(appearance) ? type : appearance;
+            if (_rigs.TryGetValue(slot, out CharacterRig rig) && _rigTypes[slot] == key) return rig;
             if (rig != null) Destroy(rig.gameObject);
             _rigs.Remove(slot);
             CharacterTypeCVO config = _characters != null ? _characters.Find(type) : null;
-            if (config == null || config.Prefab == null || _level == null) return null;
-            GameObject made = Instantiate(config.Prefab, _level.Dynamic != null ? _level.Dynamic : _level.transform, false);
-            made.name = config.Prefab.name + (slot == PlayerSlot ? " (player)" : " #" + slot);
+            GameObject prefab = familyPrefab != null ? familyPrefab : config != null ? config.Prefab : null;
+            if (prefab == null || _level == null) return null;
+            GameObject made = Instantiate(prefab, _level.Dynamic != null ? _level.Dynamic : _level.transform, false);
+            made.name = prefab.name + (slot == PlayerSlot ? " (player)" : " #" + slot);
             rig = made.GetComponent<CharacterRig>();
             if (rig == null)
             {
-                FlowLogger.LogError($"{config.Prefab.name}, the prefab of character '{type}', has no CharacterRig.", config.Prefab);
+                FlowLogger.LogError($"{prefab.name}, the prefab of character '{type}', has no CharacterRig.", prefab);
                 Destroy(made);
                 return null;
             }
             rig.OnInitialized();
             rig.OnGetFromPool();
             _rigs[slot] = rig;
-            _rigTypes[slot] = type;
+            _rigTypes[slot] = key;
             return rig;
         }
 
@@ -749,7 +754,10 @@ namespace Modules.GameplayModule.ViewsMediators
             for (int i = 0; i < state.Guards.Length; i++)
             {
                 GuardRVO guard = state.Guards[i];
-                CharacterRig rig = Rig(i, guard.Type);
+                CD_Family family = _families != null ? _families.Find(guard.Family) : null;
+                FamilyRoleCVO role = family != null ? family.Role(guard.FamilyRank) : null;
+                string appearance = family != null ? family.Id + ":" + guard.FamilyRank : guard.Type;
+                CharacterRig rig = Rig(i, guard.Type, appearance, role != null ? role.Prefab : null);
                 if (rig == null) continue;
                 rig.gameObject.SetActive(!guard.Escaped);
                 if (guard.Escaped) continue;
@@ -809,6 +817,37 @@ namespace Modules.GameplayModule.ViewsMediators
                 Return(_bullets[bullet]);
                 _bullets.Remove(bullet);
             }
+        }
+
+        // ---------------------------------------------------------------- speech
+
+        private SpeechBubbleView _bubble;
+        private LevelAuthoring _bubbleLevel;
+
+        // The bubble over whoever is speaking in a conversation, or none.
+        private void DrawSpeech(ContractRVO state)
+        {
+            if (_bubbleLevel != _level || _bubble == null)
+            {
+                if (_bubble != null) Destroy(_bubble.gameObject);
+                var go = new GameObject("Speech Bubble");
+                go.transform.SetParent(_level.Dynamic != null ? _level.Dynamic : _level.transform, false);
+                _bubble = go.AddComponent<SpeechBubbleView>();
+                _bubble.Build();
+                go.SetActive(false);
+                _bubbleLevel = _level;
+            }
+            int speaker = state.SpeechSpeaker;
+            bool speaking = !string.IsNullOrEmpty(state.SpeechText) && (speaker == -1 || (speaker >= 0 && speaker < state.Guards.Length));
+            if (!speaking)
+            {
+                _bubble.Show(Vector2.zero, null);
+                return;
+            }
+            Vector2 head = speaker == -1
+                ? state.Player + Vector2.up * (state.Crouching ? 1.7f : 2.45f)
+                : state.Guards[speaker].Position + Vector2.up * (state.Guards[speaker].Crouching ? 1.6f : 2.3f);
+            _bubble.Show(head, state.SpeechText);
         }
 
         private void DrawPickups(ContractRVO state)

@@ -16,7 +16,6 @@ namespace Modules.GameplayModule.Data.ValueObjects
         // The file the contract is after; with one, the exit opens once it is taken rather than once the building is clear.
         public bool HasDocument;
         public Vector2 Document;
-        public bool FirstMissionBossContract;
         public GuardSpawnVO[] Guards =
         {
             new() {Position = new Vector2(-5f, 0f), Left = -6.5f, Right = -4f, Facing = 1, Type = "triangle"},

@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9496f60fc9d7e44d89b0efabe105899, type: 3}
+  m_Name: CD_Territory
+  m_EditorClassIdentifier: Modules.Gameplay::Modules.GameplayModule.Data.UnityObjects.CD_Territory
+  LocationsPay: 1
+  MaxGuardsPerLocation: 10
+  DefenderType: square
+  DefenderHealth: 1
+  DefenderFirePace: 1.6
+  DefenderReaction: 1.5
+  DefenderSight: 0.85
+  DefenderBulletSpeed: 0.8
+  Raids: 1
+  RaidRollMinutes: 8
+  RaidResponseMinutes: 5
+  RichShopRaidBonus: 1
+  MinAttackers: 3
+  MaxAttackers: 10
+  AttackerAggression: {x: 1, y: 1.6}
+  RichShopToughness: 2
+  GuardStrength: 0.6
+  GuardLosses: 0.4
+  HoursPerLostShop: 24
+  GuardKeepWeight: 0.5
+  Persuasion:
+  - Speaker: 0
+    Text: Wait - don't shoot! What do you want?
+  - Speaker: 1
+    Text: Your men are on the floor. This place pays me now.
+  - Speaker: 0
+    Text: The {0} will kill me.
+  - Speaker: 1
+    Text: They couldn't protect you tonight. I can.
+  - Speaker: 1
+    Text: A cut of every take. Miss one and I come back.
+  - Speaker: 0
+    Text: ...All right. We work for you.
+  BubbleTime: 4.5

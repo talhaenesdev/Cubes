@@ -6,5 +6,6 @@ namespace Modules.GameplayModule.Data.ValueObjects
         public string Title;
         public string Subtitle;
         public string[] Entries;
+        public bool IsMap;
     }
 }

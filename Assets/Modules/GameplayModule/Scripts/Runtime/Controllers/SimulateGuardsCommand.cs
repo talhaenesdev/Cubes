@@ -29,16 +29,21 @@ namespace Modules.GameplayModule.Controllers
                 // A friendly goes about its patrol and pays the player no attention.
                 if (guard.Faction == Faction.Friendly)
                 {
+                    if (run.IsLocationDefense && FightEnemy(guard, run, dt)) continue;
                     SimulateFriendly(guard, run, dt);
                     continue;
                 }
                 Vector2 eye = guard.Position + Vector2.up * 1.15f;
                 Vector2 target = run.Player + Vector2.up * (run.Crouching ? 0.5f : 1f);
+                GuardRVO friendlyTarget = run.IsLocationDefense ? Closest(guard, run, Faction.Friendly) : null;
+                bool targetsFriendly = friendlyTarget != null && Vector2.Distance(guard.Position, friendlyTarget.Position) < Vector2.Distance(guard.Position, run.Player);
+                if (targetsFriendly) target = friendlyTarget.Position + Vector2.up * (friendlyTarget.Crouching ? 0.5f : 1f);
                 float dx = run.Player.x - guard.Position.x;
+                if (targetsFriendly) dx = friendlyTarget.Position.x - guard.Position.x;
                 LightRVO room = _model.LightAt(guard.Position);
                 float range = playerDark && run.NoiseRemaining <= 0 ? guard.DarkSight : run.Crouching ? guard.SightRange * guard.CrouchSight : guard.SightRange;
-                bool sameFloor = Mathf.Abs(run.Player.y - guard.Position.y) < 1.8f;
-                bool sees = !run.InVent && !run.Hidden && sameFloor && Mathf.Abs(dx) < range
+                bool sameFloor = Mathf.Abs((targetsFriendly ? friendlyTarget.Position.y : run.Player.y) - guard.Position.y) < 1.8f;
+                bool sees = (targetsFriendly || !run.InVent && !run.Hidden) && sameFloor && Mathf.Abs(dx) < range
                     && (Mathf.Sign(dx) == guard.Facing || guard.Alerted || Mathf.Abs(dx) < guard.CloseSense)
                     && Clear(eye, target);
                 if (run.NoiseRemaining > 0 && Vector2.Distance(run.NoisePosition, guard.Position) < run.NoiseRadius * guard.Hearing)
@@ -114,6 +119,40 @@ namespace Modules.GameplayModule.Controllers
             }
         }
 
+        private bool FightEnemy(GuardRVO guard, ContractRVO run, float dt)
+        {
+            GuardRVO enemy = Closest(guard, run, Faction.Enemy);
+            if (enemy == null) return false;
+            Vector2 eye = guard.Position + Vector2.up * 1.15f;
+            Vector2 target = enemy.Position + Vector2.up * (enemy.Crouching ? 0.5f : 1f);
+            float gap = enemy.Position.x - guard.Position.x;
+            if (Mathf.Abs(enemy.Position.y - guard.Position.y) < 1.8f && Mathf.Abs(gap) < guard.SightRange && Clear(eye, target))
+            {
+                guard.Alerted = true;
+                guard.Facing = gap >= 0f ? 1 : -1;
+                Shoot(guard, run, eye, target, dt, true);
+                return true;
+            }
+            guard.Facing = gap >= 0f ? 1 : -1;
+            guard.Position.x += Mathf.Sign(gap) * guard.AlertSpeed * dt;
+            return true;
+        }
+
+        private GuardRVO Closest(GuardRVO guard, ContractRVO run, Faction faction)
+        {
+            GuardRVO result = null;
+            float best = float.MaxValue;
+            foreach (GuardRVO candidate in run.Guards)
+            {
+                if (candidate == guard || !candidate.Alive || candidate.Escaped || candidate.Faction != faction) continue;
+                float distance = Vector2.Distance(guard.Position, candidate.Position);
+                if (distance >= best) continue;
+                best = distance;
+                result = candidate;
+            }
+            return result;
+        }
+
         private void SimulateFriendly(GuardRVO guard, ContractRVO run, float dt)
         {
             if (!guard.Civilian)
@@ -159,7 +198,7 @@ namespace Modules.GameplayModule.Controllers
             Patrol(guard, run, dt, guard.WalkSpeed * 0.65f);
         }
 
-        private void Shoot(GuardRVO guard, ContractRVO run, Vector2 eye, Vector2 target, float dt)
+        private void Shoot(GuardRVO guard, ContractRVO run, Vector2 eye, Vector2 target, float dt, bool fromAlly = false)
         {
             guard.FireCooldown -= dt;
             WeaponCVO weapon = _model.Weapon(guard.Weapon);
@@ -173,7 +212,7 @@ namespace Modules.GameplayModule.Controllers
                 run.Bullets.Add(new BulletRVO
                 {
                     Position = eye, Velocity = pellet * weapon.BulletSpeed * guard.BulletSpeedScale, Damage = 1,
-                    Life = weapon.BulletLife / Mathf.Max(0.2f, guard.BulletSpeedScale),
+                    Life = weapon.BulletLife / Mathf.Max(0.2f, guard.BulletSpeedScale), FromAlly = fromAlly,
                 });
             }
             run.GuardShots++;

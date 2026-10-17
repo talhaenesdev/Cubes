@@ -73,5 +73,13 @@ namespace Modules.GameplayModule.Data.UnityObjects
         [Range(0.5f, 4f)] public float ZoomMax = 3f;
         [Tooltip("How much one notch of the mouse wheel zooms.")]
         [Range(0.02f, 1f)] public float ZoomStep = 0.15f;
+
+        [Header("Interface and saving")]
+        [Tooltip("Seconds between automatic contract saves.")]
+        [Min(0.25f)] public float RunSaveInterval = 3f;
+        [Tooltip("Seconds between live refreshes while the city map is open.")]
+        [Min(0.1f)] public float MapRefreshInterval = 1f;
+        [Tooltip("Prevents the same input that opened a call from immediately answering it.")]
+        [Min(0f)] public float PhoneInputGrace = 0.4f;
     }
 }

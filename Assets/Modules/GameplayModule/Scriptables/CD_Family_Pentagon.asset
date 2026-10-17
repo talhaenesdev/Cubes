@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6e327f071a443d8b0cb7b8264c87cb0, type: 3}
+  m_Name: CD_Family_Pentagon
+  m_EditorClassIdentifier: Modules.Gameplay::Modules.GameplayModule.Data.UnityObjects.CD_Family
+  Id: pentagon
+  DisplayName: PENTAGON FAMILY
+  RelationToPlayer: 2
+  Relations:
+  - {Family: player, Relation: 1}
+  - {Family: rival, Relation: 0}
+  - {Family: circle, Relation: 1}
+  - {Family: hexagon, Relation: 0}
+  - {Family: diamond, Relation: 1}
+  Don: {CharacterType: pentagon, Prefab: {fileID: 6118260583255244559, guid: d10d82a3ab8515746b5c2d501261cc6a, type: 3}, Names: [Don Beş]}
+  Consigliere: {CharacterType: pentagon, Prefab: {fileID: 6118260583255244559, guid: d10d82a3ab8515746b5c2d501261cc6a, type: 3}, Names: [Rasim, Tufan]}
+  Caporegime: {CharacterType: pentagon, Prefab: {fileID: 6118260583255244559, guid: d10d82a3ab8515746b5c2d501261cc6a, type: 3}, Names: [Koray, Yaman]}
+  Soldiers: {CharacterType: pentagon, Prefab: {fileID: 6118260583255244559, guid: d10d82a3ab8515746b5c2d501261cc6a, type: 3}, Names: [Alp, Batu, Doruk, Eren]}
+  Associates: {CharacterType: pentagon, Prefab: {fileID: 6118260583255244559, guid: d10d82a3ab8515746b5c2d501261cc6a, type: 3}, Names: [Emir, Kaan, Onur, Tolga]}

@@ -15,7 +15,7 @@ namespace Modules.GameplayModule.GameplayScreenModule.Signals
         public Signal<string> ShowLocation = new();
         public Signal<string, string> ShowTerminal = new();
         public Signal HideTerminal = new();
-        public Signal<string, string, string[]> ShowMenu = new();
+        public Signal<string, string, string[], bool> ShowMenu = new();
         public Signal HideMenu = new();
         public Signal<string, string> ShowNowPlaying = new();
         public Signal<string, string, bool> ShowDeck = new();
@@ -34,6 +34,8 @@ namespace Modules.GameplayModule.GameplayScreenModule.Signals
         public Signal<string> TerminalSaved = new();
         public Signal TerminalCloseRequested = new();
         public Signal<int> MenuChosen = new();
+        // A button on the city map's shop card: the shop's index and the action (0 main, 1 fewer men, 2 more men).
+        public Signal<int, int> MapAction = new();
         public Signal MenuCloseRequested = new();
         // 0 play/pause, 1 next, 2 previous.
         public Signal<int> DeckButton = new();

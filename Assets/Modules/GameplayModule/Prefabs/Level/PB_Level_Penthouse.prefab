@@ -142,6 +142,8 @@ MonoBehaviour:
   Facing: 1
   PatrolLeft: 18.580427
   PatrolRight: 24.774826
+  Civilian: 0
+  Boss: 0
 --- !u!1 &39136480060062365
 GameObject:
   m_ObjectHideFlags: 0
@@ -2195,6 +2197,8 @@ MonoBehaviour:
   Facing: 1
   PatrolLeft: 10.558547
   PatrolRight: 14.422826
+  Civilian: 0
+  Boss: 0
 --- !u!1 &560195370953121202
 GameObject:
   m_ObjectHideFlags: 0
@@ -2246,6 +2250,8 @@ MonoBehaviour:
   Facing: -1
   PatrolLeft: -6.540027
   PatrolRight: 0.3124526
+  Civilian: 0
+  Boss: 0
 --- !u!1 &574722922104964455
 GameObject:
   m_ObjectHideFlags: 0
@@ -2524,6 +2530,8 @@ MonoBehaviour:
   Facing: -1
   PatrolLeft: 29.443396
   PatrolRight: 33
+  Civilian: 0
+  Boss: 0
 --- !u!1 &830754663886062422
 GameObject:
   m_ObjectHideFlags: 0
@@ -3066,6 +3074,8 @@ MonoBehaviour:
   Facing: 1
   PatrolLeft: -26.032654
   PatrolRight: -21.526611
+  Civilian: 0
+  Boss: 0
 --- !u!1 &1003949692654876877
 GameObject:
   m_ObjectHideFlags: 0
@@ -3208,6 +3218,8 @@ MonoBehaviour:
   Facing: -1
   PatrolLeft: 8.104323
   PatrolRight: 13.7131405
+  Civilian: 0
+  Boss: 0
 --- !u!1 &1046838592224668685
 GameObject:
   m_ObjectHideFlags: 0
@@ -4169,6 +4181,8 @@ MonoBehaviour:
   Facing: -1
   PatrolLeft: 25.555117
   PatrolRight: 31.494213
+  Civilian: 0
+  Boss: 0
 --- !u!1 &1386918825530695166
 GameObject:
   m_ObjectHideFlags: 0
@@ -4648,7 +4662,6 @@ Transform:
   - {fileID: 8638343647640767830}
   - {fileID: 4870533518833218747}
   - {fileID: 1994217025053964936}
-  - {fileID: 1744926809822943424}
   - {fileID: 7128740040075383896}
   - {fileID: 3081298014685550971}
   m_Father: {fileID: 9044133100988100819}
@@ -5204,6 +5217,8 @@ MonoBehaviour:
   Facing: -1
   PatrolLeft: 14.430656
   PatrolRight: 19.824228
+  Civilian: 0
+  Boss: 0
 --- !u!1 &1839688597750266867
 GameObject:
   m_ObjectHideFlags: 0
@@ -5255,6 +5270,8 @@ MonoBehaviour:
   Facing: -1
   PatrolLeft: -20.02661
   PatrolRight: -12.534969
+  Civilian: 0
+  Boss: 0
 --- !u!1 &1846577652437293605
 GameObject:
   m_ObjectHideFlags: 0
@@ -8888,6 +8905,8 @@ MonoBehaviour:
   Facing: 1
   PatrolLeft: 25.421736
   PatrolRight: 32.718815
+  Civilian: 0
+  Boss: 0
 --- !u!1 &2843120214477769463
 GameObject:
   m_ObjectHideFlags: 0
@@ -8939,6 +8958,8 @@ MonoBehaviour:
   Facing: -1
   PatrolLeft: -7.955372
   PatrolRight: -1.2897354
+  Civilian: 0
+  Boss: 0
 --- !u!1 &2853346603181457094
 GameObject:
   m_ObjectHideFlags: 0
@@ -9263,6 +9284,8 @@ MonoBehaviour:
   Facing: -1
   PatrolLeft: 14.430656
   PatrolRight: 18.906424
+  Civilian: 0
+  Boss: 0
 --- !u!1 &3052443781439840973
 GameObject:
   m_ObjectHideFlags: 0
@@ -9769,6 +9792,8 @@ MonoBehaviour:
   Facing: -1
   PatrolLeft: 19.774067
   PatrolRight: 26.406763
+  Civilian: 0
+  Boss: 0
 --- !u!1 &3245729125697954938
 GameObject:
   m_ObjectHideFlags: 0
@@ -10093,6 +10118,8 @@ MonoBehaviour:
   Facing: -1
   PatrolLeft: -21.04452
   PatrolRight: -16.367489
+  Civilian: 0
+  Boss: 0
 --- !u!1 &3370907672414283929
 GameObject:
   m_ObjectHideFlags: 0
@@ -10545,6 +10572,8 @@ MonoBehaviour:
   Facing: -1
   PatrolLeft: 15.734869
   PatrolRight: 21.153103
+  Civilian: 0
+  Boss: 0
 --- !u!1 &3460451819496793294
 GameObject:
   m_ObjectHideFlags: 0
@@ -10596,6 +10625,8 @@ MonoBehaviour:
   Facing: 1
   PatrolLeft: -21.04452
   PatrolRight: -14.150261
+  Civilian: 0
+  Boss: 0
 --- !u!1 &3525720217921890420
 GameObject:
   m_ObjectHideFlags: 0
@@ -18850,6 +18881,8 @@ MonoBehaviour:
   Facing: 1
   PatrolLeft: 24.484499
   PatrolRight: 28.144085
+  Civilian: 0
+  Boss: 0
 --- !u!1 &4357299398559763248
 GameObject:
   m_ObjectHideFlags: 0
@@ -22800,6 +22833,8 @@ MonoBehaviour:
   Facing: 1
   PatrolLeft: 6.166479
   PatrolRight: 13.885452
+  Civilian: 0
+  Boss: 0
 --- !u!1 &5574274037585088434
 GameObject:
   m_ObjectHideFlags: 0
@@ -23670,6 +23705,8 @@ MonoBehaviour:
   Facing: 1
   PatrolLeft: 5.4806905
   PatrolRight: 11.652026
+  Civilian: 0
+  Boss: 0
 --- !u!1 &5756002426988834803
 GameObject:
   m_ObjectHideFlags: 0
@@ -24813,6 +24850,8 @@ MonoBehaviour:
   Facing: -1
   PatrolLeft: 20.56142
   PatrolRight: 24.58802
+  Civilian: 0
+  Boss: 0
 --- !u!1 &6033973900467444322
 GameObject:
   m_ObjectHideFlags: 0
@@ -26742,6 +26781,8 @@ MonoBehaviour:
   Facing: 1
   PatrolLeft: -16.718369
   PatrolRight: -8.98391
+  Civilian: 0
+  Boss: 0
 --- !u!1 &6624328980242680329
 GameObject:
   m_ObjectHideFlags: 0
@@ -27767,6 +27808,8 @@ MonoBehaviour:
   Facing: 1
   PatrolLeft: -5.8971357
   PatrolRight: -0.3209789
+  Civilian: 0
+  Boss: 0
 --- !u!1 &6897555385141127317
 GameObject:
   m_ObjectHideFlags: 0
@@ -28637,6 +28680,8 @@ MonoBehaviour:
   Facing: -1
   PatrolLeft: -20.294449
   PatrolRight: -14.629564
+  Civilian: 0
+  Boss: 0
 --- !u!1 &7066854752368229406
 GameObject:
   m_ObjectHideFlags: 0
@@ -29187,6 +29232,8 @@ MonoBehaviour:
   Facing: -1
   PatrolLeft: 2.3087535
   PatrolRight: 8.29814
+  Civilian: 0
+  Boss: 0
 --- !u!1 &7249992023550141713
 GameObject:
   m_ObjectHideFlags: 0
@@ -29329,6 +29376,8 @@ MonoBehaviour:
   Facing: -1
   PatrolLeft: -5.205168
   PatrolRight: 2.0679166
+  Civilian: 0
+  Boss: 0
 --- !u!1 &7319496386353393685
 GameObject:
   m_ObjectHideFlags: 0
@@ -30199,6 +30248,8 @@ MonoBehaviour:
   Facing: 1
   PatrolLeft: -33
   PatrolRight: -27.406994
+  Civilian: 0
+  Boss: 0
 --- !u!1 &7606904884373864791
 GameObject:
   m_ObjectHideFlags: 0
@@ -31888,6 +31939,8 @@ MonoBehaviour:
   Facing: 1
   PatrolLeft: -11.7465925
   PatrolRight: -5.713004
+  Civilian: 0
+  Boss: 0
 --- !u!1 &8096129756362826068
 GameObject:
   m_ObjectHideFlags: 0
@@ -33326,7 +33379,7 @@ MonoBehaviour:
   HalfWidth: 33.75
   Difficulty: 3
   FollowCamera: 1
-  LayoutVersion: 3
+  LayoutVersion: 4
   Camera: {fileID: 1391985696620750629}
   Dynamic: {fileID: 4319166229085319357}
   Crosshair: {fileID: 3584288407456312784}
@@ -33976,6 +34029,8 @@ MonoBehaviour:
   Facing: 1
   PatrolLeft: -17.250237
   PatrolRight: -11.431145
+  Civilian: 0
+  Boss: 0
 --- !u!1 &8754772331303054993
 GameObject:
   m_ObjectHideFlags: 0
@@ -35028,6 +35083,8 @@ MonoBehaviour:
   Facing: 1
   PatrolLeft: 29.443396
   PatrolRight: 33
+  Civilian: 0
+  Boss: 0
 --- !u!1 &9116125569980337413
 GameObject:
   m_ObjectHideFlags: 0
@@ -36834,68 +36891,6 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 4455009038402984844, guid: aad6c13403067904d89aa3a397d2cf9d, type: 3}
   m_PrefabInstance: {fileID: 2774145680515178756}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &2851179688606582484
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 5319193778060652709}
-    m_Modifications:
-    - target: {fileID: 1264070933734163081, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
-      propertyPath: m_Name
-      value: Document
-      objectReference: {fileID: 0}
-    - target: {fileID: 4586447151272893972, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 32.33143
-      objectReference: {fileID: 0}
-    - target: {fileID: 4586447151272893972, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 4.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4586447151272893972, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4586447151272893972, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4586447151272893972, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4586447151272893972, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4586447151272893972, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4586447151272893972, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4586447151272893972, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4586447151272893972, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
---- !u!4 &1744926809822943424 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4586447151272893972, guid: fa1d020b4268bb54691fa592befbbbc1, type: 3}
-  m_PrefabInstance: {fileID: 2851179688606582484}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2920180546692250354
 PrefabInstance:

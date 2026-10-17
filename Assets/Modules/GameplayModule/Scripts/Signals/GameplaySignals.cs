@@ -17,6 +17,8 @@ namespace Modules.GameplayModule.Signals
         public Signal<string> SaveTerminal = new();
         public Signal CloseTerminal = new();
         public Signal<int> ChooseMenu = new();
+        // A button on the city map's shop card: the shop's index in CD_Missions, and MapActionCommand's action.
+        public Signal<int, int> MapAction = new();
         public Signal CloseMenu = new();
         // A tape deck button: 0 play/pause, 1 next, 2 previous.
         public Signal<int> ControlTape = new();
@@ -34,7 +36,7 @@ namespace Modules.GameplayModule.Signals
         public Signal ReturnedToMenu = new();
         public Signal<string, string> TerminalOpened = new();
         public Signal TerminalClosed = new();
-        public Signal<string, string, string[]> MenuOpened = new();
+        public Signal<string, string, string[], bool> MenuOpened = new();
         public Signal MenuClosed = new();
         public Signal<string, string> MusicStarted = new();
         // The deck panel opens or refreshes: tape title, artist, whether it is playing.

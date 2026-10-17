@@ -13,7 +13,7 @@ namespace Modules.GameplayModule.Signals
         public Signal<ContractRVO> Draw = new(hideCommandLog: true);
         public Signal<ContractLevelVO> LevelAuthored = new();
         public Signal<IPoolService> PoolShared = new();
-        public Signal<CD_Characters, CD_Weapons> RosterShared = new();
+        public Signal<CD_Characters, CD_Weapons, CD_Families> RosterShared = new();
         public Signal<CD_Outfits> OutfitsShared = new();
         public Signal<LevelAuthoring> LevelRequested = new();
         public Signal Extracted = new();

@@ -16,6 +16,7 @@ namespace Modules.GameplayModule.Models
         public bool IsDeconstructed { get; set; }
         public CD_Weapons Weapons { get; private set; }
         public CD_Characters Characters { get; private set; }
+        public CD_Families Families { get; private set; }
         public CD_Missions Missions { get; private set; }
         public CD_Upgrades Upgrades { get; private set; }
         public CD_Music Music { get; private set; }
@@ -42,22 +43,6 @@ namespace Modules.GameplayModule.Models
         {
             OutfitCVO found = Outfits != null ? Outfits.Find(outfit) : null;
             return found != null && (found.Price <= 0 || !Tuning.UseMoney || !Tuning.OutfitsCost || Progress.OwnedOutfits.Contains(outfit));
-        }
-        public int MissionGuardCount(string mission)
-        {
-            MissionGuardSVO entry = Progress.MissionGuards.Find(item => item.Mission == mission);
-            return entry != null ? entry.Count : 0;
-        }
-        public void SetMissionGuardCount(string mission, int count)
-        {
-            MissionGuardSVO entry = Progress.MissionGuards.Find(item => item.Mission == mission);
-            if (entry == null)
-            {
-                entry = new MissionGuardSVO {Mission = mission};
-                Progress.MissionGuards.Add(entry);
-            }
-            entry.Count = Mathf.Clamp(count, 0, 5);
-            SaveProgress();
         }
         public bool MenuOpen { get; set; }
         public bool PausedBeforeMenu { get; set; }
@@ -142,7 +127,10 @@ namespace Modules.GameplayModule.Models
         }
         public ProgressSVO Progress { get; private set; } = new();
         public string Mission { get; set; }
-        public string GuardAssignmentMission { get; set; }
+        public ITerritoryModel Territory { get; private set; }
+        public float MapRefreshAt { get; set; }
+        public bool TerritoryCaughtUp { get; set; }
+        public CD_Territory TerritoryConfig { get; private set; }
         public Entities.LevelAuthoring RequestedLevel
         {
             get
@@ -175,19 +163,26 @@ namespace Modules.GameplayModule.Models
             {
                 Weapons = adapter.GetScriptable<CD_Weapons>();
                 Characters = adapter.GetScriptable<CD_Characters>();
+                Families = adapter.GetScriptable<CD_Families>();
                 Missions = adapter.GetScriptable<CD_Missions>();
                 Upgrades = adapter.GetScriptable<CD_Upgrades>();
                 Music = adapter.GetScriptable<CD_Music>();
                 Outfits = adapter.GetScriptable<CD_Outfits>();
                 Tuning = adapter.GetScriptable<CD_Gameplay>();
+                TerritoryConfig = adapter.GetScriptable<CD_Territory>();
             }
             else FlowLogger.LogWarning("GameplaySystemRoot has no RootAdapter; the default weapons and characters are used.");
             if (Weapons == null) { Weapons = ScriptableObject.CreateInstance<CD_Weapons>(); Weapons.FillDefaults(); }
             if (Characters == null) { Characters = ScriptableObject.CreateInstance<CD_Characters>(); Characters.FillDefaults(); }
+            if (Families == null) Families = DefaultFamilies();
             if (Upgrades == null) { Upgrades = ScriptableObject.CreateInstance<CD_Upgrades>(); Upgrades.FillDefaults(); }
             if (Outfits == null) { Outfits = ScriptableObject.CreateInstance<CD_Outfits>(); Outfits.FillDefaults(); }
             if (Tuning == null) Tuning = ScriptableObject.CreateInstance<CD_Gameplay>();
             Progress = LoadProgress();
+            Territory = new TerritoryModel(() => Progress, Missions, Families, TerritoryConfig, Tuning.UseMoney, SaveProgress, cash => Run.Cash = cash);
+            // An unresolved raid is announced once again after every launch, even if its first banner was missed.
+            foreach (WorkingLocationSVO location in Progress.WorkingLocations)
+                if (location.Status == WorkingLocationStatus.UnderAttack) location.AttackNoticeSent = false;
         }
         public void Deconstruct() { }
         public int UpgradeLevel(string id)
@@ -222,14 +217,15 @@ namespace Modules.GameplayModule.Models
                 SaveProgress();
             }
             MissionCVO mission = Missions != null ? Missions.Find(Mission) : null;
-            if (mission == null || Progress.Completed.Contains(mission.Id)) return;
-            Progress.Completed.Add(mission.Id);
+            if (mission == null) return;
+            bool first = !Progress.Completed.Contains(mission.Id);
+            Territory.Claim(mission);
             Progress.CurrentMission = null;
             ClearRunSave();
             // A weapon found on the job comes home with the player.
             Progress.Hand = Run.Weapon;
             Progress.Pocket = Run.Holster;
-            if (Tuning.UseMoney && Tuning.MissionsPay) Progress.Cash += mission.Reward;
+            if (first && Tuning.UseMoney && Tuning.MissionsPay) Progress.Cash += mission.Reward;
             Run.Cash = Progress.Cash;
             SaveProgress();
         }
@@ -257,6 +253,8 @@ namespace Modules.GameplayModule.Models
             progress.Locker = new System.Collections.Generic.List<string>(new System.Collections.Generic.HashSet<string>(progress.Locker));
             progress.OwnedOutfits ??= new System.Collections.Generic.List<string>();
             progress.MissionGuards ??= new System.Collections.Generic.List<MissionGuardSVO>();
+            progress.WorkingLocationPayments ??= new System.Collections.Generic.List<WorkingLocationPaymentSVO>();
+            progress.WorkingLocations ??= new System.Collections.Generic.List<WorkingLocationSVO>();
             return progress;
         }
 
@@ -267,7 +265,7 @@ namespace Modules.GameplayModule.Models
         public void SaveRun()
         {
             RunSaveTimer = 0f;
-            if (Run == null || !Run.Active || Run.InHideout || !Run.Alive || Run.Won || string.IsNullOrEmpty(Mission)) return;
+            if (Run == null || !Run.Active || Run.InHideout || Run.IsLocationDefense || !Run.Alive || Run.Won || string.IsNullOrEmpty(Mission)) return;
             try
             {
                 System.IO.File.WriteAllText(RunPath, JsonUtility.ToJson(new RunSaveSVO {Mission = Mission, Run = Run}));
@@ -286,6 +284,16 @@ namespace Modules.GameplayModule.Models
                 RunSaveSVO saved = JsonUtility.FromJson<RunSaveSVO>(System.IO.File.ReadAllText(RunPath));
                 if (saved?.Run == null || saved.Mission != Mission || !saved.Run.Alive || saved.Run.Won) return false;
                 ContractRVO run = saved.Run;
+                // Runs saved before location takeovers had documents and no owner to talk to. Keep the fresh Reset
+                // result instead of restoring a contract that can no longer satisfy its objective.
+                bool hasBoss = false;
+                bool hasFamily = false;
+                foreach (GuardRVO guard in run.Guards)
+                {
+                    hasBoss |= guard.Boss;
+                    hasFamily |= !string.IsNullOrEmpty(guard.Family);
+                }
+                if (Missions != null && Missions.Find(Mission) != null && (!run.LocationTakeover || !hasBoss || !hasFamily)) return false;
                 // Back in exactly as it was, minus what only lasts a moment.
                 run.Active = true;
                 run.Paused = false;
@@ -371,12 +379,19 @@ namespace Modules.GameplayModule.Models
         public void Reset()
         {
             ContractLevelVO level = Level;
-            GuardSpawnVO[] spawns = Mission == "laundromat" ? FirstMissionCast(level) : level.Guards;
+            bool isDefense = !string.IsNullOrEmpty(Territory.DefenseMission) && Territory.DefenseMission == Mission;
+            MissionCVO activeMission = Missions != null ? Missions.Find(Mission) : null;
+            GuardSpawnVO[] spawns = !isDefense && activeMission != null ? LocationCast(level, activeMission) : level.Guards;
+            CD_Family activeFamily = activeMission != null && Families != null ? Families.Find(activeMission.OwnerFamily) : null;
             var guards = new GuardRVO[spawns.Length];
+            int armedIndex = 0;
             for (int i = 0; i < guards.Length; i++)
             {
                 GuardSpawnVO spawn = spawns[i];
-                CharacterTypeCVO type = CharacterType(spawn.Type);
+                FamilyRank rank = spawn.Boss ? FamilyRank.Don : spawn.Civilian ? FamilyRank.Associate
+                    : armedIndex++ == 0 ? FamilyRank.Consigliere : armedIndex % 4 == 0 ? FamilyRank.Caporegime : FamilyRank.Soldier;
+                FamilyRoleCVO role = activeFamily != null ? activeFamily.Role(rank) : null;
+                CharacterTypeCVO type = CharacterType(role != null && !string.IsNullOrEmpty(role.CharacterType) ? role.CharacterType : spawn.Type);
                 guards[i] = new GuardRVO
                 {
                     Position = spawn.Position, Left = spawn.Left, Right = spawn.Right, Facing = spawn.Facing >= 0 ? 1 : -1,
@@ -390,6 +405,9 @@ namespace Modules.GameplayModule.Models
                     RaisesAlarm = type.RaisesAlarm, AlarmRadius = type.AlarmRadius, CashDrop = type.CashDrop,
                     Civilian = spawn.Civilian || spawn.Boss,
                     Boss = spawn.Boss,
+                    Family = activeFamily != null ? activeFamily.Id : null,
+                    FamilyRank = rank,
+                    Name = FamilyMemberName(activeFamily, rank),
                     WorkTimer = i * 0.37f,
                 };
                 if (guards[i].Civilian)
@@ -405,6 +423,7 @@ namespace Modules.GameplayModule.Models
                 }
                 ApplyDifficulty(guards[i], level.Difficulty, spawn);
             }
+            if (isDefense) guards = PrepareLocationDefense(guards, level);
             var doors = new DoorRVO[level.Doors.Length];
             for (int i = 0; i < doors.Length; i++) doors[i] = new DoorRVO {Position = level.Doors[i]};
             var lights = new LightRVO[level.Lights.Length];
@@ -434,9 +453,10 @@ namespace Modules.GameplayModule.Models
                 Covers = (Vector2[]) level.Covers.Clone(),
                 Stairs = stairs,
                 Terminals = terminals,
-                HasDocument = level.HasDocument && Mission != "laundromat",
+                HasDocument = false,
                 Document = level.Document,
-                FirstMissionBossContract = Mission == "laundromat",
+                LocationTakeover = !isDefense && activeMission != null,
+                IsLocationDefense = isDefense,
             };
             CharacterTypeCVO player = CharacterType(Characters != null ? Characters.PlayerType : null);
             Run.PlayerType = player.Id;
@@ -445,9 +465,10 @@ namespace Modules.GameplayModule.Models
             Run.MoveScale = 1f + Bonus(UpgradeKind.MoveSpeed) / 100f;
             Run.CameraZoom = PlayerZoom > 0f ? PlayerZoom : Tuning.CameraZoom;
             Run.InHideout = Missions != null && Missions.Find(Mission) == null;
-            if (Progress.CurrentMission != (Run.InHideout ? null : Mission))
+            string currentMission = Run.InHideout || isDefense ? null : Mission;
+            if (Progress.CurrentMission != currentMission)
             {
-                Progress.CurrentMission = Run.InHideout ? null : Mission;
+                Progress.CurrentMission = currentMission;
                 SaveProgress();
                 if (Run.InHideout) ClearRunSave();
             }
@@ -480,16 +501,118 @@ namespace Modules.GameplayModule.Models
             Input = new ContractInputVO {Aim = Run.Aim};
         }
 
-        private GuardSpawnVO[] FirstMissionCast(ContractLevelVO level)
+        // A raid: the attacking family's men across the building - more and harder the richer the shop - and the
+        // player's posted men by the door, of their own type and weaker than the player.
+        private GuardRVO[] PrepareLocationDefense(GuardRVO[] authored, ContractLevelVO level)
+        {
+            RaidVO raid = Territory.RaidOn(Mission);
+            CD_Family attackingFamily = Families != null ? Families.Find(raid.Family) : null;
+            var enemies = new System.Collections.Generic.List<GuardRVO>();
+            foreach (GuardRVO guard in authored)
+                if (guard.Faction == Faction.Enemy && !guard.Civilian) enemies.Add(guard);
+            if (enemies.Count == 0) enemies.Add(DefenseGuard(CharacterType(null), level.PlayerSpawn + Vector2.right * 5f, Faction.Enemy));
+            var defense = new System.Collections.Generic.List<GuardRVO>();
+            int attackers = Mathf.Max(1, raid.Attackers);
+            for (int i = 0; i < attackers; i++)
+            {
+                GuardRVO source = enemies[i % enemies.Count];
+                GuardRVO enemy = i < enemies.Count ? source : CopyDefenseGuard(source);
+                enemy.Faction = Faction.Enemy;
+                enemy.Civilian = false;
+                enemy.Boss = false;
+                enemy.Family = attackingFamily != null ? attackingFamily.Id : raid.Family;
+                enemy.FamilyRank = i == 0 ? FamilyRank.Caporegime : FamilyRank.Soldier;
+                FamilyRoleCVO role = attackingFamily != null ? attackingFamily.Role(enemy.FamilyRank) : null;
+                if (role != null && !string.IsNullOrEmpty(role.CharacterType) && Characters.Find(role.CharacterType) != null) enemy.Type = role.CharacterType;
+                enemy.Name = FamilyMemberName(attackingFamily, enemy.FamilyRank);
+                enemy.Health += raid.Toughness;
+                enemy.ReactionTime /= raid.Aggression;
+                enemy.FireRateScale /= raid.Aggression;
+                enemy.SuspicionRate *= raid.Aggression;
+                // They come in hunting: they know someone is there.
+                enemy.Suspicion = 1f;
+                enemy.Alerted = true;
+                enemy.Chase = enemy.ChaseMemory;
+                enemy.LastSeen = level.PlayerSpawn;
+                enemy.Position = new Vector2(Mathf.Lerp(-level.HalfWidth * 0.2f, level.HalfWidth - 2f, (i + 1f) / (attackers + 1f)), source.Position.y);
+                enemy.Left = enemy.Position.x - 2f;
+                enemy.Right = enemy.Position.x + 2f;
+                defense.Add(enemy);
+            }
+            CD_Territory config = Territory.Config;
+            CharacterTypeCVO defenderType = Characters.Find(config.DefenderType) ?? CharacterType(null);
+            CD_Family playerFamily = Families != null ? Families.PlayerFamily : null;
+            for (int i = 0; i < raid.Defenders; i++)
+            {
+                Vector2 position = level.PlayerSpawn + Vector2.right * (2f + i * 1.1f);
+                GuardRVO friendly = DefenseGuard(defenderType, position, Faction.Friendly);
+                friendly.Family = playerFamily != null ? playerFamily.Id : null;
+                friendly.FamilyRank = i == 0 ? FamilyRank.Caporegime : FamilyRank.Soldier;
+                friendly.Name = FamilyMemberName(playerFamily, friendly.FamilyRank);
+                // Posted men are not the player: fewer hits, slower hands, shorter sight, slower bullets.
+                friendly.Health = Mathf.Max(1, config.DefenderHealth);
+                friendly.FirePace *= config.DefenderFirePace;
+                friendly.ReactionTime *= config.DefenderReaction;
+                friendly.SightRange *= config.DefenderSight;
+                friendly.BulletSpeedScale *= config.DefenderBulletSpeed;
+                defense.Add(friendly);
+            }
+            return defense.ToArray();
+        }
+
+        private GuardRVO DefenseGuard(CharacterTypeCVO type, Vector2 position, Faction faction)
+        {
+            string weapon = DrawWeapon(type);
+            if (Weapon(weapon) == null) weapon = Weapons != null ? Weapons.PlayerStartWeapon : null;
+            return new GuardRVO
+            {
+                Position = position, Left = position.x - 2f, Right = position.x + 2f, Type = type.Id, Faction = faction,
+                Weapon = weapon, Health = Mathf.Max(1, type.Health), WalkSpeed = type.WalkSpeed, AlertSpeed = type.AlertSpeed,
+                SightRange = type.SightRange, ReactionTime = type.ReactionTime, SuspicionRate = type.SuspicionRate,
+                SuspicionDecay = type.SuspicionDecay, CrouchSight = type.CrouchSight, DarkSight = type.DarkSight,
+                CloseSense = type.CloseSense, Hearing = type.Hearing, ChaseMemory = type.ChaseMemory,
+                InvestigateTime = type.InvestigateTime, Curiosity = type.Curiosity, FirePace = type.FirePace,
+                BulletSpeedScale = Mathf.Max(0.5f, type.BulletSpeed), DropChance = 0f,
+            };
+        }
+
+        private GuardRVO CopyDefenseGuard(GuardRVO source) => new()
+        {
+            Position = source.Position, Left = source.Left, Right = source.Right, Facing = source.Facing, Type = source.Type,
+            Faction = source.Faction, Weapon = source.Weapon, Health = source.Health, WalkSpeed = source.WalkSpeed,
+            AlertSpeed = source.AlertSpeed, SightRange = source.SightRange, ReactionTime = source.ReactionTime,
+            FireRateScale = source.FireRateScale, BulletSpeedScale = source.BulletSpeedScale, SuspicionRate = source.SuspicionRate,
+            SuspicionDecay = source.SuspicionDecay, CrouchSight = source.CrouchSight, DarkSight = source.DarkSight,
+            CloseSense = source.CloseSense, Hearing = source.Hearing, ChaseMemory = source.ChaseMemory,
+            InvestigateTime = source.InvestigateTime, Curiosity = source.Curiosity, FirePace = source.FirePace,
+            UsesCover = source.UsesCover, CoverSearch = source.CoverSearch, PeekTime = source.PeekTime,
+            HideTime = source.HideTime, RaisesAlarm = source.RaisesAlarm, AlarmRadius = source.AlarmRadius,
+        };
+
+        private GuardSpawnVO[] LocationCast(ContractLevelVO level, MissionCVO mission)
         {
             var cast = new System.Collections.Generic.List<GuardSpawnVO>(level.Guards);
             bool hasBoss = false;
+            int civilians = 0;
             foreach (GuardSpawnVO spawn in cast) hasBoss |= spawn.Boss;
-            if (hasBoss) return cast.ToArray();
-            cast.Add(new GuardSpawnVO {Position = new Vector2(-6.5f, 0f), Left = -7.1f, Right = -5.8f, Facing = 1, Type = "circle", Civilian = true});
-            cast.Add(new GuardSpawnVO {Position = new Vector2(1.5f, 0f), Left = 0.9f, Right = 2.4f, Facing = -1, Type = "circle", Civilian = true});
-            cast.Add(new GuardSpawnVO {Position = new Vector2(3.6f, 0f), Left = 3.0f, Right = 4.5f, Facing = 1, Type = "circle", Civilian = true});
-            cast.Add(new GuardSpawnVO {Position = new Vector2(11.35f, 0f), Left = 10.9f, Right = 11.6f, Facing = -1, Type = "circle", Civilian = true, Boss = true});
+            foreach (GuardSpawnVO spawn in cast) if (spawn.Civilian && !spawn.Boss) civilians++;
+            float upperFloor = 0f;
+            foreach (GuardSpawnVO spawn in level.Guards) upperFloor = Mathf.Max(upperFloor, spawn.Position.y);
+            int needed = Mathf.Max(1, mission.CivilianCount) - civilians;
+            for (int i = 0; i < needed; i++)
+            {
+                float t = (i + 1f) / (needed + 1f);
+                float x = Mathf.Lerp(-level.HalfWidth + 3f, level.HalfWidth - 5f, t);
+                float y = upperFloor > 0f && i % 2 == 1 ? upperFloor : 0f;
+                cast.Add(new GuardSpawnVO {Position = new Vector2(x, y), Left = x - 0.8f, Right = x + 0.8f,
+                    Facing = i % 2 == 0 ? 1 : -1, Type = "circle", Civilian = true});
+            }
+            if (!hasBoss)
+            {
+                float x = level.HalfWidth - 2.5f;
+                cast.Add(new GuardSpawnVO {Position = new Vector2(x, upperFloor), Left = x - 0.7f, Right = x + 0.7f,
+                    Facing = -1, Type = "circle", Civilian = true, Boss = true});
+            }
             return cast.ToArray();
         }
         // Health added; reaction, sight and fire rate scaled; guard bullets sped up - by the level, then by the spawn.
@@ -534,6 +657,30 @@ namespace Modules.GameplayModule.Models
             CharacterTypeCVO fallback = Characters.Types.Count > 0 ? Characters.Types[0] : new CharacterTypeCVO();
             if (!string.IsNullOrEmpty(id)) FlowLogger.LogWarning($"CD_Characters lists no character '{id}'; using '{fallback.Id}'.");
             return fallback;
+        }
+
+        private string FamilyMemberName(CD_Family family, FamilyRank rank)
+        {
+            FamilyRoleCVO role = family != null ? family.Role(rank) : null;
+            if (role == null || role.Names == null || role.Names.Count == 0) return rank.ToString();
+            return role.Names[UnityEngine.Random.Range(0, role.Names.Count)];
+        }
+
+        private CD_Families DefaultFamilies()
+        {
+            var rival = ScriptableObject.CreateInstance<CD_Family>();
+            rival.Id = "rival";
+            rival.DisplayName = "TRIANGLE FAMILY";
+            rival.RelationToPlayer = FamilyRelation.Enemy;
+            var player = ScriptableObject.CreateInstance<CD_Family>();
+            player.Id = "player";
+            player.DisplayName = "SQUARE FAMILY";
+            player.RelationToPlayer = FamilyRelation.Player;
+            var families = ScriptableObject.CreateInstance<CD_Families>();
+            families.PlayerFamily = player;
+            families.Families.Add(player);
+            families.Families.Add(rival);
+            return families;
         }
         public void Capture(ContractInputVO input)
         {

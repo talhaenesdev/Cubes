@@ -12,8 +12,6 @@ namespace Modules.GameplayModule.Controllers
     // on the same keys, or on their own - and the run picks up when the last one is done.
     internal class PhoneCallCommand : Command
     {
-        // A press this soon after the ring starts is the one that opened the door, not an answer.
-        private const float Grace = 0.4f;
         [Inject] private INightShiftModel _model { get; set; }
         [Inject] private ILocalizationService _loc { get; set; }
         [InjectSignal] private GameplaySignals _signals { get; set; }
@@ -27,7 +25,7 @@ namespace Modules.GameplayModule.Controllers
             {
                 if (run.CallTimer == 0f) _signals.Outgoing.CallRinging.Dispatch(_loc.Get(missions.PhoneCaller));
                 run.CallTimer += Mathf.Min(Time.deltaTime, 0.05f);
-                if (!pressed || run.CallTimer < Grace) return;
+                if (!pressed || run.CallTimer < _model.Tuning.PhoneInputGrace) return;
                 run.CallRinging = false;
                 run.CallTimer = 0f;
                 _model.CallHeard = true;

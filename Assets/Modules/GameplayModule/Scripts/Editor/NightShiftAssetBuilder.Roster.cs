@@ -10,12 +10,16 @@ using UnityEngine;
 
 namespace Modules.GameplayModule.Editor
 {
-    // The cast and the arsenal: shape characters, weapons, the pickup, and the two configs that list them.
+    // The cast and arsenal, plus the family configs that choose each rank's names and character prefab.
     public partial class NightShiftAssetBuilder
     {
         public const string WeaponsAsset = ModuleRoot + "/Scriptables/CD_Weapons.asset";
         public const string CharactersAsset = ModuleRoot + "/Scriptables/CD_Characters.asset";
+        public const string FamiliesAsset = ModuleRoot + "/Scriptables/CD_Families.asset";
+        public const string RivalFamilyAsset = ModuleRoot + "/Scriptables/CD_Family_Rival.asset";
+        public const string PlayerFamilyAsset = ModuleRoot + "/Scriptables/CD_Family_Player.asset";
         public const string GameplayAsset = ModuleRoot + "/Scriptables/CD_Gameplay.asset";
+        public const string TerritoryAsset = ModuleRoot + "/Scriptables/CD_Territory.asset";
 
         private readonly System.Collections.Generic.Dictionary<string, (string, float)[]> ShippedPools = new()
         {
@@ -564,7 +568,80 @@ namespace Modules.GameplayModule.Editor
                 AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<CD_Gameplay>(), GameplayAsset);
                 _report.Add("Wrote " + GameplayAsset);
             }
+            if (AssetDatabase.LoadAssetAtPath<CD_Territory>(TerritoryAsset) == null)
+            {
+                AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<CD_Territory>(), TerritoryAsset);
+                _report.Add("Wrote " + TerritoryAsset);
+            }
+            var families = AssetDatabase.LoadAssetAtPath<CD_Families>(FamiliesAsset);
+            if (families == null)
+            {
+                families = ScriptableObject.CreateInstance<CD_Families>();
+                AssetDatabase.CreateAsset(families, FamiliesAsset);
+                _report.Add("Wrote " + FamiliesAsset);
+            }
+            var rival = AssetDatabase.LoadAssetAtPath<CD_Family>(RivalFamilyAsset);
+            if (rival == null)
+            {
+                rival = ScriptableObject.CreateInstance<CD_Family>();
+                rival.Id = "rival";
+                rival.DisplayName = "TRIANGLE FAMILY";
+                rival.RelationToPlayer = FamilyRelation.Enemy;
+                rival.Don.Names.Add("Vittorio");
+                rival.Consigliere.Names.AddRange(new[] {"Silvio", "Tommaso"});
+                rival.Caporegime.Names.AddRange(new[] {"Marco", "Enzo", "Rocco"});
+                rival.Soldiers.Names.AddRange(new[] {"Nico", "Luca", "Bruno", "Dante"});
+                rival.Associates.Names.AddRange(new[] {"Paolo", "Carlo", "Aldo", "Gino"});
+                AssetDatabase.CreateAsset(rival, RivalFamilyAsset);
+                _report.Add("Wrote " + RivalFamilyAsset);
+            }
+            rival.Don.Prefab ??= characters.Find(rival.Don.CharacterType)?.Prefab;
+            rival.Consigliere.Prefab ??= characters.Find(rival.Consigliere.CharacterType)?.Prefab;
+            rival.Caporegime.Prefab ??= characters.Find(rival.Caporegime.CharacterType)?.Prefab;
+            rival.Soldiers.Prefab ??= characters.Find(rival.Soldiers.CharacterType)?.Prefab;
+            rival.Associates.Prefab ??= characters.Find(rival.Associates.CharacterType)?.Prefab;
+            if (!families.Families.Contains(rival)) families.Families.Add(rival);
+            var playerFamily = AssetDatabase.LoadAssetAtPath<CD_Family>(PlayerFamilyAsset);
+            if (playerFamily == null)
+            {
+                playerFamily = ScriptableObject.CreateInstance<CD_Family>();
+                playerFamily.Id = "player";
+                playerFamily.DisplayName = "SQUARE FAMILY";
+                playerFamily.RelationToPlayer = FamilyRelation.Player;
+                playerFamily.Don.CharacterType = "rectangle";
+                playerFamily.Consigliere.CharacterType = "square";
+                playerFamily.Caporegime.CharacterType = "square";
+                playerFamily.Soldiers.CharacterType = "square";
+                playerFamily.Associates.CharacterType = "circle";
+                AssetDatabase.CreateAsset(playerFamily, PlayerFamilyAsset);
+                _report.Add("Wrote " + PlayerFamilyAsset);
+            }
+            rival.RelationToPlayer = FamilyRelation.Enemy;
+            playerFamily.RelationToPlayer = FamilyRelation.Player;
+            playerFamily.Don.Prefab ??= characters.Find(playerFamily.Don.CharacterType)?.Prefab;
+            playerFamily.Consigliere.Prefab ??= characters.Find(playerFamily.Consigliere.CharacterType)?.Prefab;
+            playerFamily.Caporegime.Prefab ??= characters.Find(playerFamily.Caporegime.CharacterType)?.Prefab;
+            playerFamily.Soldiers.Prefab ??= characters.Find(playerFamily.Soldiers.CharacterType)?.Prefab;
+            playerFamily.Associates.Prefab ??= characters.Find(playerFamily.Associates.CharacterType)?.Prefab;
+            if (!families.Families.Contains(playerFamily)) families.Families.Insert(0, playerFamily);
+            families.PlayerFamily = playerFamily;
+            EditorUtility.SetDirty(playerFamily);
+            EditorUtility.SetDirty(rival);
+            EditorUtility.SetDirty(families);
             EditorUtility.SetDirty(characters);
+        }
+
+        // True when GameplaySystemRoot's RootAdapter does not list CD_Territory yet.
+        private bool TerritoryNotFiled()
+        {
+            var root = AssetDatabase.LoadAssetAtPath<GameObject>(RootPrefab);
+            var asset = AssetDatabase.LoadAssetAtPath<CD_Territory>(TerritoryAsset);
+            var adapter = root != null ? root.GetComponent<RootAdapter>() : null;
+            if (adapter == null || asset == null) return asset != null;
+            SerializedProperty property = new SerializedObject(adapter).GetIterator();
+            while (property.Next(true))
+                if (property.propertyType == SerializedPropertyType.ObjectReference && property.objectReferenceValue == asset) return false;
+            return true;
         }
 
         // Files both configs on GameplaySystemRoot's RootAdapter, where NightShiftModel reads them.
@@ -586,6 +663,8 @@ namespace Modules.GameplayModule.Editor
             FileEntry(keys, values, nameof(CD_Music), AssetDatabase.LoadAssetAtPath<CD_Music>(MusicAsset));
             FileEntry(keys, values, nameof(CD_Outfits), AssetDatabase.LoadAssetAtPath<CD_Outfits>(OutfitsAsset));
             FileEntry(keys, values, nameof(CD_Gameplay), AssetDatabase.LoadAssetAtPath<CD_Gameplay>(GameplayAsset));
+            FileEntry(keys, values, nameof(CD_Families), AssetDatabase.LoadAssetAtPath<CD_Families>(FamiliesAsset));
+            FileEntry(keys, values, nameof(CD_Territory), AssetDatabase.LoadAssetAtPath<CD_Territory>(TerritoryAsset));
             serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 

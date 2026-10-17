@@ -27,6 +27,7 @@ namespace Modules.ConnectorModule.RootsContexts
             _screenSignals.Outgoing.TerminalSaved.Connect(_gameplaySignals.Incoming.SaveTerminal, GROUP);
             _screenSignals.Outgoing.TerminalCloseRequested.Connect(_gameplaySignals.Incoming.CloseTerminal, GROUP);
             _screenSignals.Outgoing.MenuChosen.Connect(_gameplaySignals.Incoming.ChooseMenu, GROUP);
+            _screenSignals.Outgoing.MapAction.Connect(_gameplaySignals.Incoming.MapAction, GROUP);
             _screenSignals.Outgoing.MenuCloseRequested.Connect(_gameplaySignals.Incoming.CloseMenu, GROUP);
             _screenSignals.Outgoing.DeckButton.Connect(_gameplaySignals.Incoming.ControlTape, GROUP);
             _screenSignals.Outgoing.DeckCloseRequested.Connect(_gameplaySignals.Incoming.CloseDeck, GROUP);

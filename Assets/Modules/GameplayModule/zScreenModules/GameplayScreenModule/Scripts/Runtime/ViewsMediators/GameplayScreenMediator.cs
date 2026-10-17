@@ -37,6 +37,7 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             _signals.Incoming.ShowTerminal.AddListener(_view.ShowTerminal);
             _signals.Incoming.HideTerminal.AddListener(_view.HideTerminal);
             _view.MenuEntryClicked += OnMenuEntry;
+            _view.MapActionClicked += OnMapAction;
             _view.MenuCloseClicked += OnMenuClose;
             _signals.Incoming.ShowMenu.AddListener(_view.ShowMenu);
             _signals.Incoming.HideMenu.AddListener(_view.HideMenu);
@@ -64,6 +65,7 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             _signals.Incoming.ShowTerminal.RemoveListener(_view.ShowTerminal);
             _signals.Incoming.HideTerminal.RemoveListener(_view.HideTerminal);
             _view.MenuEntryClicked -= OnMenuEntry;
+            _view.MapActionClicked -= OnMapAction;
             _view.MenuCloseClicked -= OnMenuClose;
             _signals.Incoming.ShowMenu.RemoveListener(_view.ShowMenu);
             _signals.Incoming.HideMenu.RemoveListener(_view.HideMenu);
@@ -109,6 +111,12 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
         {
             if (!_view.Data.HasState(ScreenState.AvailableToSendSignal)) return;
             _signals.Outgoing.MenuChosen.Dispatch(index);
+        }
+
+        private void OnMapAction(int location, int action)
+        {
+            if (!_view.Data.HasState(ScreenState.AvailableToSendSignal)) return;
+            _signals.Outgoing.MapAction.Dispatch(location, action);
         }
 
         private void OnMenuClose()

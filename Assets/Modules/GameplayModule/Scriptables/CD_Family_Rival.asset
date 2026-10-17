@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6e327f071a443d8b0cb7b8264c87cb0, type: 3}
+  m_Name: CD_Family_Rival
+  m_EditorClassIdentifier: Modules.Gameplay::Modules.GameplayModule.Data.UnityObjects.CD_Family
+  Id: rival
+  DisplayName: TRIANGLE FAMILY
+  Color: {r: 0.55, g: 0.2, b: 0.22, a: 1}
+  RelationToPlayer: 2
+  Relations:
+  - Family: player
+    Relation: 1
+  - Family: circle
+    Relation: 1
+  - Family: pentagon
+    Relation: 0
+  - Family: hexagon
+    Relation: 1
+  - Family: diamond
+    Relation: 1
+  Don:
+    CharacterType: circle
+    Prefab: {fileID: 7316023911584897620, guid: b8a2288e96848f8448302f4a2a019b85, type: 3}
+    Names:
+    - Vittorio
+  Consigliere:
+    CharacterType: diamond
+    Prefab: {fileID: 748040947343931460, guid: d023584b89c3940499186b16df71f6b7, type: 3}
+    Names:
+    - Silvio
+    - Tommaso
+  Caporegime:
+    CharacterType: pentagon
+    Prefab: {fileID: 6118260583255244559, guid: d10d82a3ab8515746b5c2d501261cc6a, type: 3}
+    Names:
+    - Marco
+    - Enzo
+    - Rocco
+  Soldiers:
+    CharacterType: triangle
+    Prefab: {fileID: 6763227804749069794, guid: 306d379c5be924e49afbe9a7e72077a3, type: 3}
+    Names:
+    - Nico
+    - Luca
+    - Bruno
+    - Dante
+  Associates:
+    CharacterType: circle
+    Prefab: {fileID: 7316023911584897620, guid: b8a2288e96848f8448302f4a2a019b85, type: 3}
+    Names:
+    - Paolo
+    - Carlo
+    - Aldo
+    - Gino

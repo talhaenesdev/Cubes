@@ -1,5 +1,6 @@
 using Modules.GameplayModule.Data.UnityObjects;
 using Modules.GameplayModule.Data.ValueObjects;
+using Modules.GameplayModule.Enums;
 using UnityEngine;
 namespace Modules.GameplayModule.Models
 {
@@ -14,6 +15,7 @@ namespace Modules.GameplayModule.Models
         int Remaining { get; }
         CD_Weapons Weapons { get; }
         CD_Characters Characters { get; }
+        CD_Families Families { get; }
         CD_Missions Missions { get; }
         CD_Upgrades Upgrades { get; }
         CD_Music Music { get; }
@@ -59,7 +61,12 @@ namespace Modules.GameplayModule.Models
         ProgressSVO Progress { get; }
         // The contract being played, or null for the hideout.
         string Mission { get; set; }
-        string GuardAssignmentMission { get; set; }
+        // The city - shops, families, raids and the time between sessions.
+        ITerritoryModel Territory { get; }
+        // When the open city map is next redrawn, in unscaled seconds.
+        float MapRefreshAt { get; set; }
+        // The time away has been settled for this launch.
+        bool TerritoryCaughtUp { get; set; }
         // The level prefab the next run is played in: the mission's, or the hideout.
         Entities.LevelAuthoring RequestedLevel { get; }
         int UpgradeLevel(string id);
@@ -67,8 +74,6 @@ namespace Modules.GameplayModule.Models
         bool Buy(string id);
         // Pays the current mission's reward the first time it is finished.
         void CompleteMission();
-        int MissionGuardCount(string mission);
-        void SetMissionGuardCount(string mission, int count);
         // The weapon by Id, or null for unarmed or an Id CD_Weapons does not list.
         WeaponCVO Weapon(string id);
         void Drop(Vector2 position, string weapon, int ammo, int reserve);
