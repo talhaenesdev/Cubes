@@ -5,6 +5,7 @@ using Modules.LoadingModule.Models;
 using Modules.LoadingModule.Shared.Data.ValueObjects;
 using Modules.LoadingModule.Shared.Enums;
 using Modules.LoadingModule.Signals;
+using Modules.LocalizationModule.Services;
 
 namespace Modules.LoadingModule.Controllers
 {
@@ -16,6 +17,7 @@ namespace Modules.LoadingModule.Controllers
     {
         [Inject] private ILoadingModel _model { get; set; }
         [InjectSignal] private LoadingSignals _signals { get; set; }
+        [Inject] private ILocalizationService _loc { get; set; }
 
         [SignalParam] private string _set { get; set; }
 
@@ -24,6 +26,11 @@ namespace Modules.LoadingModule.Controllers
             if (!_model.TryGetSet(_set, out LoadingSetRVO set)) return;
 
             LoadingSetStatusRVO status = _model.BuildStatus(set);
+            if (_loc != null)
+            {
+                status.Message = _loc.Get(status.Message);
+                status.ChildMessage = _loc.Get(status.ChildMessage);
+            }
 
             if (!set.BeginAnnounced && set.State == LoadingSetState.Running)
             {

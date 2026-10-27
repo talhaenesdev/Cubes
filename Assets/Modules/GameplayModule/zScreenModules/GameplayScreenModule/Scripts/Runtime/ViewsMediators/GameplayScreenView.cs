@@ -165,10 +165,12 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
 
         internal void BuildLayout()
         {
+            // Editor prefab baking does not invoke Awake; use a serializable font for authored Text objects.
+            if (_font == null) _font = _fontAsset != null ? _fontAsset : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             PrefabPanel(_headerPrefab, "Header", transform, 0, .84f, 1, 1, _ink);
             CreatePanel("HeaderRule", transform, .025f, .84f, .975f, .843f, _mint);
             _location = CreateText("Location", transform, "", .03f, .87f, .27f, .985f, 28, _cream);
-            _status = CreateText("Status", transform, "AWAITING CONTRACT", .29f, .925f, .80f, .985f, 23, _mint);
+            _status = Label(CreateText("Status", transform, "", .29f, .925f, .80f, .985f, 23, _mint), "AWAITING CONTRACT");
             _objective = CreateText("Objective", transform, "", .29f, .85f, .80f, .925f, 20, _cream);
             _retryButton = CreateButton("Retry", "RETRY", .835f, .925f, .975f, .98f);
             _menuButton = CreateButton("Menu", "MENU", .835f, .855f, .975f, .91f);
@@ -188,6 +190,10 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
 
         private void BindAuthoredLayout()
         {
+            EnsureAuthoredFonts();
+            // The fixed labels of a baked layout carry their keys on LocalizedText.
+            foreach (LocalizedText marker in GetComponentsInChildren<LocalizedText>(true))
+                if (!string.IsNullOrEmpty(marker.Key) && marker.TryGetComponent(out Text text)) _labels.Add((text, marker.Key));
             _location = Named<Text>(transform, "Location");
             _status = Named<Text>(transform, "Status");
             _objective = Named<Text>(transform, "Objective");
@@ -272,6 +278,16 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             if (_click == null) _click = Resources.Load<AudioClip>("SND_UI_HudClick");
         }
 
+        // An operating-system dynamic font cannot be serialized into the editable prefab.
+        // Reapply the configured or built-in fallback whenever this pooled screen is bound.
+        private void EnsureAuthoredFonts()
+        {
+            if (_font == null)
+                _font = Serif(_fontAsset != null ? _fontAsset : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf"));
+            foreach (Text text in GetComponentsInChildren<Text>(true))
+                if (text.font == null) text.font = _font;
+        }
+
 #if UNITY_EDITOR
         internal GameObject BuildMenuRowTemplate()
         {
@@ -326,7 +342,12 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
         // A cassette reel: a ring with a hub and three spokes, turned by its RectTransform.
         private RectTransform Reel(string objectName, Transform parent, float left, float bottom, float right, float top)
         {
-            Image tape = Circle(objectName, parent, left, bottom, right, top, new Color32(52, 34, 22, 255));
+            // The box it is given is rarely square; the reel is the largest square inside it, so it stays round as it turns.
+            RectTransform box = CreateRect(objectName + " Box", parent, left, bottom, right, top);
+            Image tape = Circle(objectName, box, 0f, 0f, 1f, 1f, new Color32(52, 34, 22, 255));
+            var square = tape.gameObject.AddComponent<AspectRatioFitter>();
+            square.aspectMode = AspectRatioFitter.AspectMode.FitInParent;
+            square.aspectRatio = 1f;
             Image hub = Circle("Hub", tape.transform, .3f, .3f, .7f, .7f, new Color32(226, 214, 190, 255));
             for (int i = 0; i < 3; i++)
             {
@@ -419,7 +440,7 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             _deck = body.gameObject;
             CreatePanel("Chrome top", body.transform, 0f, .955f, 1f, 1f, new Color32(120, 110, 95, 255));
             CreatePanel("Handle", body.transform, .3f, 1f, .7f, 1.04f, new Color32(80, 72, 62, 255));
-            CreateText("Brand", body.transform, "SHAPE & SONS  ·  STEREO CASSETTE", .05f, .87f, .95f, .95f, 15, _mint).alignment = TextAnchor.MiddleCenter;
+            Label(CreateText("Brand", body.transform, "", .05f, .87f, .95f, .95f, 15, _mint), "SHAPE & SONS  ·  STEREO CASSETTE").alignment = TextAnchor.MiddleCenter;
             foreach (float x in new[] {.03f, .75f})
             {
                 Image grille = Circle("Speaker", body.transform, x, .4f, x + .22f, .84f, new Color32(8, 7, 7, 255));
@@ -462,7 +483,7 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
 
         private void ShowDeckState()
         {
-            _deckPlayLabel.text = _t(_deckPlaying ? "PAUSE" : "PLAY");
+            _deckPlayLabel.text = _t(_deckPlaying ? "TAPE PAUSE" : "TAPE PLAY");
             _deckState.text = _t(_deckPlaying ? "PLAYING" : "STOPPED");
         }
 
@@ -783,7 +804,7 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             Color label = new Color32(226, 214, 190, 40);
             foreach ((string name, float x, float y) in new[] {("THE DOCKS", .3f, .045f), ("OLD TOWN", .12f, .9f), ("MARKET", .35f, .55f), ("UPTOWN", .82f, .94f)})
             {
-                Text district = CreateText("District", city.transform, name, x - .14f, y - .04f, x + .14f, y + .04f, 20, label);
+                Text district = Label(CreateText("District", city.transform, "", x - .14f, y - .04f, x + .14f, y + .04f, 20, label), name);
                 district.alignment = TextAnchor.MiddleCenter;
                 district.fontStyle = FontStyle.Bold;
             }
@@ -972,8 +993,8 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             _menuTitle.text = title ?? string.Empty;
             _menuSubtitle.text = subtitle ?? string.Empty;
             int count = entries?.Length ?? 0;
-            _menuFrame.anchorMin = isMap ? new Vector2(.03f, .05f) : new Vector2(.22f, .14f);
-            _menuFrame.anchorMax = isMap ? new Vector2(.97f, .93f) : new Vector2(.78f, .82f);
+            _menuFrame.anchorMin = isMap ? new Vector2(.03f, .03f) : new Vector2(.22f, .14f);
+            _menuFrame.anchorMax = isMap ? new Vector2(.97f, .83f) : new Vector2(.78f, .82f);
             _menuViewport.gameObject.SetActive(!isMap);
             _menuScrollbar.SetActive(!isMap);
             _cityMap.SetActive(isMap);
@@ -1122,7 +1143,7 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
         public override void BeforeScreenActivation()
         {
             base.BeforeScreenActivation();
-            ShowHud("AWAITING CONTRACT", "");
+            ShowHud(_t("AWAITING CONTRACT"), "");
             HideTerminal();
             HideMenu();
             HideDeck();
@@ -1166,6 +1187,10 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
 
         private Text Label(Text text, string key)
         {
+            // The key goes on the Text itself as well, so a layout baked into the prefab keeps it.
+            LocalizedText marker = text.GetComponent<LocalizedText>();
+            if (marker == null) marker = text.gameObject.AddComponent<LocalizedText>();
+            marker.Key = key;
             _labels.Add((text, key));
             text.text = _t(key);
             return text;
@@ -1240,6 +1265,7 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             button.onClick.AddListener(() => { if (_click != null) _ui.PlayOneShot(_click, 0.8f); });
             Text label = Named(panel.transform, "Label")?.GetComponent<Text>();
             if (label == null) label = CreateText("Label", panel.transform, caption, .08f, .05f, .92f, .95f, 20, _cream);
+            else if (label.font == null) label.font = _font;
             label.text = caption;
             Label(label, caption).alignment = TextAnchor.MiddleCenter;
             return button;

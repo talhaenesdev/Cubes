@@ -100,7 +100,7 @@ namespace Modules.GameplayModule.Controllers
                 if (!Offer(_loc.Format("E  —  use the computer: {0}", _loc.Get(terminal.Title)))) continue;
                 run.Terminal = i;
                 run.Paused = true;
-                _signals.Outgoing.TerminalOpened.Dispatch(terminal.Title, terminal.Text);
+                _signals.Outgoing.TerminalOpened.Dispatch(_loc.Get(terminal.Title), _loc.Get(terminal.Text));
             }
             foreach (DoorRVO door in run.Doors)
             {
@@ -181,7 +181,8 @@ namespace Modules.GameplayModule.Controllers
             run.Aim = boss.Position + Vector2.up * 1.1f;
             run.SpeechTimer += Mathf.Min(Time.deltaTime, 0.05f);
             _hint = _loc.Get("E  —  next");
-            bool next = _press || run.SpeechTimer >= _model.Territory.Config.BubbleTime;
+            // A press only counts once the line has been up a moment, so the E that opened the talk does not skip its first line.
+            bool next = (_press && run.SpeechTimer > 0.4f) || run.SpeechTimer >= _model.Territory.Config.BubbleTime;
             if (!next) return true;
             _press = false;
             run.BossDialogue++;

@@ -845,8 +845,8 @@ namespace Modules.GameplayModule.ViewsMediators
                 return;
             }
             Vector2 head = speaker == -1
-                ? state.Player + Vector2.up * (state.Crouching ? 1.7f : 2.45f)
-                : state.Guards[speaker].Position + Vector2.up * (state.Guards[speaker].Crouching ? 1.6f : 2.3f);
+                ? state.Player + Vector2.up * (state.Crouching ? 1.6f : 2.2f)
+                : state.Guards[speaker].Position + Vector2.up * (state.Guards[speaker].Crouching ? 1.5f : 2.1f);
             _bubble.Show(head, state.SpeechText);
         }
 

@@ -309,7 +309,8 @@ namespace Modules.GameplayModule.Editor
             serializedObject.Update();
             Banner("TERRITORY", "Holding the city: shop income, the men posted there, raids live and while the game is closed, and talking an owner round.", Teal);
             Group("Income", Gold, "LocationsPay");
-            Group("Our men at a shop  -  their own type, weaker than the player", Leaf, "MaxGuardsPerLocation", "DefenderType", "DefenderHealth",
+            Group("Our men at a shop  -  their own type, weaker than the player", Leaf, "MaxGuardsPerLocation", "GuardHirePrice",
+                "GuardUpkeepPerPayment", "DefenderType", "DefenderHealth",
                 "DefenderFirePace", "DefenderReaction", "DefenderSight", "DefenderBulletSpeed");
             Group("Raids while playing", Ember, "Raids", "RaidRollMinutes", "RaidResponseMinutes", "RichShopRaidBonus");
             Group("Raid strength  -  richer shops are hit harder", Crimson, "MinAttackers", "MaxAttackers", "AttackerAggression", "RichShopToughness");

@@ -31,6 +31,8 @@ namespace Modules.GameplayModule.Models
         // ---- guards
         int MaxGuards { get; }
         int Guards(string mission);
+        int NetPayment(MissionCVO mission);
+        bool TryHireGuard(string mission);
         void SetGuards(string mission, int count);
 
         // ---- families

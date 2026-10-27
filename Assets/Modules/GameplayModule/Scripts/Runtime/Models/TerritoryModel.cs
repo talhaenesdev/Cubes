@@ -39,6 +39,31 @@ namespace Modules.GameplayModule.Models
             _useMoney = useMoney;
             _save = save;
             _cashChanged = cashChanged;
+            RepairOwners();
+        }
+
+        // Saves from an earlier build wrote a family's display name where its Id belongs ("THE RIVAL FAMILY" for
+        // "rival"). Each such owner is matched back to its family, or to the shop's raiding family when nothing matches.
+        private void RepairOwners()
+        {
+            ProgressSVO progress = Progress;
+            if (progress?.WorkingLocations == null || _families == null) return;
+            foreach (WorkingLocationSVO location in progress.WorkingLocations)
+            {
+                location.OwnerFamily = KnownFamily(location.OwnerFamily, location.Mission);
+                if (!string.IsNullOrEmpty(location.AttackingFamily)) location.AttackingFamily = KnownFamily(location.AttackingFamily, location.Mission);
+            }
+        }
+
+        private string KnownFamily(string id, string mission)
+        {
+            if (string.IsNullOrEmpty(id) || Family(id) != null) return id;
+            foreach (CD_Family family in _families.Families)
+                if (family != null && (string.Equals(family.DisplayName, id, StringComparison.OrdinalIgnoreCase)
+                                       || id.IndexOf(family.Id, StringComparison.OrdinalIgnoreCase) >= 0))
+                    return family.Id;
+            MissionCVO owner = _missions != null ? _missions.Find(mission) : null;
+            return owner != null ? owner.AttackingFamily : id;
         }
 
         private ProgressSVO Progress => _progress();
@@ -107,7 +132,8 @@ namespace Modules.GameplayModule.Models
             {
                 float total = 0f;
                 foreach (MissionCVO mission in Missions)
-                    if (IsOurs(mission.Id) && !IsUnderAttack(mission.Id)) total += IncomePerMinute(mission) * 60f;
+                    if (IsOurs(mission.Id) && !IsUnderAttack(mission.Id) && mission.WorkPaymentInterval > 0f)
+                        total += NetPayment(mission) * 3600f / mission.WorkPaymentInterval;
                 return Mathf.RoundToInt(total);
             }
         }
@@ -163,6 +189,25 @@ namespace Modules.GameplayModule.Models
         {
             MissionGuardSVO entry = Progress.MissionGuards.Find(item => item.Mission == mission);
             return entry != null ? Mathf.Clamp(entry.Count, 0, MaxGuards) : 0;
+        }
+
+        public int NetPayment(MissionCVO mission)
+        {
+            if (mission == null) return 0;
+            int upkeep = _useMoney ? Guards(mission.Id) * Mathf.Max(0, Config.GuardUpkeepPerPayment) : 0;
+            return Mathf.Max(0, mission.WorkPayment - upkeep);
+        }
+
+        public bool TryHireGuard(string mission)
+        {
+            if (!IsOurs(mission) || Guards(mission) >= MaxGuards) return false;
+            int price = _useMoney ? Mathf.Max(0, Config.GuardHirePrice) : 0;
+            if (Progress.Cash < price) return false;
+            Progress.Cash -= price;
+            _cashChanged(Progress.Cash);
+            SetGuardsQuietly(mission, Guards(mission) + 1);
+            _save();
+            return true;
         }
 
         public void SetGuards(string mission, int count)
@@ -352,7 +397,7 @@ namespace Modules.GameplayModule.Models
             long elapsed = until - state.LastPaymentUnixMilliseconds;
             if (elapsed < interval) return 0;
             long due = elapsed / interval;
-            long earned = Math.Min(int.MaxValue, due * mission.WorkPayment);
+            long earned = Math.Min(int.MaxValue, due * NetPayment(mission));
             state.LastPaymentUnixMilliseconds += due * interval;
             Progress.Cash = (int) Math.Min(int.MaxValue, (long) Progress.Cash + earned);
             _cashChanged(Progress.Cash);
@@ -521,7 +566,7 @@ namespace Modules.GameplayModule.Models
         {
             int total = 0;
             foreach (MissionCVO mission in Missions)
-                if (_useMoney && IsOurs(mission.Id) && !IsUnderAttack(mission.Id)) total += mission.WorkPayment;
+                if (_useMoney && IsOurs(mission.Id) && !IsUnderAttack(mission.Id)) total += NetPayment(mission);
             Progress.Cash = (int) Math.Min(int.MaxValue, (long) Progress.Cash + total);
             _cashChanged(Progress.Cash);
             _save();

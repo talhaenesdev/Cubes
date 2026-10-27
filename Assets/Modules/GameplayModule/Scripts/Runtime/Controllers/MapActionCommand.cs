@@ -30,7 +30,14 @@ namespace Modules.GameplayModule.Controllers
             if (_action == FewerGuards || _action == MoreGuards)
             {
                 if (!territory.IsOurs(mission.Id)) return;
-                territory.SetGuards(mission.Id, territory.Guards(mission.Id) + (_action == MoreGuards ? 1 : -1));
+                if (_action == MoreGuards)
+                {
+                    if (territory.Guards(mission.Id) >= territory.MaxGuards)
+                        _signals.Outgoing.BannerShown.Dispatch(_loc.Get("THIS SHOP HAS ENOUGH MEN"));
+                    else if (!territory.TryHireGuard(mission.Id))
+                        _signals.Outgoing.BannerShown.Dispatch(_loc.Format("NEED ${0} TO POST A MAN", territory.Config.GuardHirePrice));
+                }
+                else territory.SetGuards(mission.Id, territory.Guards(mission.Id) - 1);
                 Refresh();
                 return;
             }

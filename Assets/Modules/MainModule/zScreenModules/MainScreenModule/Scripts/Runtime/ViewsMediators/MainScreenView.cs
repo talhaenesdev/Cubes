@@ -32,6 +32,8 @@ namespace Modules.MainModule.MainScreenModule.ViewsMediators
         private readonly System.Collections.Generic.List<GameObject> _titleScreen = new();
         private GameObject _pause;
         private GameObject _credits;
+        private Text _creditsBody;
+        private string _creditsSource = "";
         private Button _creditsButton;
         private AudioSource _ui;
         private AudioClip _click;
@@ -160,7 +162,9 @@ namespace Modules.MainModule.MainScreenModule.ViewsMediators
             CreatePanel("Rule", window.transform, 0f, .985f, 1f, 1f, _red);
             Keyed(CreateText("Title", window.transform, "", .06f, .88f, .94f, .97f, 28, _cream), "CREDITS");
             var asset = Resources.Load<TextAsset>("TXT_Credits");
-            Text body = CreateText("Body", window.transform, asset != null ? asset.text : "", .06f, .12f, .94f, .87f, 16, _cream);
+            _creditsSource = asset != null ? asset.text.Replace("\r", "") : "";
+            Text body = CreateText("Body", window.transform, _creditsSource, .06f, .12f, .94f, .87f, 16, _cream);
+            _creditsBody = body;
             body.alignment = TextAnchor.UpperLeft;
             Button close = CreateButton("Close", "", .7f, .025f, .94f, .1f);
             close.transform.SetParent(window.transform, false);
@@ -253,6 +257,12 @@ namespace Modules.MainModule.MainScreenModule.ViewsMediators
         public void Localize(Func<string, string> translate)
         {
             foreach ((Text text, string key) in _texts) text.text = translate(key);
+            if (_creditsBody != null)
+            {
+                string[] lines = _creditsSource.Split('\n');
+                for (int i = 0; i < lines.Length; i++) lines[i] = lines[i].Length > 0 ? translate(lines[i]) : lines[i];
+                _creditsBody.text = string.Join("\n", lines);
+            }
         }
 
         private void OnEnable()

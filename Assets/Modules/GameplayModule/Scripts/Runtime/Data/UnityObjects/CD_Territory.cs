@@ -18,6 +18,10 @@ namespace Modules.GameplayModule.Data.UnityObjects
         [Header("Guards")]
         [Tooltip("Most men the player can post at one shop.")]
         [Min(1)] public int MaxGuardsPerLocation = 10;
+        [Tooltip("Cash paid once when one man is posted at a shop. Removing him gives no refund.")]
+        [Min(0)] public int GuardHirePrice = 1000;
+        [Tooltip("Cash one posted man takes from that shop every WorkPaymentInterval. Net income never goes below zero.")]
+        [Min(0)] public int GuardUpkeepPerPayment = 20;
         [Tooltip("The character type posted men use - not the player's own, and weaker than the enemy's soldiers.")]
         public string DefenderType = "square";
         [Tooltip("Hits a posted man takes. The enemy's soldiers keep their own.")]

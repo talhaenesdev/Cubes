@@ -331,7 +331,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 13
     m_FontStyle: 0
     m_BestFit: 1
@@ -430,6 +430,7 @@ GameObject:
   - component: {fileID: 8449390190463453621}
   - component: {fileID: 1890558866484263706}
   - component: {fileID: 6375850076576401478}
+  - component: {fileID: 3120820403849813576}
   m_Layer: 0
   m_Name: Label
   m_TagString: Untagged
@@ -485,7 +486,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 1
@@ -498,6 +499,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: '-'
+--- !u!114 &3120820403849813576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 163250593738952358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: '-'
 --- !u!1 &174322661460147388
 GameObject:
   m_ObjectHideFlags: 0
@@ -765,7 +779,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 26
     m_FontStyle: 1
     m_BestFit: 1
@@ -844,7 +858,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 1
@@ -1458,7 +1472,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 14
     m_FontStyle: 2
     m_BestFit: 1
@@ -1742,6 +1756,7 @@ GameObject:
   - component: {fileID: 401752230388996436}
   - component: {fileID: 5878143985978166891}
   - component: {fileID: 2387832804008763393}
+  - component: {fileID: 2080399936255089769}
   m_Layer: 0
   m_Name: Incoming
   m_TagString: Untagged
@@ -1797,7 +1812,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 13
     m_FontStyle: 0
     m_BestFit: 1
@@ -1810,6 +1825,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: INCOMING CALL
+--- !u!114 &2080399936255089769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 929775602005061425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: INCOMING CALL
 --- !u!1 &944649408514015295
 GameObject:
   m_ObjectHideFlags: 0
@@ -2221,7 +2249,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 11
     m_FontStyle: 0
     m_BestFit: 1
@@ -2321,6 +2349,7 @@ GameObject:
   - component: {fileID: 4048129349968738836}
   - component: {fileID: 2341669956106278898}
   - component: {fileID: 5535470215310941121}
+  - component: {fileID: 428381160310830217}
   m_Layer: 0
   m_Name: Label
   m_TagString: Untagged
@@ -2376,7 +2405,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 1
@@ -2389,6 +2418,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: +
+--- !u!114 &428381160310830217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1108259874993057059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: +
 --- !u!1 &1128922294132343216
 GameObject:
   m_ObjectHideFlags: 0
@@ -2782,6 +2824,7 @@ GameObject:
   - component: {fileID: 8596049992114216102}
   - component: {fileID: 4898617391415313480}
   - component: {fileID: 7842250958476178978}
+  - component: {fileID: 6623109507362188086}
   m_Layer: 0
   m_Name: Label
   m_TagString: Untagged
@@ -2837,7 +2880,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 1
@@ -2850,6 +2893,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: CLOSE
+--- !u!114 &6623109507362188086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1286679240560372652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: CLOSE
 --- !u!1 &1318255140127177594
 GameObject:
   m_ObjectHideFlags: 0
@@ -2861,6 +2917,7 @@ GameObject:
   - component: {fileID: 1343033612242784181}
   - component: {fileID: 3041823258011816756}
   - component: {fileID: 195334164536297767}
+  - component: {fileID: 3578932091998114562}
   m_Layer: 0
   m_Name: Status
   m_TagString: Untagged
@@ -2916,7 +2973,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 23
     m_FontStyle: 0
     m_BestFit: 1
@@ -2929,6 +2986,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: AWAITING CONTRACT
+--- !u!114 &3578932091998114562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1318255140127177594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: AWAITING CONTRACT
 --- !u!1 &1354474521099661146
 GameObject:
   m_ObjectHideFlags: 0
@@ -4172,6 +4242,7 @@ GameObject:
   - component: {fileID: 6024078811179914503}
   - component: {fileID: 1235009348747143952}
   - component: {fileID: 848635869556320129}
+  - component: {fileID: 3980615793986751886}
   m_Layer: 0
   m_Name: District
   m_TagString: Untagged
@@ -4227,7 +4298,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
     m_FontStyle: 1
     m_BestFit: 1
@@ -4240,6 +4311,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: MARKET
+--- !u!114 &3980615793986751886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2000077950336230194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: MARKET
 --- !u!1 &2021576787567264343
 GameObject:
   m_ObjectHideFlags: 0
@@ -4767,6 +4851,7 @@ GameObject:
   - component: {fileID: 6336005035691946246}
   - component: {fileID: 271132211634925837}
   - component: {fileID: 9114053272860924129}
+  - component: {fileID: 6663576850331940252}
   m_Layer: 0
   m_Name: Engraving
   m_TagString: Untagged
@@ -4822,7 +4907,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 12
     m_FontStyle: 0
     m_BestFit: 1
@@ -4835,6 +4920,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: VOLUME
+--- !u!114 &6663576850331940252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2177308154514819897}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: VOLUME
 --- !u!1 &2185469279362964223
 GameObject:
   m_ObjectHideFlags: 0
@@ -5421,7 +5519,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 24
     m_FontStyle: 0
     m_BestFit: 1
@@ -5500,7 +5598,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 36
     m_FontStyle: 0
     m_BestFit: 1
@@ -5804,7 +5902,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 45
     m_FontStyle: 0
     m_BestFit: 1
@@ -6072,7 +6170,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 10
     m_FontStyle: 0
     m_BestFit: 1
@@ -6412,7 +6510,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 14
     m_FontStyle: 2
     m_BestFit: 1
@@ -7245,7 +7343,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 30
     m_FontStyle: 0
     m_BestFit: 1
@@ -7269,6 +7367,7 @@ GameObject:
   - component: {fileID: 8904934246232239448}
   - component: {fileID: 1597291988694484797}
   - component: {fileID: 722884509555443541}
+  - component: {fileID: 2480443749253132402}
   m_Layer: 0
   m_Name: District
   m_TagString: Untagged
@@ -7324,7 +7423,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
     m_FontStyle: 1
     m_BestFit: 1
@@ -7337,6 +7436,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: UPTOWN
+--- !u!114 &2480443749253132402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3509160009860690882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: UPTOWN
 --- !u!1 &3575434638918455304
 GameObject:
   m_ObjectHideFlags: 0
@@ -7921,6 +8033,7 @@ GameObject:
   - component: {fileID: 2914961809232095526}
   - component: {fileID: 7926545408154996085}
   - component: {fileID: 6727206948360640327}
+  - component: {fileID: 931359840062953803}
   m_Layer: 0
   m_Name: Label
   m_TagString: Untagged
@@ -7976,7 +8089,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 1
@@ -7989,6 +8102,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: NEXT  >|
+--- !u!114 &931359840062953803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3838155839900993977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: NEXT  >|
 --- !u!1 &3841037004028166611
 GameObject:
   m_ObjectHideFlags: 0
@@ -8130,7 +8256,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 11
     m_FontStyle: 0
     m_BestFit: 1
@@ -8595,7 +8721,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 13
     m_FontStyle: 0
     m_BestFit: 1
@@ -9101,7 +9227,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 28
     m_FontStyle: 0
     m_BestFit: 1
@@ -9575,6 +9701,7 @@ GameObject:
   - component: {fileID: 5398794545216884953}
   - component: {fileID: 7917342498510139361}
   - component: {fileID: 6661099205511370720}
+  - component: {fileID: 8287832037952141780}
   m_Layer: 0
   m_Name: District
   m_TagString: Untagged
@@ -9630,7 +9757,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
     m_FontStyle: 1
     m_BestFit: 1
@@ -9643,6 +9770,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: OLD TOWN
+--- !u!114 &8287832037952141780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4496632111069202954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: OLD TOWN
 --- !u!1 &4526918388600159746
 GameObject:
   m_ObjectHideFlags: 0
@@ -9709,7 +9849,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 10
     m_FontStyle: 0
     m_BestFit: 1
@@ -11323,6 +11463,7 @@ GameObject:
   - component: {fileID: 2816442150440804552}
   - component: {fileID: 1572066533362010405}
   - component: {fileID: 4884768604374448123}
+  - component: {fileID: 8579580824313325468}
   m_Layer: 0
   m_Name: Income Label
   m_TagString: Untagged
@@ -11378,7 +11519,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 13
     m_FontStyle: 0
     m_BestFit: 1
@@ -11391,6 +11532,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: INCOME
+--- !u!114 &8579580824313325468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5056422688115508066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: INCOME
 --- !u!1 &5077129869407023617
 GameObject:
   m_ObjectHideFlags: 0
@@ -11477,6 +11631,7 @@ GameObject:
   - component: {fileID: 3811077005124618056}
   - component: {fileID: 7205447340214799571}
   - component: {fileID: 2328808269550658317}
+  - component: {fileID: 2222709621498443077}
   m_Layer: 0
   m_Name: Label
   m_TagString: Untagged
@@ -11532,7 +11687,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 1
@@ -11545,6 +11700,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: MENU
+--- !u!114 &2222709621498443077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5109174464026943995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: MENU
 --- !u!1 &5113954267981265553
 GameObject:
   m_ObjectHideFlags: 0
@@ -11961,7 +12129,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 0
@@ -12138,6 +12306,7 @@ GameObject:
   - component: {fileID: 6379693179395910907}
   - component: {fileID: 7288282941904057316}
   - component: {fileID: 8064729804037477365}
+  - component: {fileID: 524447205698224469}
   m_Layer: 0
   m_Name: Label
   m_TagString: Untagged
@@ -12193,7 +12362,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 1
@@ -12206,6 +12375,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: PLAY
+--- !u!114 &524447205698224469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5448633240080956845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: PLAY
 --- !u!1 &5499091321074757199
 GameObject:
   m_ObjectHideFlags: 0
@@ -12661,7 +12843,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 13
     m_FontStyle: 0
     m_BestFit: 1
@@ -13042,7 +13224,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 26
     m_FontStyle: 0
     m_BestFit: 1
@@ -13141,6 +13323,7 @@ GameObject:
   - component: {fileID: 1026216906967708353}
   - component: {fileID: 8543917169496975309}
   - component: {fileID: 482442294829074907}
+  - component: {fileID: 1253784040336771111}
   m_Layer: 0
   m_Name: Next
   m_TagString: Untagged
@@ -13196,7 +13379,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 12
     m_FontStyle: 0
     m_BestFit: 1
@@ -13209,6 +13392,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "E / SPACE  \u2014  next"
+--- !u!114 &1253784040336771111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5767874474826118828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: "E / SPACE  \u2014  next"
 --- !u!1 &5784391036379822915
 GameObject:
   m_ObjectHideFlags: 0
@@ -13550,6 +13746,7 @@ MonoBehaviour:
     m_Interactions: 
     m_SingletonActionBindings: []
     m_Flags: 0
+    m_Priority: 0
   m_PointerMoveAction:
     m_Name: 
     m_Type: 0
@@ -13559,6 +13756,7 @@ MonoBehaviour:
     m_Interactions: 
     m_SingletonActionBindings: []
     m_Flags: 0
+    m_Priority: 0
 --- !u!1 &6050533092713748628
 GameObject:
   m_ObjectHideFlags: 0
@@ -14213,7 +14411,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 36
     m_FontStyle: 0
     m_BestFit: 1
@@ -14292,7 +14490,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 22
     m_FontStyle: 0
     m_BestFit: 1
@@ -14734,7 +14932,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 16
     m_FontStyle: 0
     m_BestFit: 1
@@ -14869,6 +15067,7 @@ GameObject:
   - component: {fileID: 7290732050350663067}
   - component: {fileID: 662444532137172401}
   - component: {fileID: 5177172051741093840}
+  - component: {fileID: 535622638471272907}
   m_Layer: 0
   m_Name: Hint
   m_TagString: Untagged
@@ -14924,7 +15123,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 13
     m_FontStyle: 0
     m_BestFit: 1
@@ -14937,6 +15136,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Type to edit.  SAVE keeps the text on this computer.  ESC closes.
+--- !u!114 &535622638471272907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6495838373182668722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: Type to edit.  SAVE keeps the text on this computer.  ESC closes.
 --- !u!1 &6546144647011779090
 GameObject:
   m_ObjectHideFlags: 0
@@ -15078,7 +15290,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
     m_FontStyle: 3
     m_BestFit: 1
@@ -15102,6 +15314,7 @@ GameObject:
   - component: {fileID: 1386936500892631374}
   - component: {fileID: 5515466176382181652}
   - component: {fileID: 954000746799172231}
+  - component: {fileID: 8109714632227899124}
   m_Layer: 0
   m_Name: Label
   m_TagString: Untagged
@@ -15157,7 +15370,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 1
@@ -15170,6 +15383,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: SAVE
+--- !u!114 &8109714632227899124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6558447957224275427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: SAVE
 --- !u!1 &6593028333535138099
 GameObject:
   m_ObjectHideFlags: 0
@@ -15543,7 +15769,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 1
@@ -15792,6 +16018,7 @@ GameObject:
   - component: {fileID: 4491704987800510310}
   - component: {fileID: 9043340583252479588}
   - component: {fileID: 6091762632215438350}
+  - component: {fileID: 7972132701061910526}
   m_Layer: 0
   m_Name: Label
   m_TagString: Untagged
@@ -15847,7 +16074,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 1
@@ -15860,6 +16087,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: '|<  PREV'
+--- !u!114 &7972132701061910526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6699398957458276002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: '|<  PREV'
 --- !u!1 &6795963345494250229
 GameObject:
   m_ObjectHideFlags: 0
@@ -15926,7 +16166,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 12
     m_FontStyle: 0
     m_BestFit: 1
@@ -16080,7 +16320,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 1
@@ -16459,7 +16699,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 26
     m_FontStyle: 0
     m_BestFit: 1
@@ -17061,6 +17301,7 @@ GameObject:
   - component: {fileID: 5032283207147787317}
   - component: {fileID: 8274580940144031680}
   - component: {fileID: 3834371329740587591}
+  - component: {fileID: 6596049799113422876}
   m_Layer: 0
   m_Name: Label
   m_TagString: Untagged
@@ -17116,7 +17357,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 13
     m_FontStyle: 2
     m_BestFit: 1
@@ -17129,6 +17370,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: NOW PLAYING
+--- !u!114 &6596049799113422876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7153774263227269991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: NOW PLAYING
 --- !u!1 &7159138369077118583
 GameObject:
   m_ObjectHideFlags: 0
@@ -17260,6 +17514,7 @@ GameObject:
   - component: {fileID: 6999868031339219488}
   - component: {fileID: 8939799178560425886}
   - component: {fileID: 2646672710279976755}
+  - component: {fileID: 1529370745660678571}
   m_Layer: 0
   m_Name: Guards Label
   m_TagString: Untagged
@@ -17315,7 +17570,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 13
     m_FontStyle: 0
     m_BestFit: 1
@@ -17328,6 +17583,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: OUR MEN HERE
+--- !u!114 &1529370745660678571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7274516848680860362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: OUR MEN HERE
 --- !u!1 &7289673462744160646
 GameObject:
   m_ObjectHideFlags: 0
@@ -17339,6 +17607,7 @@ GameObject:
   - component: {fileID: 4254523018495147396}
   - component: {fileID: 7189092023269213644}
   - component: {fileID: 8302288896795637820}
+  - component: {fileID: 4433256205455682213}
   m_Layer: 0
   m_Name: Label
   m_TagString: Untagged
@@ -17394,7 +17663,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 1
@@ -17407,6 +17676,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: CLOSE
+--- !u!114 &4433256205455682213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7289673462744160646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: CLOSE
 --- !u!1 &7299163044350476189
 GameObject:
   m_ObjectHideFlags: 0
@@ -17568,6 +17850,7 @@ GameObject:
   - component: {fileID: 4163388435314704956}
   - component: {fileID: 8704845123501893109}
   - component: {fileID: 19954710461345890}
+  - component: {fileID: 372350458733958811}
   m_Layer: 0
   m_Name: Label
   m_TagString: Untagged
@@ -17623,7 +17906,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 1
@@ -17636,6 +17919,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: RETRY
+--- !u!114 &372350458733958811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7360670760415035816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: RETRY
 --- !u!1 &7373235495732388913
 GameObject:
   m_ObjectHideFlags: 0
@@ -17702,7 +17998,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 30
     m_FontStyle: 0
     m_BestFit: 1
@@ -18216,7 +18512,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 12
     m_FontStyle: 0
     m_BestFit: 1
@@ -18540,6 +18836,7 @@ GameObject:
   - component: {fileID: 8957907091553860824}
   - component: {fileID: 7586034813115379134}
   - component: {fileID: 3053113107246206046}
+  - component: {fileID: 1790224378439502555}
   m_Layer: 0
   m_Name: Label
   m_TagString: Untagged
@@ -18595,7 +18892,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
     m_FontStyle: 1
     m_BestFit: 1
@@ -18608,6 +18905,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
+--- !u!114 &1790224378439502555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7610374888464859230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: 
 --- !u!1 &7616910118701781459
 GameObject:
   m_ObjectHideFlags: 0
@@ -20039,7 +20349,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 46
     m_FontStyle: 1
     m_BestFit: 1
@@ -20138,6 +20448,7 @@ GameObject:
   - component: {fileID: 615820193968592518}
   - component: {fileID: 1176243100245921260}
   - component: {fileID: 5322649308722151491}
+  - component: {fileID: 6497908585606057977}
   m_Layer: 0
   m_Name: Risk Label
   m_TagString: Untagged
@@ -20193,7 +20504,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 13
     m_FontStyle: 0
     m_BestFit: 1
@@ -20206,6 +20517,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: RAID RISK
+--- !u!114 &6497908585606057977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7997182460946835865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: RAID RISK
 --- !u!1 &8004318261510137947
 GameObject:
   m_ObjectHideFlags: 0
@@ -20217,6 +20541,7 @@ GameObject:
   - component: {fileID: 131353454898333312}
   - component: {fileID: 3784809872583182205}
   - component: {fileID: 2970767233927811822}
+  - component: {fileID: 5116803998815835565}
   m_Layer: 0
   m_Name: District
   m_TagString: Untagged
@@ -20272,7 +20597,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
     m_FontStyle: 1
     m_BestFit: 1
@@ -20285,6 +20610,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: THE DOCKS
+--- !u!114 &5116803998815835565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8004318261510137947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: THE DOCKS
 --- !u!1 &8070676727737697199
 GameObject:
   m_ObjectHideFlags: 0
@@ -20427,7 +20765,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 18
     m_FontStyle: 1
     m_BestFit: 1
@@ -21089,7 +21427,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 15
     m_FontStyle: 0
     m_BestFit: 1
@@ -21799,6 +22137,7 @@ GameObject:
   - component: {fileID: 7070327402545900}
   - component: {fileID: 197795742477054696}
   - component: {fileID: 4670065651632380960}
+  - component: {fileID: 4022318146203375308}
   m_Layer: 0
   m_Name: Label
   m_TagString: Untagged
@@ -21854,7 +22193,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 1
@@ -21867,6 +22206,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: CLOSE
+--- !u!114 &4022318146203375308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8845979073880653068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: CLOSE
 --- !u!1 &8847857844327403120
 GameObject:
   m_ObjectHideFlags: 0
@@ -21933,7 +22285,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 22
     m_FontStyle: 2
     m_BestFit: 1
@@ -22288,7 +22640,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
     m_FontStyle: 3
     m_BestFit: 1
@@ -22423,6 +22775,7 @@ GameObject:
   - component: {fileID: 1359351473027467011}
   - component: {fileID: 8506307156348152032}
   - component: {fileID: 3264470137827097662}
+  - component: {fileID: 1570703503824156083}
   m_Layer: 0
   m_Name: Brand
   m_TagString: Untagged
@@ -22478,7 +22831,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 15
     m_FontStyle: 0
     m_BestFit: 1
@@ -22491,6 +22844,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "SHAPE & SONS  \xB7  STEREO CASSETTE"
+--- !u!114 &1570703503824156083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9087233841595133924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6893fe8fbbecd6438216ea2582c0cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.LocalizedText
+  Key: "SHAPE & SONS  \xB7  STEREO CASSETTE"
 --- !u!1 &9112775443270868700
 GameObject:
   m_ObjectHideFlags: 0

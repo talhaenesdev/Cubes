@@ -65,6 +65,57 @@ namespace Modules.GameplayModule.GameplayScreenModule.Editor
             }
             BakeScreenLayout();
             BakeDynamicTemplates();
+            TagBakedLabels();
+        }
+
+        // A layout baked before labels carried LocalizedText has none: build a throwaway layout, read which Text at
+        // which place is a label, and put the same key on the matching Text of the baked prefab. Nothing else changes.
+        private static void TagBakedLabels()
+        {
+            GameObject contents = PrefabUtility.LoadPrefabContents(Screen);
+            GameObject scratch = null;
+            try
+            {
+                if (contents.GetComponentInChildren<LocalizedText>(true) != null) return;
+                scratch = Object.Instantiate(contents);
+                GameplayScreenView scratchView = scratch.GetComponent<GameplayScreenView>();
+                for (int i = scratch.transform.childCount - 1; i >= 0; i--) Object.DestroyImmediate(scratch.transform.GetChild(i).gameObject);
+                scratchView.BuildLayout();
+                var keys = new System.Collections.Generic.Dictionary<string, string>();
+                foreach (LocalizedText marker in scratch.GetComponentsInChildren<LocalizedText>(true))
+                    keys[PathOf(marker.transform, scratch.transform)] = marker.Key;
+                int tagged = 0;
+                foreach (Text text in contents.GetComponentsInChildren<Text>(true))
+                {
+                    if (!keys.TryGetValue(PathOf(text.transform, contents.transform), out string key)) continue;
+                    LocalizedText marker = text.GetComponent<LocalizedText>() ?? text.gameObject.AddComponent<LocalizedText>();
+                    marker.Key = key;
+                    tagged++;
+                }
+                if (tagged == 0) return;
+                PrefabUtility.SaveAsPrefabAsset(contents, Screen);
+                Debug.Log($"GameplayScreen: tagged {tagged} baked labels for translation.");
+            }
+            finally
+            {
+                if (scratch != null) Object.DestroyImmediate(scratch);
+                PrefabUtility.UnloadPrefabContents(contents);
+            }
+        }
+
+        // A Text's place under the screen: names down from the root, each with its index among same-named siblings.
+        private static string PathOf(Transform item, Transform root)
+        {
+            var parts = new System.Collections.Generic.List<string>();
+            for (Transform at = item; at != null && at != root; at = at.parent)
+            {
+                int index = 0;
+                if (at.parent != null)
+                    for (int i = 0; i < at.GetSiblingIndex(); i++)
+                        if (at.parent.GetChild(i).name == at.name) index++;
+                parts.Insert(0, at.name + "#" + index);
+            }
+            return string.Join("/", parts);
         }
 
         private static void BakeScreenLayout()

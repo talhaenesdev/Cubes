@@ -26,9 +26,9 @@ namespace Modules.GameplayModule.Controllers
             if (pocket != null) gun += "     Q " + _loc.Get(pocket.DisplayName);
             string status = run.InHideout ? (_model.Tuning.UseMoney ? "$" + run.Cash : "")
                 : gun + (_model.Tuning.UseMoney ? "     $" + run.CashCarried : "");
-            string state = !run.Alive ? _loc.Get("DEAD  -  R to retry") : run.Won ? _loc.Get("CONTRACT COMPLETE") : run.Paused && run.Menu < 0 && run.Terminal < 0 && !run.DeckOpen && run.IntroRemaining <= 0f && run.Call < 0 && !_model.MenuOpen ? _loc.Get("PAUSED") : "";
+            string state = !run.Alive ? _loc.Get("DEAD  -  R to retry") : run.Won ? _loc.Get("CONTRACT COMPLETE") : run.Paused && run.Menu < 0 && run.Terminal < 0 && !run.DeckOpen && run.IntroRemaining <= 0f && run.Call < 0 && !run.BossDialogueOpen && !_model.MenuOpen ? _loc.Get("PAUSED") : "";
             string count = run.InHideout || Enemies(run) == 0 ? "" : (Enemies(run) - _model.Remaining) + " / " + Enemies(run);
-            string objective = state != "" ? state : run.Hint != "" ? run.Hint : count;
+            string objective = state != "" ? state : run.Hint != "" ? _loc.Get(run.Hint) : count;
             _signals.Outgoing.HudChanged.Dispatch(status, objective);
             // Where the player is, for the HUD's corner: HOME, or the contract's name.
             MissionCVO mission = _model.Missions != null ? _model.Missions.Find(_model.Mission) : null;

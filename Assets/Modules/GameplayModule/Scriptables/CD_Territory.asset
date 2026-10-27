@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Modules.Gameplay::Modules.GameplayModule.Data.UnityObjects.CD_Territory
   LocationsPay: 1
   MaxGuardsPerLocation: 10
+  GuardHirePrice: 1000
+  GuardUpkeepPerPayment: 20
   DefenderType: square
   DefenderHealth: 1
   DefenderFirePace: 1.6

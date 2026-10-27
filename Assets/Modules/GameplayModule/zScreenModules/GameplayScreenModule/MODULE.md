@@ -11,6 +11,8 @@ The NIGHT SHIFT HUD is authored as a visible hierarchy in `GameplayScreen.prefab
 prefabs live in `Prefabs/Panels`; the editor builder creates and bakes only a missing hierarchy,
 then leaves it for drag-and-drop authoring. Runtime code binds the authored Image, Text and Button
 components and only instantiates genuinely variable menu rows and map pins from their prefabs.
+Because an operating-system dynamic font cannot be serialized into a prefab, the pooled screen
+reapplies its configured or built-in fallback font to baked Text components whenever it binds.
 It creates no canvas of its own.
 RefreshHud(status, objective) displays both strings verbatim while shown; gameplay owns
 all mission, death and pause wording. Send a fresh update after each opening: pooled

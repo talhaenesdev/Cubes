@@ -186,6 +186,9 @@ gameplay, run, Night Shift, stealth, guards, shooting, cover, stairwell doors, c
   row starts the original contract again so it can be taken back. The defence reuses the location level, spawns the
   assigned MissionGuards as friendly armed guards, and lets both factions shoot one another. Clearing every attacker
   and exiting restores Owned; death or abandoning transfers the location to the configured family.
+- Posted men are paid from CD_Territory: GuardHirePrice is charged once when the map's plus button posts one,
+  with no refund on removal, and GuardUpkeepPerPayment is deducted per man from every location payment. The map
+  shows net hourly income, hourly guard upkeep and the hire price; a location's net payment never falls below zero.
 
 - Every contract level was widened x1.25 and given extra guards in roomy rooms by a one-off builder pass
   (NightShiftAssetBuilder.Spacious, LevelAuthoring.LayoutVersion). Feel: per-weapon shake, camera kick, hit flash and

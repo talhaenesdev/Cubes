@@ -6,8 +6,8 @@ namespace Modules.GameplayModule.Entities
     // wrapped to a few words a line. It pops in on each new line. Built at runtime; nothing to author.
     public class SpeechBubbleView : MonoBehaviour
     {
-        private const int WrapAt = 26;
-        private const float Padding = 0.22f;
+        private const int WrapAt = 30;
+        private const float Padding = 0.16f;
         private TextMesh _text;
         private SpriteRenderer _card;
         private SpriteRenderer _edge;
@@ -32,7 +32,7 @@ namespace Modules.GameplayModule.Entities
             Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             _text.font = font;
             _text.fontSize = 48;
-            _text.characterSize = 0.045f;
+            _text.characterSize = 0.03f;
             _text.anchor = TextAnchor.MiddleCenter;
             _text.alignment = TextAlignment.Center;
             _text.color = new Color(0.1f, 0.07f, 0.06f);
@@ -66,10 +66,14 @@ namespace Modules.GameplayModule.Entities
                 Fit();
             }
             _age += Time.unscaledDeltaTime;
-            // A quick pop on each new line, then a gentle bob.
-            float pop = _age < 0.18f ? Mathf.Lerp(0.6f, 1.08f, _age / 0.18f) : _age < 0.28f ? Mathf.Lerp(1.08f, 1f, (_age - 0.18f) / 0.1f) : 1f;
-            transform.localScale = new Vector3(pop, pop, 1f);
-            transform.localPosition = new Vector3(head.x, head.y + 0.35f + Mathf.Sin(Time.unscaledTime * 2.2f) * 0.03f, 0f);
+            // A new line fades in over a moment, then the bubble bobs gently. Its size never changes, so it is measured once.
+            float fade = Mathf.Clamp01(_age / 0.15f);
+            _text.color = new Color(_text.color.r, _text.color.g, _text.color.b, fade);
+            _card.color = new Color(_card.color.r, _card.color.g, _card.color.b, fade);
+            _edge.color = new Color(_edge.color.r, _edge.color.g, _edge.color.b, fade);
+            _tail.color = new Color(_tail.color.r, _tail.color.g, _tail.color.b, fade);
+            transform.localScale = Vector3.one;
+            transform.localPosition = new Vector3(head.x, head.y + 0.1f + Mathf.Sin(Time.unscaledTime * 2.2f) * 0.03f, 0f);
         }
 
         // The card sized to the text, the tail under its bottom edge.

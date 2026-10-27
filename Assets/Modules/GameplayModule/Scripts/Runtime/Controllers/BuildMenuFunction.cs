@@ -45,8 +45,12 @@ namespace Modules.GameplayModule.Controllers
                 }
                 else if (ours) status = _loc.Get("WORKS FOR US");
                 else status = _loc.Format("WORKS FOR {0}", _loc.Get(territory.FamilyName(owner)));
-                float perMinute = territory.IncomePerMinute(mission);
-                string income = _model.Tuning.UseMoney && perMinute > 0f ? _loc.Format("${0} / HOUR", Mathf.RoundToInt(perMinute * 60f)) : "—";
+                float paymentsPerHour = mission.WorkPaymentInterval > 0f ? 3600f / mission.WorkPaymentInterval : 0f;
+                int netPerHour = Mathf.RoundToInt(territory.NetPayment(mission) * paymentsPerHour);
+                int upkeepPerHour = Mathf.RoundToInt(territory.Guards(mission.Id) * territory.Config.GuardUpkeepPerPayment * paymentsPerHour);
+                string income = _model.Tuning.UseMoney && mission.WorkPayment > 0
+                    ? _loc.Format("NET ${0} / HOUR  ·  MEN -${1} / HOUR  ·  HIRE ${2}", netPerHour, upkeepPerHour, territory.Config.GuardHirePrice)
+                    : "—";
                 float danger = territory.Wealth(mission);
                 RaidVO raid = territory.RaidOn(mission.Id);
                 string risk = _loc.Format("RAIDS: {0}  ·  {1} ATTACKERS", _loc.Get(danger < 0.34f ? "LOW" : danger < 0.67f ? "MEDIUM" : "HIGH"), raid.Attackers);

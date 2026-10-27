@@ -15,14 +15,14 @@ MonoBehaviour:
   Texts:
   - Key: DEAD OF NIGHT  /  A stealth-action prototype
     English: 
-    Turkish: GECE YARISI  /  Bir gizlilik-aksiyon prototipi
+    Turkish: GECE YARISI  /  Gizlilik ve aksiyon prototipi
   - Key: 'The city sleeps. Your work begins.
 
       Enter the building. Finish the
       contract. Get out alive.'
     English: 
-    Turkish: "\u015Eehir uyuyor. Senin i\u015Fin \u015Fimdi ba\u015Fl\u0131yor.\nBinaya
-      gir. Kontrat\u0131 bitir. Canl\u0131 \xE7\u0131k."
+    Turkish: "\u015Eehir uyuyor. Senin i\u015Fin ba\u015Fl\u0131yor.\nBinaya gir.
+      \u0130\u015Fi bitir. Canl\u0131 \xE7\u0131k."
   - Key: PLAY
     English: 
     Turkish: OYNA
@@ -76,7 +76,7 @@ MonoBehaviour:
     Turkish: KAPAT
   - Key: Type to edit.  SAVE keeps the text on this computer.  ESC closes.
     English: 
-    Turkish: "Yazmak i\xE7in t\u0131kla.  KAYDET metni bu bilgisayarda tutar.  ESC
+    Turkish: "D\xFCzenlemek i\xE7in yaz.  KAYDET metni bu bilgisayarda saklar.  ESC
       kapat\u0131r."
   - Key: NOW PLAYING
     English: 
@@ -101,19 +101,19 @@ MonoBehaviour:
     Turkish: KASET YOK
   - Key: Press PLAY
     English: 
-    Turkish: OYNA'ya bas
+    Turkish: "\xC7AL'a bas"
   - Key: Drop music into Music/Hideout
     English: 
-    Turkish: "M\xFCzi\u011Fi Music/Hideout klas\xF6r\xFCne at"
+    Turkish: "M\xFCzikleri Music/Hideout klas\xF6r\xFCne koy"
   - Key: AWAITING CONTRACT
     English: 
-    Turkish: "KONTRAT BEKLEN\u0130YOR"
+    Turkish: "G\xD6REV BEKLEN\u0130YOR"
   - Key: DEAD  -  R to retry
     English: 
-    Turkish: "\xD6LD\xDCN  -  R ile tekrar dene"
+    Turkish: "\xD6LD\xDCN  -  tekrar denemek i\xE7in R"
   - Key: CONTRACT COMPLETE
     English: 
-    Turkish: KONTRAT TAMAM
+    Turkish: "G\xD6REV TAMAMLANDI"
   - Key: PAUSED
     English: 
     Turkish: DURAKLATILDI
@@ -122,7 +122,7 @@ MonoBehaviour:
     Turkish: EV
   - Key: "E  \u2014  crawl to the linked vent    A / D  \u2014  climb out"
     English: 
-    Turkish: "E  \u2014  ba\u011Fl\u0131 kanala s\xFCr\xFCn    A / D  \u2014  d\u0131\u015Far\u0131
+    Turkish: "E  \u2014  havaland\u0131rmadan \xE7\u0131k    A / D  \u2014  d\u0131\u015Far\u0131
       \xE7\u0131k"
   - Key: "E  \u2014  stairs up"
     English: 
@@ -132,7 +132,7 @@ MonoBehaviour:
     Turkish: "E  \u2014  a\u015Fa\u011F\u0131 in"
   - Key: "E  \u2014  enter vent"
     English: 
-    Turkish: "E  \u2014  kanala gir"
+    Turkish: "E  \u2014  havaland\u0131rmaya gir"
   - Key: "E  \u2014  kill the lights"
     English: 
     Turkish: "E  \u2014  \u0131\u015F\u0131klar\u0131 kapat"
@@ -150,19 +150,19 @@ MonoBehaviour:
     Turkish: "E  \u2014  kap\u0131y\u0131 tekmele"
   - Key: "E  \u2014  extract"
     English: 
-    Turkish: "E  \u2014  ka\xE7"
+    Turkish: "E  \u2014  \xE7\u0131k ve eve d\xF6n"
   - Key: Clear - back to the exit
     English: 
-    Turkish: "Temiz - \xE7\u0131k\u0131\u015Fa d\xF6n"
+    Turkish: "Bina temiz - \xE7\u0131k\u0131\u015Fa d\xF6n"
   - Key: "E  \u2014  pick up the {0}"
     English: 
-    Turkish: "E  \u2014  {0} al"
+    Turkish: "E  \u2014  {0} silah\u0131n\u0131 al"
   - Key: '  ({0} to the pocket)'
     English: 
-    Turkish: '  ({0} cebe)'
+    Turkish: '  ({0} cebe gider)'
   - Key: '  (drops the {0})'
     English: 
-    Turkish: "  ({0} yere d\xFC\u015Fer)"
+    Turkish: "  ({0} yere b\u0131rak\u0131l\u0131r)"
   - Key: CASH  ${0}
     English: 
     Turkish: "NAK\u0130T  ${0}"
@@ -201,10 +201,10 @@ MonoBehaviour:
     Turkish: "GEL\u0130\u015ET\u0130RME TEZGAHI"
   - Key: MAXED
     English: 
-    Turkish: TAMAMLANDI
+    Turkish: "EN \xDCST SEV\u0130YE"
   - Key: LV {0}/{1}
     English: 
-    Turkish: SV {0}/{1}
+    Turkish: SEV {0}/{1}
   - Key: REVOLVER
     English: 
     Turkish: TOPLU TABANCA
@@ -258,7 +258,7 @@ MonoBehaviour:
     Turkish: "F\u0130\u015EEKL\u0130K"
   - Key: Start with 6 more spare rounds.
     English: 
-    Turkish: "6 yedek mermiyle fazladan ba\u015Fla."
+    Turkish: "G\xF6reve 6 fazladan yedek mermiyle ba\u015Fla."
   - Key: ENGAGEMENT BLACK
     English: 
     Turkish: "N\u0130\u015EAN S\u0130YAHI"
@@ -289,8 +289,8 @@ MonoBehaviour:
   - Key: Six shapes guard a cold storage unit. Clear the building, leave by the green
       exit.
     English: 
-    Turkish: "Alt\u0131 \u015Fekil bir so\u011Fuk hava deposunu koruyor. Binay\u0131
-      temizle, ye\u015Fil \xE7\u0131k\u0131\u015Ftan \xE7\u0131k."
+    Turkish: "Alt\u0131 \u015Fekil bir so\u011Fuk hava deposunu koruyor. Adamlar\u0131n\u0131
+      temizle, patronu ikna et."
   - Key: DOCKS MASSACRE  /  SHAPE & SONS
     English: 
     Turkish: "L\u0130MAN KATL\u0130AMI  /  SHAPE & SONS"
@@ -298,7 +298,7 @@ MonoBehaviour:
       are live - use them.
     English: 
     Turkish: "Ailenin yirmi iki adam\u0131 sahildeki depoyu tutuyor. Ac\u0131mas\u0131z.
-      Variller patl\u0131yor - kullan."
+      Variller patlar - kullan."
   - Key: DELIVERIES / LOG
     English: 
     Turkish: "TESL\u0130MATLAR / KAYIT"
@@ -522,16 +522,16 @@ MonoBehaviour:
   - Key: BOSS
     English: 
     Turkish: PATRON
-  - Key: "Boss: Don't shoot. I can pay."
+  - Key: 'Boss: Don''t shoot. I can pay.'
     English: 
     Turkish: "Patron: Ate\u015F etme. \xD6deyebilirim."
-  - Key: "You: Good. From now on you work for us."
+  - Key: 'You: Good. From now on you work for us.'
     English: 
     Turkish: "Sen: G\xFCzel. Bundan sonra bizim i\xE7in \xE7al\u0131\u015Facaks\u0131n."
-  - Key: "You: Every week, an envelope. Miss one and I come back."
+  - Key: 'You: Every week, an envelope. Miss one and I come back.'
     English: 
-    Turkish: "Sen: Her hafta bir zarf. Birini atlarsan geri gelirim."
-  - Key: "Boss: Every week. You have my word."
+    Turkish: 'Sen: Her hafta bir zarf. Birini atlarsan geri gelirim.'
+  - Key: 'Boss: Every week. You have my word.'
     English: 
     Turkish: "Patron: Her hafta. S\xF6z veriyorum."
   - Key: "E  \u2014  next"
@@ -539,28 +539,310 @@ MonoBehaviour:
     Turkish: "E  \u2014  devam"
   - Key: Talk to the boss
     English: 
-    Turkish: Patronla konu\u015F
+    Turkish: "Patronla konu\u015F"
   - Key: The boss is gone
     English: 
     Turkish: "Patron art\u0131k yok"
   - Key: THE BOSS WORKS FOR US NOW
     English: 
-    Turkish: "PATRON ARTIK B\u0130Z\u0130M \xC7\u0130N \xC7ALI\u015EIYOR"
-  - Key: "CONTRACT COMPLETE  /  heading home"
+    Turkish: "PATRON ARTIK B\u0130Z\u0130M \u0130\xC7\u0130N \xC7ALI\u015EIYOR"
+  - Key: CONTRACT COMPLETE  /  heading home
     English: 
-    Turkish: "KONTRAT TAMAM  /  eve d\xF6n\xFCl\xFCyor"
-  - Key: "YOU WERE SEEN. ONE SHOT IS ALL IT TAKES.  /  R to retry"
+    Turkish: "G\xD6REV TAMAMLANDI  /  eve d\xF6n\xFCl\xFCyor"
+  - Key: YOU WERE SEEN. ONE SHOT IS ALL IT TAKES.  /  R to retry
     English: 
-    Turkish: "G\xD6R\xDCLD\xDCN. TEK MERM\xC4\xB0 YETER.  /  R ile tekrar dene"
+    Turkish: "G\xD6R\xDCLD\xDCN. TEK KUR\u015EUN YETER.  /  tekrar denemek i\xE7in
+      R"
   - Key: WORKING FOR US
     English: 
-    Turkish: BİZE ÇALIŞIYOR
+    Turkish: "B\u0130ZE \xC7ALI\u015EIYOR"
   - Key: GUARD DETAIL
     English: 
-    Turkish: KORUMA AYARLARI
+    Turkish: KORUMALAR
   - Key: PROTECT THIS LOCATION
     English: 
-    Turkish: BU KONUMU KORU
+    Turkish: "BU MEK\xC2NI KORU"
   - Key: (assigned)
     English: 
-    Turkish: (atanmış)
+    Turkish: "(atand\u0131)"
+  - Key: Wait - don't shoot! What do you want?
+    English: 
+    Turkish: "Dur - ate\u015F etme! Ne istiyorsun?"
+  - Key: Your men are on the floor. This place pays me now.
+    English: 
+    Turkish: "Adamlar\u0131n yerde yat\u0131yor. Bu mek\xE2n art\u0131k bana \xF6deyecek."
+  - Key: The {0} will kill me.
+    English: 
+    Turkish: "{0} beni \xF6ld\xFCr\xFCr."
+  - Key: They couldn't protect you tonight. I can.
+    English: 
+    Turkish: "Bu gece seni koruyamad\u0131lar. Ben koruyabilirim."
+  - Key: A cut of every take. Miss one and I come back.
+    English: 
+    Turkish: "Her kazan\xE7tan bir pay. Birini atlarsan geri gelirim."
+  - Key: ...All right. We work for you.
+    English: 
+    Turkish: "...Peki. Art\u0131k senin i\xE7in \xE7al\u0131\u015F\u0131yoruz."
+  - Key: WORKS FOR US
+    English: 
+    Turkish: "B\u0130ZE \xC7ALI\u015EIYOR"
+  - Key: WORKS FOR {0}
+    English: 
+    Turkish: "{0} \u0130\xC7\u0130N \xC7ALI\u015EIYOR"
+  - Key: GO AND HELP
+    English: 
+    Turkish: "YARDIMA G\u0130T"
+  - Key: TAKE IT OVER
+    English: 
+    Turkish: "ELE GE\xC7\u0130R"
+  - Key: "{0} / {1} SHOPS  \xB7  ${2} / HOUR"
+    English: 
+    Turkish: "{0} / {1} D\xDCKKAN  \xB7  SAATTE ${2}"
+  - Key: ${0} / HOUR
+    English: 
+    Turkish: SAATTE ${0}
+  - Key: "NET ${0} / HOUR  \xB7  MEN -${1} / HOUR  \xB7  HIRE ${2}"
+    English: 
+    Turkish: "NET SAATTE ${0}  \xB7  ADAMLAR SAATTE -${1}  \xB7  ADAM TUTMA ${2}"
+  - Key: "RAIDS: {0}  \xB7  {1} ATTACKERS"
+    English: 
+    Turkish: "BASKIN R\u0130SK\u0130: {0}  \xB7  {1} SALDIRGAN"
+  - Key: LOW
+    English: 
+    Turkish: "D\xDC\u015E\xDCK"
+  - Key: MEDIUM
+    English: 
+    Turkish: ORTA
+  - Key: HIGH
+    English: 
+    Turkish: "Y\xDCKSEK"
+  - Key: INCOME
+    English: 
+    Turkish: "GEL\u0130R"
+  - Key: RAID RISK
+    English: 
+    Turkish: "BASKIN R\u0130SK\u0130"
+  - Key: OUR MEN HERE
+    English: 
+    Turkish: "BURADAK\u0130 ADAMLARIMIZ"
+  - Key: THE DOCKS
+    English: 
+    Turkish: "L\u0130MAN"
+  - Key: OLD TOWN
+    English: 
+    Turkish: "ESK\u0130 \u015EEH\u0130R"
+  - Key: MARKET
+    English: 
+    Turkish: "\xC7AR\u015EI"
+  - Key: UPTOWN
+    English: 
+    Turkish: "YUKARI \u015EEH\u0130R"
+  - Key: THIS SHOP HAS ENOUGH MEN
+    English: 
+    Turkish: "BU D\xDCKKANDA YETER\u0130NCE ADAM VAR"
+  - Key: NEED ${0} TO POST A MAN
+    English: 
+    Turkish: "ADAM KOYMAK \u0130\xC7\u0130N ${0} GEREK\u0130YOR"
+  - Key: Open the city map to go and help
+    English: 
+    Turkish: "Yard\u0131ma gitmek i\xE7in \u015Fehir haritas\u0131n\u0131 a\xE7"
+  - Key: OUR MEN HELD {0}
+    English: 
+    Turkish: "ADAMLARIMIZ {0} D\xDCKKANINI KORUDU"
+  - Key: LOCATION DEFENDED
+    English: 
+    Turkish: "MEK\xC2N SAVUNULDU"
+  - Key: LOCATION DEFENDED  /  {0} of our men fell
+    English: 
+    Turkish: "MEK\xC2N SAVUNULDU  /  {0} adam\u0131m\u0131z d\xFC\u015Ft\xFC"
+  - Key: THE WHOLE CITY WORKS FOR US
+    English: 
+    Turkish: "B\xDCT\xDCN \u015EEH\u0130R ARTIK B\u0130Z\u0130M \u0130\xC7\u0130N
+      \xC7ALI\u015EIYOR"
+  - Key: "AWAY {0}h {1:00}m  \xB7  +${2}"
+    English: 
+    Turkish: "{0} sa {1:00} dk YOKTUN  \xB7  +${2}"
+  - Key: 'LOST: {0}'
+    English: 
+    Turkish: "KAYBED\u0130LEN: {0}"
+  - Key: 'HELD: {0}'
+    English: 
+    Turkish: 'KORUNAN: {0}'
+  - Key: A guard's bullet found you.
+    English: 
+    Turkish: "Bir koruman\u0131n kur\u015Funu seni buldu."
+  - Key: Crushed under a falling lamp.
+    English: 
+    Turkish: "D\xFC\u015Fen bir lamban\u0131n alt\u0131nda ezildin."
+  - Key: Caught in the blast.
+    English: 
+    Turkish: "Patlamaya yakaland\u0131n."
+  - Key: TAPE PLAY
+    English: 
+    Turkish: "\xC7AL"
+  - Key: TAPE PAUSE
+    English: 
+    Turkish: DURAKLAT
+  - Key: "SHAPE & SONS  \xB7  STEREO CASSETTE"
+    English: 
+    Turkish: "SHAPE & SONS  \xB7  STEREO KASET\xC7ALAR"
+  - Key: Preparing screens
+    English: 
+    Turkish: "Ekranlar haz\u0131rlan\u0131yor"
+  - Key: Warming up
+    English: 
+    Turkish: "Haz\u0131rlan\u0131yor"
+  - Key: Contract complete
+    English: 
+    Turkish: "G\xF6rev tamamland\u0131"
+  - Key: Heading home
+    English: 
+    Turkish: "Eve d\xF6n\xFCl\xFCyor"
+  - Key: "{0:0.0}s  \xB7  {1} shots"
+    English: 
+    Turkish: "{0:0.0} sn  \xB7  {1} at\u0131\u015F"
+  - Key: cash ${0}
+    English: 
+    Turkish: kasa ${0}
+  - Key: "by Talha Enes \u0130slamo\u011Flu"
+    English: 
+    Turkish: "Talha Enes \u0130slamo\u011Flu taraf\u0131ndan"
+  - Key: MUSIC
+    English: 
+    Turkish: "M\xDCZ\u0130K"
+  - Key: 'Licensed under Creative Commons: By Attribution 4.0 License'
+    English: 
+    Turkish: "Creative Commons At\u0131f 4.0 Lisans\u0131 ile lisanslanm\u0131\u015Ft\u0131r"
+  - Key: Sound effects made for the game.
+    English: 
+    Turkish: "Ses efektleri oyun i\xE7in \xFCretildi."
+  - Key: Built with Unity.
+    English: 
+    Turkish: "Unity ile yap\u0131ld\u0131."
+  - Key: 'Night courier due 02:40.
+
+      Dock door code changed - ask Marek.'
+    English: 
+    Turkish: "Gece kuryesi 02:40'ta gelecek.\nR\u0131ht\u0131m kap\u0131s\u0131n\u0131n
+      \u015Fifresi de\u011Fi\u015Fti - Marek'e sor."
+  - Key: 'Unit 07 temperature alarm muted.
+
+      Do not open before the buyer arrives.'
+    English: 
+    Turkish: "07 numaral\u0131 \xFCnitenin s\u0131cakl\u0131k alarm\u0131 susturuldu.\nAl\u0131c\u0131
+      gelmeden a\xE7ma."
+  - Key: 'Patrol rota: two upstairs, three down.
+
+      Lights on the top floor keep
+      tripping.'
+    English: 
+    Turkish: "Devriye \xE7izelgesi: ikisi yukar\u0131da, \xFC\xE7\xFC a\u015Fa\u011F\u0131da.\n\xDCst
+      kattaki \u0131\u015F\u0131klar s\xFCrekli at\u0131yor."
+  - Key: 'Crate 44 - ''machine parts''. Do not open.
+
+      The Pentagons pick up
+      at dawn.'
+    English: 
+    Turkish: "44 numaral\u0131 kasa - 'makine par\xE7alar\u0131'. A\xE7ma.\nBe\u015Fgenler
+      \u015Fafakta alacak."
+  - Key: 'Every Triangle on the dock is on the payroll.
+
+      The Square is coming.
+      Double the guard.'
+    English: 
+    Turkish: "R\u0131ht\u0131mdaki her \xDC\xE7gen maa\u015F bordrosunda.\nKare geliyor.
+      Korumay\u0131 ikiye katla."
+  - Key: LOCATION  /  WORKS FOR  /  INCOME
+    English: 
+    Turkish: "MEK\xC2N  /  \xC7ALI\u015ETI\u011EI A\u0130LE  /  GET\u0130R\u0130"
+  - Key: CITY MAP
+    English: 
+    Turkish: "\u015EEH\u0130R HAR\u0130TASI"
+  - Key: SELECT A LOCATION
+    English: 
+    Turkish: "B\u0130R MEK\xC2N SE\xC7"
+  - Key: UNDER ATTACK BY {0} {1}:{2:00}
+    English: 
+    Turkish: '{0} SALDIRIYOR  {1}:{2:00}'
+  - Key: OUR FAMILY
+    English: 
+    Turkish: "B\u0130Z\u0130M A\u0130LE"
+  - Key: FAMILY BOARD
+    English: 
+    Turkish: "A\u0130LE PANOSU"
+  - Key: FAMILY  /  RELATION WITH SQUARE
+    English: 
+    Turkish: "A\u0130LE  /  KARE A\u0130LES\u0130YLE \u0130L\u0130\u015EK\u0130"
+  - Key: INTER-FAMILY RELATIONS
+    English: 
+    Turkish: "A\u0130LELER ARASI \u0130L\u0130\u015EK\u0130LER"
+  - Key: FRIENDLY
+    English: 
+    Turkish: DOST
+  - Key: ENEMY
+    English: 
+    Turkish: "D\xDC\u015EMAN"
+  - Key: '{0} / FRIENDS: {1} / ENEMIES: {2}'
+    English: 
+    Turkish: "{0} / DOSTLAR: {1} / D\xDC\u015EMANLAR: {2}"
+  - Key: '{0} IS NOW AN ENEMY'
+    English: 
+    Turkish: "{0} ARTIK D\xDC\u015EMAN"
+  - Key: SQUARE FAMILY
+    English: 
+    Turkish: "KARE A\u0130LES\u0130"
+  - Key: TRIANGLE FAMILY
+    English: 
+    Turkish: "\xDC\xC7GEN A\u0130LES\u0130"
+  - Key: CIRCLE FAMILY
+    English: 
+    Turkish: "DA\u0130RE A\u0130LES\u0130"
+  - Key: PENTAGON FAMILY
+    English: 
+    Turkish: "BE\u015EGEN A\u0130LES\u0130"
+  - Key: HEXAGON FAMILY
+    English: 
+    Turkish: "ALTIGEN A\u0130LES\u0130"
+  - Key: DIAMOND FAMILY
+    English: 
+    Turkish: "ELMAS A\u0130LES\u0130"
+  - Key: '{0} / UNDER ATTACK BY {1} {2}:{3:00}'
+    English: 
+    Turkish: '{0} / {1} SALDIRIYOR {2}:{3:00}'
+  - Key: OUR FAMILY  /  UNDER ATTACK {0}:{1:00}
+    English: 
+    Turkish: "B\u0130Z\u0130M A\u0130LE  /  SALDIRI ALTINDA  {0}:{1:00}"
+  - Key: 'UNDER ATTACK: {0}'
+    English: 
+    Turkish: 'SALDIRI ALTINDA: {0}'
+  - Key: 'LOCATION LOST: {0}'
+    English: 
+    Turkish: "MEK\xC2N KAYBED\u0130LD\u0130: {0}"
+  - Key: UNDER ATTACK  {0}:{1:00}  /  GO NOW
+    English: 
+    Turkish: "SALDIRI ALTINDA  {0}:{1:00}  /  HEMEN G\u0130T"
+  - Key: TAKEN BY {0}  /  TAKE IT BACK
+    English: 
+    Turkish: "{0} ELE GE\xC7\u0130RD\u0130  /  GER\u0130 AL"
+  - Key: LOCATION DEFENDED  /  heading home
+    English: 
+    Turkish: "MEK\xC2N SAVUNULDU  /  eve d\xF6n\xFCl\xFCyor"
+  - Key: LOCATION LOST  /  heading home
+    English: 
+    Turkish: "MEK\xC2N KAYBED\u0130LD\u0130  /  eve d\xF6n\xFCl\xFCyor"
+  - Key: "E  \u2014  talk to the boss"
+    English: 
+    Turkish: "E  \u2014  patronla konu\u015F"
+  - Key: Every place on that board makes money for a family.
+    English: 
+    Turkish: "O panodaki her mek\xE2n bir aileye para kazand\u0131r\u0131yor."
+  - Key: Clear their armed men, but leave the civilians alone.
+    English: 
+    Turkish: "Silahl\u0131 adamlar\u0131n\u0131 temizle ama sivillere dokunma."
+  - Key: Find the boss and make an offer they cannot refuse.
+    English: 
+    Turkish: "Patronu bul ve reddedemeyece\u011Fi bir teklif yap."
+  - Key: Once the boss agrees to work for us, the place is ours.
+    English: 
+    Turkish: "Patron bizim i\xE7in \xE7al\u0131\u015Fmay\u0131 kabul edince mek\xE2n
+      bizim olur."
