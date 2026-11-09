@@ -1185,7 +1185,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8487188980901099727
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5549,7 +5549,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &83044023837836660
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5703,7 +5703,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5235732426912447681
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5853,7 +5853,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2235991791431243890
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7294,7 +7294,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3425593603414283054
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8826,7 +8826,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5395155138382201686
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9332,7 +9332,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4166426408993550994
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10763,6 +10763,7 @@ GameObject:
   - component: {fileID: 2907155175571436047}
   - component: {fileID: 491865130681745260}
   - component: {fileID: 2111117547238896725}
+  - component: {fileID: 3550245570298203922}
   m_Layer: 0
   m_Name: Face
   m_TagString: Untagged
@@ -10810,14 +10811,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.26588237, g: 0.2517647, b: 0.22352943, a: 0.45}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: d0bd47a5677811a4b851a9f21299947e, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -10840,6 +10841,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.OnScreen.OnScreenButton
   m_ControlPath: <Keyboard>/q
+--- !u!114 &3550245570298203922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4799846869365905622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbce701ff1e2e654f9b263c6b5ee0c6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.PressedSprite
+  _image: {fileID: 491865130681745260}
+  _normal: {fileID: 21300000, guid: d0bd47a5677811a4b851a9f21299947e, type: 3}
+  _pressed: {fileID: 21300000, guid: acc46176f8fa3e64c99d9294a46316f1, type: 3}
 --- !u!1 &4829952538584977938
 GameObject:
   m_ObjectHideFlags: 0
@@ -11151,6 +11167,7 @@ GameObject:
   - component: {fileID: 3851304437499931114}
   - component: {fileID: 8313045509081298251}
   - component: {fileID: 4289396835644231633}
+  - component: {fileID: 3318361926611195411}
   m_Layer: 0
   m_Name: Face
   m_TagString: Untagged
@@ -11198,14 +11215,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.23058824, g: 0.18823531, b: 0.1082353, a: 0.45}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 7620cb4821c44564b81d900afd59904e, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -11228,6 +11245,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.OnScreen.OnScreenButton
   m_ControlPath: <Keyboard>/t
+--- !u!114 &3318361926611195411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4939807888568959573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbce701ff1e2e654f9b263c6b5ee0c6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.PressedSprite
+  _image: {fileID: 8313045509081298251}
+  _normal: {fileID: 21300000, guid: 7620cb4821c44564b81d900afd59904e, type: 3}
+  _pressed: {fileID: 21300000, guid: 554da38cd8c157e43abaa592c9a10c48, type: 3}
 --- !u!1 &4952746750878524275
 GameObject:
   m_ObjectHideFlags: 0
@@ -11805,7 +11837,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3589597774544972891
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11911,6 +11943,7 @@ GameObject:
   - component: {fileID: 7902278146363154287}
   - component: {fileID: 2178346893366649001}
   - component: {fileID: 8206213781161205504}
+  - component: {fileID: 739367443792786635}
   m_Layer: 0
   m_Name: Face
   m_TagString: Untagged
@@ -11958,14 +11991,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.23058824, g: 0.18823531, b: 0.1082353, a: 0.45}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 59d1153b8aa37574bb64590081a4999a, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -11988,6 +12021,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.OnScreen.OnScreenButton
   m_ControlPath: <Keyboard>/e
+--- !u!114 &739367443792786635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5254333693576758692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbce701ff1e2e654f9b263c6b5ee0c6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.PressedSprite
+  _image: {fileID: 2178346893366649001}
+  _normal: {fileID: 21300000, guid: 59d1153b8aa37574bb64590081a4999a, type: 3}
+  _pressed: {fileID: 21300000, guid: 2fa0ffd209aa6bb4aa85cdfea1206d2a, type: 3}
 --- !u!1 &5263708013384192185
 GameObject:
   m_ObjectHideFlags: 0
@@ -13175,7 +13223,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1252663378362748944
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13492,6 +13540,7 @@ GameObject:
   - component: {fileID: 5335536355593844513}
   - component: {fileID: 1129439655626370976}
   - component: {fileID: 7734248233216246014}
+  - component: {fileID: 7539229140634616045}
   m_Layer: 0
   m_Name: Face
   m_TagString: Untagged
@@ -13539,14 +13588,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.26588237, g: 0.2517647, b: 0.22352943, a: 0.45}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: f2ca21fbaf0e336429c952f6d5f01aad, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -13569,6 +13618,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.OnScreen.OnScreenButton
   m_ControlPath: <Keyboard>/r
+--- !u!114 &7539229140634616045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5838105382878451413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbce701ff1e2e654f9b263c6b5ee0c6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.PressedSprite
+  _image: {fileID: 1129439655626370976}
+  _normal: {fileID: 21300000, guid: f2ca21fbaf0e336429c952f6d5f01aad, type: 3}
+  _pressed: {fileID: 21300000, guid: 975626a596e07ad4c853949bd5ece9ac, type: 3}
 --- !u!1 &5888061214913427176
 GameObject:
   m_ObjectHideFlags: 0
@@ -13656,6 +13720,7 @@ GameObject:
   - component: {fileID: 138540653095054082}
   - component: {fileID: 3322246064665185933}
   - component: {fileID: 8956928691404203456}
+  - component: {fileID: 3579062444134645682}
   m_Layer: 0
   m_Name: Knob
   m_TagString: Untagged
@@ -13703,14 +13768,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.76862746, g: 0.627451, b: 0.36078432, a: 0.6666667}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: a9b57c0379e2b8846aa80593e828c2a9, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -13757,6 +13822,21 @@ MonoBehaviour:
     m_SingletonActionBindings: []
     m_Flags: 0
     m_Priority: 0
+--- !u!114 &3579062444134645682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5976014262782709541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbce701ff1e2e654f9b263c6b5ee0c6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.PressedSprite
+  _image: {fileID: 3322246064665185933}
+  _normal: {fileID: 21300000, guid: a9b57c0379e2b8846aa80593e828c2a9, type: 3}
+  _pressed: {fileID: 21300000, guid: 241136caa7ec959469263eac0bda798c, type: 3}
 --- !u!1 &6050533092713748628
 GameObject:
   m_ObjectHideFlags: 0
@@ -14362,7 +14442,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4086880788753566041
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14678,6 +14758,7 @@ GameObject:
   - component: {fileID: 7032048885055016126}
   - component: {fileID: 7541603572847919369}
   - component: {fileID: 6589598358887679015}
+  - component: {fileID: 1840820636993593547}
   m_Layer: 0
   m_Name: Face
   m_TagString: Untagged
@@ -14725,14 +14806,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.25882354, g: 0.08235295, b: 0.08235295, a: 0.45}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 806ab1ccd0d86b94b90036d4a4f29ed4, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -14755,6 +14836,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.OnScreen.OnScreenButton
   m_ControlPath: <Keyboard>/f
+--- !u!114 &1840820636993593547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6309549018944393786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbce701ff1e2e654f9b263c6b5ee0c6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.PressedSprite
+  _image: {fileID: 7541603572847919369}
+  _normal: {fileID: 21300000, guid: 806ab1ccd0d86b94b90036d4a4f29ed4, type: 3}
+  _pressed: {fileID: 21300000, guid: 4ecf15dfa3fbcf04b80064eed076627c, type: 3}
 --- !u!1 &6322444398026125327
 GameObject:
   m_ObjectHideFlags: 0
@@ -17949,7 +18045,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7424262704574582951
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18103,7 +18199,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4881919173131024312
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18369,6 +18465,7 @@ GameObject:
   - component: {fileID: 9165701486675961309}
   - component: {fileID: 7178079451806485127}
   - component: {fileID: 1245135504834947613}
+  - component: {fileID: 4580888581865952778}
   m_Layer: 0
   m_Name: Face
   m_TagString: Untagged
@@ -18416,14 +18513,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.26588237, g: 0.2517647, b: 0.22352943, a: 0.45}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 1d54c132471ce154382a1955f4f8f573, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -18446,6 +18543,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.OnScreen.OnScreenButton
   m_ControlPath: <Keyboard>/space
+--- !u!114 &4580888581865952778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7536399947456381832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbce701ff1e2e654f9b263c6b5ee0c6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Modules.Gameplay.Screen::Modules.GameplayModule.GameplayScreenModule.ViewsMediators.PressedSprite
+  _image: {fileID: 7178079451806485127}
+  _normal: {fileID: 21300000, guid: 1d54c132471ce154382a1955f4f8f573, type: 3}
+  _pressed: {fileID: 21300000, guid: ca62502b31679bf479823b5fcb1078d5, type: 3}
 --- !u!1 &7538946654412865292
 GameObject:
   m_ObjectHideFlags: 0
@@ -20996,7 +21108,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7391783709376072343
 RectTransform:
   m_ObjectHideFlags: 0
@@ -22951,14 +23063,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.25}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 83a35e67e67b1b345a570fa6df4237a0, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
