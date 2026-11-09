@@ -17,6 +17,9 @@ namespace Modules.GameplayModule.Entities
         [SerializeField] private Transform _legBack;
         [SerializeField] private Transform _torso;
         [SerializeField] private Transform _armPivot;
+        [Tooltip("A drawn character: plays its frames in place of the shapes, and the shapes' fall is not used. "
+                 + "Found under Pose when left empty.")]
+        [SerializeField] private PixelSpriteAnimator _pixelArt;
         [Tooltip("The held weapon's prefab is placed here; +X points down the barrel.")]
         [SerializeField] private Transform _weaponSocket;
         [Tooltip("Where the pocket weapon hangs; made at runtime under the torso when empty.")]
@@ -166,10 +169,30 @@ namespace Modules.GameplayModule.Entities
         public void Kick() => _recoil = 1f;
 
         // The swing: wound back, thrown forward, the body lunging behind it.
-        public void Punch() => _punch = 1f;
+        public void Punch()
+        {
+            _punch = 1f;
+            PixelArt?.PlayMelee();
+        }
 
-        // A hit lands: every part goes white for an instant.
-        public void Flash() => _flash = 1f;
+        // A hit lands: every part goes white for an instant, and a drawing reels.
+        public void Flash()
+        {
+            _flash = 1f;
+            PixelArt?.PlayHurt();
+        }
+
+        // The player's boot through a door.
+        public void KickDoor() => PixelArt?.PlayKick();
+
+        private PixelSpriteAnimator PixelArt
+        {
+            get
+            {
+                if (_pixelArt == null && _pose != null) _pixelArt = _pose.GetComponentInChildren<PixelSpriteAnimator>(true);
+                return _pixelArt;
+            }
+        }
 
         private float _punch;
         private float _flash;
@@ -223,7 +246,11 @@ namespace Modules.GameplayModule.Entities
             _pose.gameObject.SetActive(!pose.InVent);
             if (_ventEyes != null) _ventEyes.SetActive(pose.InVent);
             PoseDeath();
-            _body.localScale = new Vector3(_facing, pose.Crouching && pose.Alive ? _crouchScale : 1f, 1f);
+            PosePixelArt(pose, dt);
+            _body.localScale = new Vector3(_facing, pose.Crouching && pose.Alive && PixelArt == null ? _crouchScale : 1f, 1f);
+            // The drawing breathes, crouches and bobs in its frames: the arm, the headphones and the rest on Body
+            // rise and sink with the top of the frame on show.
+            if (PixelArt != null) _body.localPosition = new Vector3(_body.localPosition.x, _pixelArt.Rise, _body.localPosition.z);
             PoseLegs(pose);
             PoseArm(pose);
             PosePhone(pose);
@@ -238,6 +265,20 @@ namespace Modules.GameplayModule.Entities
             Mark(_investigateMark, pose.Alive && pose.Investigating && !pose.Spotted && !pose.Stunned);
             Mark(_stunMark, pose.Alive && pose.Stunned);
             if (_stunMark != null && pose.Stunned) _stunMark.transform.localRotation = Quaternion.Euler(0f, 0f, Time.time * 240f);
+        }
+
+        // A drawing falls in its own frames, so the pose stays upright; the shadow and blood pool still follow.
+        private void PosePixelArt(CharacterPoseVO pose, float dt)
+        {
+            if (PixelArt == null) return;
+            _pose.localRotation = Quaternion.identity;
+            _pose.localPosition = Vector3.zero;
+            bool armed = _weapon != null && _weaponSocket != null && _weaponSocket.gameObject.activeSelf;
+            _pixelArt.Apply(pose.Position, pose.Alive, pose.Moving, pose.Crouching, armed, pose.VerticalSpeed != 0f,
+                pose.VerticalSpeed, _facing, _dead, dt);
+            // A punch, a kick, a hit and a fall are drawn with both arms: the gun arm and the gun go away meanwhile.
+            bool armUp = pose.Alive && (_pixelArt.Arm == null || _pixelArt.Arm.enabled || !armed);
+            if (_armPivot != null && _armPivot.gameObject.activeSelf != armUp) _armPivot.gameObject.SetActive(armUp);
         }
 
         // A jolt back from the hit, knees buckling, a topple that settles with a small bounce.

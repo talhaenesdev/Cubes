@@ -188,7 +188,7 @@ namespace Modules.GameplayModule.Editor
             serializedObject.Update();
             Banner("CAST", "Every kind of character. Red cards hunt the player, green ones only patrol. Change Faction to switch sides.", Crimson);
             var config = (CD_Characters) target;
-            RootFields("PlayerType");
+            RootFields("PlayerType", "CivilianPrefab", "BossPrefab");
             SerializedProperty list = serializedObject.FindProperty("Types");
             for (int i = 0; i < list.arraySize && i < config.Types.Count; i++)
             {
@@ -315,7 +315,7 @@ namespace Modules.GameplayModule.Editor
             Group("Raids while playing", Ember, "Raids", "RaidRollMinutes", "RaidResponseMinutes", "RichShopRaidBonus");
             Group("Raid strength  -  richer shops are hit harder", Crimson, "MinAttackers", "MaxAttackers", "AttackerAggression", "RichShopToughness");
             Group("A raid nobody answers", Violet, "GuardStrength", "GuardLosses");
-            Group("While the game is closed", Sky, "HoursPerLostShop", "GuardKeepWeight");
+            Group("While the game is closed", Sky, "HoursPerLostShop", "GuardKeepWeight", "MinShopsKept");
             Group("Talking the owner round", Gold, "Persuasion", "BubbleTime");
             serializedObject.ApplyModifiedProperties();
         }

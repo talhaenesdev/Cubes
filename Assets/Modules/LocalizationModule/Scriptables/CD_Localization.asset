@@ -604,6 +604,78 @@ MonoBehaviour:
   - Key: "NET ${0} / HOUR  \xB7  MEN -${1} / HOUR  \xB7  HIRE ${2}"
     English: 
     Turkish: "NET SAATTE ${0}  \xB7  ADAMLAR SAATTE -${1}  \xB7  ADAM TUTMA ${2}"
+  - Key: "YOU GET ${0} / HOUR"
+    English: 
+    Turkish: "SAATTE ${0} SANA KALIR"
+  - Key: "Shop pays ${0}, your {1} men take ${2}"
+    English: 
+    Turkish: "D\u00fckk\u00e2n ${0} \u00f6der, {1} adam\u0131n ${2} al\u0131r"
+  - Key: "No men posted, you keep it all"
+    English: 
+    Turkish: "Adam koymad\u0131n, hepsi sana kal\u0131r"
+  - Key: "A new man: ${0} once, then ${1} / hour"
+    English: 
+    Turkish: "Yeni adam: bir kez ${0}, sonra saatte ${1}"
+  - Key: "PAYS ${0} / HOUR"
+    English: 
+    Turkish: "SAATTE ${0} \u00d6DER"
+  - Key: "Yours once you take it over"
+    English: 
+    Turkish: "Ele ge\u00e7irince senin olur"
+  - Key: "{0}  \xB7  a raid brings {1} men"
+    English: 
+    Turkish: "{0}  \xB7  bask\u0131nda {1} adam gelir"
+  - Key: "YOU GET ${0} / HOUR"
+    English: 
+    Turkish: "SAATTE ${0} SANA KALIR"
+  - Key: "Shop pays ${0}, your {1} men take ${2}"
+    English: 
+    Turkish: "D\u00fckk\u00e2n ${0} \u00f6der, {1} adam\u0131n ${2} al\u0131r"
+  - Key: "No men posted, you keep it all"
+    English: 
+    Turkish: "Adam koymad\u0131n, hepsi sana kal\u0131r"
+  - Key: "A new man: ${0} once, then ${1} / hour"
+    English: 
+    Turkish: "Yeni adam: bir kez ${0}, sonra saatte ${1}"
+  - Key: "PAYS ${0} / HOUR"
+    English: 
+    Turkish: "SAATTE ${0} \u00d6DER"
+  - Key: "Yours once you take it over"
+    English: 
+    Turkish: "Ele ge\u00e7irince senin olur"
+  - Key: "{0}  \xB7  a raid brings {1} men"
+    English: 
+    Turkish: "{0}  \xB7  bask\u0131nda {1} adam gelir"
+  - Key: "! RAID ON {0}  {1}:{2:00}  -  MAP TO HELP"
+    English: 
+    Turkish: "! BASKIN: {0}  {1}:{2:00}  -  YARDIM \u0130\u00c7\u0130N HAR\u0130TA"
+  - Key: "UPGRADE SHOP  ${0}  (+{1}%)"
+    English: 
+    Turkish: "D\u00dcKK\u00c2NI GEL\u0130\u015eT\u0130R  ${0}  (+%{1})"
+  - Key: "LV {0}"
+    English: 
+    Turkish: "SEV {0}"
+  - Key: "TAKEN {0}  \xB7  LOST {1}  \xB7  RAIDS BEATEN {2}  \xB7  MEN DOWN {3}  \xB7  SHOPS EARNED ${4}"
+    English: 
+    Turkish: "ALINAN {0}  \xB7  KAYBED\u0130LEN {1}  \xB7  P\u00dcSK\u00dcRT\u00dcLEN BASKIN {2}  \xB7  DEVR\u0130LEN ADAM {3}  \xB7  D\u00dcKK\u00c2N GEL\u0130R\u0130 ${4}"
+  - Key: "Pick to buy a truce: ${0}"
+    English: 
+    Turkish: "Ate\u015fkes almak i\u00e7in se\u00e7: ${0}"
+  - Key: "Truce: they leave our shops alone - unless we hit theirs"
+    English: 
+    Turkish: "Ate\u015fkes: biz onlar\u0131nkine dokunmad\u0131k\u00e7a bizimkilere dokunmazlar"
+  - Key: "NEED ${0} TO UPGRADE"
+    English: 
+    Turkish: "GEL\u0130\u015eT\u0130RMEK \u0130\u00c7\u0130N ${0} GEREK\u0130YOR"
+  - Key: "SHOP UPGRADED TO LV {0}"
+    English: 
+    Turkish: "D\u00dcKK\u00c2N SEV\u0130YE {0} OLDU"
+  - Key: "TRUCE WITH {0}"
+    English: 
+    Turkish: "{0} \u0130LE ATE\u015eKES"
+  - Key: "NEED ${0} FOR A TRUCE"
+    English: 
+    Turkish: "ATE\u015eKES \u0130\u00c7\u0130N ${0} GEREK\u0130YOR"
   - Key: "RAIDS: {0}  \xB7  {1} ATTACKERS"
     English: 
     Turkish: "BASKIN R\u0130SK\u0130: {0}  \xB7  {1} SALDIRGAN"

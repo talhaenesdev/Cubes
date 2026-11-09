@@ -109,7 +109,7 @@ namespace Modules.GameplayModule.Models
         }
 
         public float IncomePerMinute(MissionCVO mission) =>
-            mission == null || mission.WorkPayment <= 0 || mission.WorkPaymentInterval <= 0f ? 0f : mission.WorkPayment * 60f / mission.WorkPaymentInterval;
+            mission == null || mission.WorkPayment <= 0 || mission.WorkPaymentInterval <= 0f ? 0f : GrossPayment(mission) * 60f / mission.WorkPaymentInterval;
 
         public float Wealth(MissionCVO mission)
         {
@@ -143,6 +143,7 @@ namespace Modules.GameplayModule.Models
             if (mission == null) return;
             long now = Now;
             if (!Progress.Completed.Contains(mission.Id)) Progress.Completed.Add(mission.Id);
+            Stats.ShopsTaken++;
             WorkingLocationSVO location = Location(mission.Id);
             if (location == null)
             {
@@ -169,6 +170,9 @@ namespace Modules.GameplayModule.Models
         private void Lose(WorkingLocationSVO location, MissionCVO mission, string family)
         {
             location.Status = WorkingLocationStatus.Lost;
+            Stats.ShopsLost++;
+            // What was put into the shop goes with it.
+            Progress.ShopLevels?.RemoveAll(item => item.Mission == location.Mission);
             location.OwnerFamily = !string.IsNullOrEmpty(family) ? family
                 : !string.IsNullOrEmpty(location.AttackingFamily) ? location.AttackingFamily
                 : mission != null ? mission.AttackingFamily : "rival";
@@ -195,7 +199,42 @@ namespace Modules.GameplayModule.Models
         {
             if (mission == null) return 0;
             int upkeep = _useMoney ? Guards(mission.Id) * Mathf.Max(0, Config.GuardUpkeepPerPayment) : 0;
-            return Mathf.Max(0, mission.WorkPayment - upkeep);
+            return Mathf.Max(0, GrossPayment(mission) - upkeep);
+        }
+
+        // ---------------------------------------------------------------- shop upgrades
+
+        private PlayerStatsSVO Stats => Progress.Stats ??= new PlayerStatsSVO();
+
+        public int GrossPayment(MissionCVO mission) =>
+            mission == null ? 0 : Mathf.RoundToInt(mission.WorkPayment * (1f + ShopLevel(mission.Id) * Mathf.Max(0f, Config.ShopIncomePerLevel)));
+
+        public int ShopLevel(string mission)
+        {
+            ShopLevelSVO entry = Progress.ShopLevels?.Find(item => item.Mission == mission);
+            return entry != null ? Mathf.Clamp(entry.Level, 0, Mathf.Max(0, Config.MaxShopLevel)) : 0;
+        }
+
+        public int ShopUpgradePrice(string mission)
+        {
+            int level = ShopLevel(mission);
+            if (level >= Config.MaxShopLevel) return 0;
+            return _useMoney ? Mathf.Max(0, Config.ShopUpgradePrice) * (level + 1) : 0;
+        }
+
+        public bool TryUpgradeShop(string mission)
+        {
+            if (!IsOurs(mission) || IsUnderAttack(mission) || ShopLevel(mission) >= Config.MaxShopLevel) return false;
+            int price = ShopUpgradePrice(mission);
+            if (Progress.Cash < price) return false;
+            Progress.Cash -= price;
+            _cashChanged(Progress.Cash);
+            Progress.ShopLevels ??= new List<ShopLevelSVO>();
+            ShopLevelSVO entry = Progress.ShopLevels.Find(item => item.Mission == mission);
+            if (entry == null) Progress.ShopLevels.Add(entry = new ShopLevelSVO {Mission = mission});
+            entry.Level = ShopLevel(mission) + 1;
+            _save();
+            return true;
         }
 
         public bool TryHireGuard(string mission)
@@ -255,14 +294,31 @@ namespace Modules.GameplayModule.Models
             if (_families == null) return FamilyDiplomacy.Enemy;
             string other = firstFamily == PlayerFamily ? secondFamily : secondFamily == PlayerFamily ? firstFamily : null;
             if (!string.IsNullOrEmpty(other) && Progress.EnemyFamilies != null && Progress.EnemyFamilies.Contains(other)) return FamilyDiplomacy.Enemy;
+            if (!string.IsNullOrEmpty(other) && Progress.TruceFamilies != null && Progress.TruceFamilies.Contains(other)) return FamilyDiplomacy.Friendly;
             return _families.Relation(firstFamily, secondFamily);
         }
 
         public bool DeclareEnemy(string family)
         {
             if (string.IsNullOrEmpty(family) || RelationToPlayer(family) != FamilyRelation.Friendly) return false;
+            // Going after a family's shop ends any truce bought with it.
+            Progress.TruceFamilies?.Remove(family);
             Progress.EnemyFamilies ??= new List<string>();
             Progress.EnemyFamilies.Add(family);
+            _save();
+            return true;
+        }
+
+        public bool TryMakeTruce(string family)
+        {
+            if (string.IsNullOrEmpty(family) || RelationToPlayer(family) != FamilyRelation.Enemy) return false;
+            int price = _useMoney ? Mathf.Max(0, Config.TrucePrice) : 0;
+            if (Progress.Cash < price) return false;
+            Progress.Cash -= price;
+            _cashChanged(Progress.Cash);
+            Progress.EnemyFamilies?.Remove(family);
+            Progress.TruceFamilies ??= new List<string>();
+            if (!Progress.TruceFamilies.Contains(family)) Progress.TruceFamilies.Add(family);
             _save();
             return true;
         }
@@ -319,9 +375,11 @@ namespace Modules.GameplayModule.Models
             }
 
             // One shop lost for every full period away, the next at each period's end. A shop earns until it goes.
+            // Time away never takes the last MinShopsKept: a player coming back after a month still has a foothold.
             int periods = (int) Math.Min(LocationCount, (now - lastSeen) / LostShopPeriod);
             for (int i = 1; i <= periods; i++)
             {
+                if (OwnedCount <= Mathf.Max(0, Config.MinShopsKept)) break;
                 long at = lastSeen + i * LostShopPeriod;
                 MissionCVO victim = PickLostShop();
                 if (victim == null) break;
@@ -400,6 +458,7 @@ namespace Modules.GameplayModule.Models
             long earned = Math.Min(int.MaxValue, due * NetPayment(mission));
             state.LastPaymentUnixMilliseconds += due * interval;
             Progress.Cash = (int) Math.Min(int.MaxValue, (long) Progress.Cash + earned);
+            Stats.ShopIncome += earned;
             _cashChanged(Progress.Cash);
             return (int) earned;
         }
@@ -466,6 +525,7 @@ namespace Modules.GameplayModule.Models
             bool held = guards > 0f && UnityEngine.Random.value < guards / (guards + attackers);
             if (held)
             {
+                Stats.RaidsRepelled++;
                 int lost = Mathf.CeilToInt(Guards(mission.Id) * Config.GuardLosses);
                 SetGuardsQuietly(mission.Id, Guards(mission.Id) - lost);
                 Settle(location, WorkingLocationStatus.Owned, Now);
@@ -508,6 +568,7 @@ namespace Modules.GameplayModule.Models
             if (location != null)
             {
                 Settle(location, WorkingLocationStatus.Owned, Now);
+                Stats.RaidsRepelled++;
                 SetGuardsQuietly(DefenseMission, Guards(DefenseMission) - Mathf.Max(0, defendersLost));
                 WorkingLocationPaymentSVO paid = Progress.WorkingLocationPayments.Find(item => item.Mission == DefenseMission);
                 if (paid != null) paid.LastPaymentUnixMilliseconds = Now;

@@ -25,7 +25,19 @@ namespace Modules.GameplayModule.Controllers
             if (kind == StationKind.MissionBoard) return;
             if (kind == StationKind.FamilyBoard)
             {
-                // Informational panel: selecting a row changes nothing.
+                // An enemy family's line buys a truce with it; any other line changes nothing.
+                var families = _model.Families != null ? _model.Families.Families : null;
+                if (families != null && _index >= 0 && _index < families.Count && families[_index] != null)
+                {
+                    ITerritoryModel territory = _model.Territory;
+                    string family = families[_index].Id;
+                    if (territory.RelationToPlayer(family) == FamilyRelation.Enemy)
+                    {
+                        if (territory.TryMakeTruce(family))
+                            _signals.Outgoing.BannerShown.Dispatch(_loc.Format("TRUCE WITH {0}", _loc.Get(territory.FamilyName(family))));
+                        else _signals.Outgoing.BannerShown.Dispatch(_loc.Format("NEED ${0} FOR A TRUCE", territory.Config.TrucePrice));
+                    }
+                }
             }
             else if (kind == StationKind.Wardrobe)
             {

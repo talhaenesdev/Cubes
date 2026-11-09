@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Modules.Gameplay::Modules.GameplayModule.Data.UnityObjects.CD_Family
   Id: diamond
   DisplayName: DIAMOND FAMILY
+  Color: {r: 0.92, g: 0.84, b: 0.3, a: 1}
   RelationToPlayer: 2
   Relations:
   - {Family: player, Relation: 1}

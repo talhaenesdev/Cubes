@@ -15,6 +15,14 @@ namespace Modules.GameplayModule.Data.UnityObjects
         [Tooltip("Shops pay their CD_Missions WorkPayment every WorkPaymentInterval, in real time, open or closed.")]
         public bool LocationsPay = true;
 
+        [Header("Shop upgrades")]
+        [Tooltip("Cash for a shop's first upgrade; each level after costs this times the level it reaches.")]
+        [Min(0)] public int ShopUpgradePrice = 1500;
+        [Tooltip("Share added to a shop's WorkPayment per upgrade level: 0.25 is +25% a level.")]
+        [Min(0f)] public float ShopIncomePerLevel = 0.25f;
+        [Tooltip("Highest level a shop can be upgraded to.")]
+        [Min(0)] public int MaxShopLevel = 3;
+
         [Header("Guards")]
         [Tooltip("Most men the player can post at one shop.")]
         [Min(1)] public int MaxGuardsPerLocation = 10;
@@ -65,6 +73,13 @@ namespace Modules.GameplayModule.Data.UnityObjects
         [Min(1f)] public float HoursPerLostShop = 24f;
         [Tooltip("Shops with more posted men are less likely to be the one lost: each man counts this much against it.")]
         [Min(0f)] public float GuardKeepWeight = 0.5f;
+        [Tooltip("Shops time away never takes: however long the player was gone, this many are still theirs.")]
+        [Min(0)] public int MinShopsKept = 1;
+
+        [Header("Diplomacy")]
+        [Tooltip("Cash for a truce with an enemy family on the Family Board. It stops raiding the player's shops "
+                 + "until the player goes after one of its own.")]
+        [Min(0)] public int TrucePrice = 5000;
 
         [Header("Talking the owner round")]
         [Tooltip("The conversation with a shop's owner once their men are down, in bubbles. {0} is the family they paid until now.")]

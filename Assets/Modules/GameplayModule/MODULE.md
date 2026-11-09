@@ -187,8 +187,33 @@ gameplay, run, Night Shift, stealth, guards, shooting, cover, stairwell doors, c
   assigned MissionGuards as friendly armed guards, and lets both factions shoot one another. Clearing every attacker
   and exiting restores Owned; death or abandoning transfers the location to the configured family.
 - Posted men are paid from CD_Territory: GuardHirePrice is charged once when the map's plus button posts one,
-  with no refund on removal, and GuardUpkeepPerPayment is deducted per man from every location payment. The map
-  shows net hourly income, hourly guard upkeep and the hire price; a location's net payment never falls below zero.
+  with no refund on removal, and GuardUpkeepPerPayment is deducted per man from every location payment. A location's
+  net payment never falls below zero. The map card says the money in words (BuildMenuFunction.CityMap): for one of
+  ours what is left per hour, what the shop pays and what its men take, and what a new man costs; for anyone
+  else's what it pays. The raid line names the attacker count only on our shops - on another family's shop that
+  number read as the men inside.
+- The city is TerritoryModel, saved in ProgressSVO and tuned in CD_Territory: one UTC clock covers the game open and
+  closed. Each HoursPerLostShop away loses one shop (fewer posted men, likelier), but never the last MinShopsKept, so a
+  player back after a month still has a foothold. A raid on one of our shops stays on the HUD's objective line with
+  its countdown until it ends (DrawContractCommand.RaidAlert); the banner alone was missed.
+- A family's armed men always fight for its shop: at Reset a non-civilian spawn of a takeover is Faction.Enemy
+  whatever its family type says, and takes the authored type's gun if the family's type has none. The Circle family
+  is dressed as the friendly circle type, and without this its shops (Laundromat, Diner) had nobody to fight.
+- Shop upgrades (CD_Territory → Shop upgrades, ProgressSVO.ShopLevels): the map card's main button on one of our shops
+  buys the next level, each raising its WorkPayment by ShopIncomePerLevel; a lost shop loses its levels. GrossPayment is
+  the raised figure and everything that pays reads it.
+- Truces (CD_Territory.TrucePrice, ProgressSVO.TruceFamilies): picking an enemy family's line on the Family Board buys
+  one; the family counts as Friendly, so it drops out of the raid draw, until the player starts a takeover of one of its
+  shops, which makes it an enemy again.
+- The Family Board's subtitle is the player's record (ProgressSVO.Stats): shops taken and lost, raids beaten, enemies
+  downed and what the shops have paid in all.
+- Map shop names carry the job's LocationDifficulty as one to three stars and, on our shops, the upgrade level.
+- A phone vibrates when the rectangle is hit or dies (NightShiftView.Buzz); a desktop does nothing.
+- Every CD_Family carries its own map Color; families sharing the default colour made the map unreadable.
+- TerritoryModel.RepairOwners maps an owner saved as a display name ("THE RIVAL FAMILY", from an older build) back
+  to the family Id when the save loads.
+- The hideout desk clock is a small alarm clock drawn by NightShiftView: hours and minutes with a blinking colon and
+  the date under them, from the device's clock. Seconds are deliberately not shown.
 
 - Every contract level was widened x1.25 and given extra guards in roomy rooms by a one-off builder pass
   (NightShiftAssetBuilder.Spacious, LevelAuthoring.LayoutVersion). Feel: per-weapon shake, camera kick, hit flash and

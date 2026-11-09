@@ -17,6 +17,9 @@ namespace Modules.GameplayModule.Controllers
         [InjectSignal] private GameplaySignals _signals { get; set; }
         [Inject] private IFunctionProvider _functions { get; set; }
         private bool _press;
+        private bool _bossGone;
+        // Everything in reach that E could do; the nearest one gets the prompt and the press.
+        private readonly System.Collections.Generic.List<(float distance, string text, System.Action act)> _near = new();
         private string _hint;
         public override void Execute()
         {
@@ -28,6 +31,8 @@ namespace Modules.GameplayModule.Controllers
                 && Mathf.Abs(run.Player.y - run.Document.y) < 0.5f && Mathf.Abs(run.Player.x - run.Document.x) < 1f;
             _press = _model.Input.Interact;
             _hint = null;
+            _bossGone = false;
+            _near.Clear();
             if (run.LocationTakeover && OfferBossTalk(run))
             {
                 run.Hint = _hint ?? "";
@@ -53,69 +58,72 @@ namespace Modules.GameplayModule.Controllers
                 for (int i = 0; i < run.Vents.Length; i++)
                 {
                     if (Vector2.Distance(run.Player, run.Vents[i].Position) > 0.8f) continue;
-                    if (!Offer(_loc.Get("E  —  hide in the vent"))) continue;
-                    run.InVent = true;
-                    run.Hidden = true;
-                    run.Vent = i;
-                    run.Player = run.Vents[i].Position;
-                    run.Floor = run.Player.y > run.FloorHeight * 0.5f ? 1 : 0;
-                    run.VerticalSpeed = 0;
-                    break;
+                    int vent = i;
+                    Consider(Mathf.Abs(run.Player.x - run.Vents[i].Position.x), _loc.Get("E  —  hide in the vent"), () =>
+                    {
+                        run.InVent = true;
+                        run.Hidden = true;
+                        run.Vent = vent;
+                        run.Player = run.Vents[vent].Position;
+                        run.Floor = run.Player.y > run.FloorHeight * 0.5f ? 1 : 0;
+                        run.VerticalSpeed = 0;
+                    });
                 }
             foreach (StairRVO stair in run.Stairs)
             {
                 if (run.InVent || Vector2.Distance(run.Player, stair.Position) > 0.8f) continue;
                 StairRVO exit = run.Stairs[stair.Link];
-                if (!Offer(_loc.Get(exit.Position.y > stair.Position.y ? "E  —  stairs up" : "E  —  stairs down"))) continue;
-                run.Player = exit.Position;
-                run.Floor = run.Player.y > run.FloorHeight * 0.5f ? 1 : 0;
-                run.VerticalSpeed = 0;
-                break;
+                Consider(Mathf.Abs(run.Player.x - stair.Position.x), _loc.Get(exit.Position.y > stair.Position.y ? "E  —  stairs up" : "E  —  stairs down"), () =>
+                {
+                    run.Player = exit.Position;
+                    run.Floor = run.Player.y > run.FloorHeight * 0.5f ? 1 : 0;
+                    run.VerticalSpeed = 0;
+                });
             }
             foreach (LightRVO light in run.Lights)
             {
                 if (run.InVent || Mathf.Abs(run.Player.y - light.Floor) > 1.8f || Mathf.Abs(run.Player.x - light.Switch) > 0.7f) continue;
-                if (Offer(_loc.Get(light.On ? "E  —  kill the lights" : "E  —  turn the lights on"))) light.On = !light.On;
+                Consider(Mathf.Abs(run.Player.x - light.Switch), _loc.Get(light.On ? "E  —  kill the lights" : "E  —  turn the lights on"), () => light.On = !light.On);
             }
             for (int i = 0; i < run.Stations.Length; i++)
             {
                 StationRVO station = run.Stations[i];
                 if (run.InVent || Mathf.Abs(run.Player.y - station.Position.y) > 0.5f || Mathf.Abs(run.Player.x - station.Position.x) > 1f) continue;
+                float stationDistance = Mathf.Abs(run.Player.x - station.Position.x);
                 if (station.Kind == Enums.StationKind.CassettePlayer)
                 {
-                    if (Offer("E")) OpenDeck(run);
+                    Consider(stationDistance, "E", () => OpenDeck(run));
                     continue;
                 }
                 // At home the icon over the station says what it is; the prompt is only the key.
-                if (!Offer("E")) continue;
-                run.Menu = i;
-                run.Paused = true;
-                MenuVO menu = _functions.Call<BuildMenuFunction>().AddParams(station.Kind).ExecuteAndGetResult<MenuVO>();
-                _signals.Outgoing.MenuOpened.Dispatch(menu.Title, menu.Subtitle, menu.Entries, menu.IsMap);
+                int menuIndex = i;
+                Consider(stationDistance, "E", () =>
+                {
+                    run.Menu = menuIndex;
+                    run.Paused = true;
+                    MenuVO menu = _functions.Call<BuildMenuFunction>().AddParams(station.Kind).ExecuteAndGetResult<MenuVO>();
+                    _signals.Outgoing.MenuOpened.Dispatch(menu.Title, menu.Subtitle, menu.Entries, menu.IsMap);
+                });
             }
             for (int i = 0; i < run.Terminals.Length; i++)
             {
                 TerminalRVO terminal = run.Terminals[i];
                 if (run.InVent || Mathf.Abs(run.Player.y - terminal.Position.y) > 0.5f || Mathf.Abs(run.Player.x - terminal.Position.x) > 1f) continue;
-                if (!Offer(_loc.Format("E  —  use the computer: {0}", _loc.Get(terminal.Title)))) continue;
-                run.Terminal = i;
-                run.Paused = true;
-                _signals.Outgoing.TerminalOpened.Dispatch(_loc.Get(terminal.Title), _loc.Get(terminal.Text));
+                int terminalIndex = i;
+                Consider(Mathf.Abs(run.Player.x - terminal.Position.x), _loc.Format("E  —  use the computer: {0}", _loc.Get(terminal.Title)), () =>
+                {
+                    run.Terminal = terminalIndex;
+                    run.Paused = true;
+                    _signals.Outgoing.TerminalOpened.Dispatch(_loc.Get(terminal.Title), _loc.Get(terminal.Text));
+                });
             }
             foreach (DoorRVO door in run.Doors)
             {
                 if (run.InVent || Vector2.Distance(run.Player, door.Position) > 1.6f) continue;
-                if (!Offer(_loc.Get(door.Open ? "E  —  close the door" : "E  —  kick the door"))) continue;
-                door.Open = !door.Open;
-                if (!door.Open) continue;
-                run.NoiseRemaining = 0.3f;
-                run.NoiseRadius = _model.Tuning.KickNoise;
-                run.NoisePosition = door.Position;
-                foreach (GuardRVO guard in run.Guards)
-                    if (guard.Alive && Mathf.Abs(guard.Position.y - door.Position.y) < 0.1f && Mathf.Abs(guard.Position.x - door.Position.x) < _model.Tuning.KickReach)
-                        guard.StunRemaining = _model.Tuning.KickStun;
+                Consider(Mathf.Abs(run.Player.x - door.Position.x), _loc.Get(door.Open ? "E  —  close the door" : "E  —  kick the door"), () => Kick(run, door));
             }
             OfferPickup(run);
+            Choose();
             WeaponCVO held = _model.Weapon(run.Weapon);
             if (_model.Input.Reload && held != null && run.Ammo < held.Magazine && run.Reserve > 0 && run.ReloadRemaining == 0)
                 run.ReloadRemaining = held.ReloadTime * run.ReloadScale;
@@ -135,6 +143,7 @@ namespace Modules.GameplayModule.Controllers
                 && Offer(_loc.Get("E  —  give up the job and go home")))
                 run.Abandoned = true;
             if (!run.InHideout && run.HasDocument && !run.DocumentTaken) _hint ??= _loc.Get("Find the documents");
+            if (_bossGone) _hint ??= _loc.Get("The boss is gone");
             if (!run.InHideout && run.LocationTakeover && _model.Remaining == 0 && !run.BossRecruited)
                 _hint ??= _loc.Get("Talk to the boss");
             // Only what the player can do right here; the rest of the time the line stays empty.
@@ -150,14 +159,14 @@ namespace Modules.GameplayModule.Controllers
                 if (run.Guards[i].Boss && run.Guards[i].Alive && !run.Guards[i].Escaped) { bossIndex = i; break; }
             if (bossIndex < 0)
             {
-                _hint ??= _loc.Get("The boss is gone");
+                _bossGone = true;
                 return false;
             }
             GuardRVO boss = run.Guards[bossIndex];
             bool near = !run.InVent && Mathf.Abs(run.Player.y - boss.Position.y) < 0.8f && Mathf.Abs(run.Player.x - boss.Position.x) < 2.2f;
             if (!near && !run.BossDialogueOpen) return false;
             // The boss owns this spot. Before the guards are clear, nothing else should show an E prompt here.
-            if (_model.Remaining > 0) return near;
+            if (_model.Remaining > 0) return false;
             var lines = _model.Territory.Config.Persuasion;
             if (lines == null || lines.Count == 0)
             {
@@ -278,6 +287,30 @@ namespace Modules.GameplayModule.Controllers
             MusicTrackCVO loaded = _model.Music != null ? _model.Music.Find(_model.PlayingTrack) : null;
             bool tape = loaded != null && loaded.Category == Enums.MusicCategory.Hideout;
             _signals.Outgoing.DeckShown.Dispatch(tape ? loaded.Title : _loc.Get("NO TAPE"), tape ? loaded.Artist : _loc.Get("Press PLAY"), run.TapePlaying);
+        }
+
+        private void Kick(ContractRVO run, DoorRVO door)
+        {
+            door.Open = !door.Open;
+            if (!door.Open) return;
+            run.NoiseRemaining = 0.3f;
+            run.NoiseRadius = _model.Tuning.KickNoise;
+            run.NoisePosition = door.Position;
+            foreach (GuardRVO guard in run.Guards)
+                if (guard.Alive && Mathf.Abs(guard.Position.y - door.Position.y) < 0.1f && Mathf.Abs(guard.Position.x - door.Position.x) < _model.Tuning.KickReach)
+                    guard.StunRemaining = _model.Tuning.KickStun;
+        }
+
+        private void Consider(float distance, string text, System.Action act) => _near.Add((distance, text, act));
+
+        // A door beside a computer, a stairwell beside the deck: whichever the player stands closer to is the one E uses.
+        private void Choose()
+        {
+            if (_near.Count == 0) return;
+            int best = 0;
+            for (int i = 1; i < _near.Count; i++)
+                if (_near[i].distance < _near[best].distance) best = i;
+            if (Offer(_near[best].text)) _near[best].act();
         }
 
         private bool Offer(string text)

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Modules.Gameplay::Modules.GameplayModule.Data.UnityObjects.CD_Family
   Id: player
   DisplayName: SQUARE FAMILY
-  Color: {r: 0.55, g: 0.2, b: 0.22, a: 1}
+  Color: {r: 0.36, g: 0.78, b: 0.55, a: 1}
   RelationToPlayer: 0
   Relations:
   - Family: circle

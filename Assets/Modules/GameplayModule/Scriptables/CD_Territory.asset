@@ -34,6 +34,7 @@ MonoBehaviour:
   GuardLosses: 0.4
   HoursPerLostShop: 24
   GuardKeepWeight: 0.5
+  MinShopsKept: 1
   Persuasion:
   - Speaker: 0
     Text: Wait - don't shoot! What do you want?

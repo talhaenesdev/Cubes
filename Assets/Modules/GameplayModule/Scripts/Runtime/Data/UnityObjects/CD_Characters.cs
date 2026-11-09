@@ -11,6 +11,10 @@ namespace Modules.GameplayModule.Data.UnityObjects
     {
         [Tooltip("The character type the player plays as.")]
         public string PlayerType = "rectangle";
+        [Tooltip("Prefab used for unarmed civilians. Leave empty to use their character type prefab.")]
+        public GameObject CivilianPrefab;
+        [Tooltip("Prefab used for a location's shop owner / boss. Leave empty to use their character type prefab.")]
+        public GameObject BossPrefab;
         public List<CharacterTypeCVO> Types = new();
 
         public CharacterTypeCVO Find(string id)

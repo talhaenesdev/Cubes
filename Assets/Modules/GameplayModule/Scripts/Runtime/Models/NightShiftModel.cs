@@ -342,6 +342,7 @@ namespace Modules.GameplayModule.Models
             if (guard.Health <= 0)
             {
                 guard.Alive = false;
+                if (guard.Faction == Faction.Enemy) (Progress.Stats ??= new PlayerStatsSVO()).MenDown++;
                 return true;
             }
             // A hit that does not kill still knocks them off their feet for a moment.
@@ -392,10 +393,16 @@ namespace Modules.GameplayModule.Models
                     : armedIndex++ == 0 ? FamilyRank.Consigliere : armedIndex % 4 == 0 ? FamilyRank.Caporegime : FamilyRank.Soldier;
                 FamilyRoleCVO role = activeFamily != null ? activeFamily.Role(rank) : null;
                 CharacterTypeCVO type = CharacterType(role != null && !string.IsNullOrEmpty(role.CharacterType) ? role.CharacterType : spawn.Type);
+                // A family's armed men hold the shop against us whatever their type, so a family dressed in a
+                // friendly type (the Circles) still fights, with the authored type's gun if its own has none.
+                bool holdsShop = activeMission != null && !spawn.Civilian && !spawn.Boss;
+                string weapon = !string.IsNullOrEmpty(spawn.Weapon) ? spawn.Weapon : DrawWeapon(type);
+                if (holdsShop && Weapon(weapon) == null) weapon = DrawWeapon(CharacterType(spawn.Type));
+                if (holdsShop && Weapon(weapon) == null) weapon = Weapons != null ? Weapons.PlayerStartWeapon : null;
                 guards[i] = new GuardRVO
                 {
                     Position = spawn.Position, Left = spawn.Left, Right = spawn.Right, Facing = spawn.Facing >= 0 ? 1 : -1,
-                    Type = type.Id, Faction = type.Faction, Weapon = string.IsNullOrEmpty(spawn.Weapon) ? DrawWeapon(type) : spawn.Weapon,
+                    Type = type.Id, Faction = holdsShop ? Faction.Enemy : type.Faction, Weapon = weapon,
                     SuspicionRate = type.SuspicionRate, SuspicionDecay = type.SuspicionDecay, CrouchSight = type.CrouchSight,
                     DarkSight = type.DarkSight, CloseSense = type.CloseSense, Hearing = type.Hearing, ChaseMemory = type.ChaseMemory,
                     InvestigateTime = type.InvestigateTime, Curiosity = type.Curiosity, FirePace = type.FirePace, DropChance = type.DropChance,

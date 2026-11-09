@@ -99,6 +99,8 @@ namespace Modules.GameplayModule.ViewsMediators
         private TextMesh _clockText;
         private TextMesh _calendarText;
         private string _lastDeviceTime;
+        private int _lastHealth = -1;
+        private bool _lastAlive = true;
 
         public void SetPool(IPoolService pool) => _pool = pool;
 
@@ -579,6 +581,7 @@ namespace Modules.GameplayModule.ViewsMediators
         private void DrawFixtures(ContractRVO state)
         {
             UpdateHideoutClock(state);
+            Buzz(state);
             for (int i = 0; i < state.Doors.Length && i < _level.Doors.Length; i++)
                 _level.Doors[i].Apply(state.Doors[i].Open);
             for (int i = 0; i < state.Lights.Length && i < _level.Rooms.Length; i++)
@@ -600,9 +603,30 @@ namespace Modules.GameplayModule.ViewsMediators
             CreateHideoutDesk(level);
             _hideoutClock = new GameObject("Device Clock and Calendar");
             _hideoutClock.transform.SetParent(level.transform, false);
-            _hideoutClock.transform.localPosition = new Vector3(3.2f, 0.89f, -0.2f);
-            _clockText = ClockLabel("Clock", _hideoutClock.transform, new Vector3(0f, 0.045f, 0f), 0.03f, new Color(0.75f, 0.95f, 0.86f));
-            _calendarText = ClockLabel("Calendar", _hideoutClock.transform, new Vector3(0f, -0.045f, 0f), 0.02f, new Color(0.9f, 0.78f, 0.5f));
+            _hideoutClock.transform.localPosition = new Vector3(3.45f, 1.0f, -0.2f);
+            // A small bedside alarm clock standing on the desk: a dark case, a dim face, amber digits and the date under them.
+            ClockPart("Case", new Vector3(0f, 0f, 0f), new Vector2(0.46f, 0.26f), new Color(0.09f, 0.06f, 0.05f), 10);
+            ClockPart("Face", new Vector3(0f, 0.025f, 0f), new Vector2(0.38f, 0.15f), new Color(0.16f, 0.05f, 0.03f), 11);
+            ClockPart("Left foot", new Vector3(-0.15f, -0.145f, 0f), new Vector2(0.07f, 0.04f), new Color(0.06f, 0.04f, 0.03f), 10);
+            ClockPart("Right foot", new Vector3(0.15f, -0.145f, 0f), new Vector2(0.07f, 0.04f), new Color(0.06f, 0.04f, 0.03f), 10);
+            _clockText = ClockLabel("Clock", _hideoutClock.transform, new Vector3(0f, 0.027f, 0f), 0.022f, new Color(1f, 0.55f, 0.18f));
+            _calendarText = ClockLabel("Calendar", _hideoutClock.transform, new Vector3(0f, -0.085f, 0f), 0.009f, new Color(0.78f, 0.62f, 0.42f));
+        }
+
+        private void ClockPart(string name, Vector3 position, Vector2 size, Color color, int order)
+        {
+            GameObject part = new GameObject(name);
+            part.transform.SetParent(_hideoutClock.transform, false);
+            part.transform.localPosition = position;
+            part.transform.localScale = new Vector3(size.x, size.y, 1f);
+            SpriteRenderer renderer = part.AddComponent<SpriteRenderer>();
+            Texture2D texture = new Texture2D(1, 1);
+            texture.name = "Runtime Clock Pixel";
+            texture.SetPixel(0, 0, Color.white);
+            texture.Apply();
+            renderer.sprite = Sprite.Create(texture, new Rect(0f, 0f, 1f, 1f), new Vector2(0.5f, 0.5f), 1f);
+            renderer.color = color;
+            renderer.sortingOrder = order;
         }
 
         private void CreateHideoutDesk(LevelAuthoring level)
@@ -649,6 +673,19 @@ namespace Modules.GameplayModule.ViewsMediators
             return text;
         }
 
+        // A phone shakes in the hand when the rectangle is hit or dies. Nothing on a desktop.
+        private void Buzz(ContractRVO state)
+        {
+            bool hurt = _lastHealth >= 0 && state.Health < _lastHealth;
+            if (hurt && state.Alive && _rigs.TryGetValue(PlayerSlot, out CharacterRig player) && player != null) player.Flash();
+            bool died = _lastAlive && !state.Alive;
+            _lastHealth = state.Health;
+            _lastAlive = state.Alive;
+#if UNITY_ANDROID || UNITY_IOS
+            if ((hurt || died) && Application.isMobilePlatform) Handheld.Vibrate();
+#endif
+        }
+
         private void UpdateHideoutClock(ContractRVO state)
         {
             if (_hideoutClock == null) return;
@@ -656,24 +693,29 @@ namespace Modules.GameplayModule.ViewsMediators
             if (_hideoutClock.activeSelf != visible) _hideoutClock.SetActive(visible);
             if (!visible) return;
             DateTime now = DateTime.Now;
-            string current = now.ToString("HH:mm:ss dd/MM/yyyy");
+            // Hours and minutes with a colon that blinks each second, like the real thing; no seconds counting away.
+            string current = now.ToString(now.Second % 2 == 0 ? "HH:mm" : "HH mm");
             if (current == _lastDeviceTime) return;
             _lastDeviceTime = current;
-            _clockText.text = now.ToString("HH:mm:ss");
-            _calendarText.text = now.ToString("dd/MM/yyyy");
+            _clockText.text = current;
+            _calendarText.text = now.ToString("dd.MM.yyyy");
         }
 
         private const int PlayerSlot = -1;
 
         // The rig for a slot, made from the prefab its character type names and remade if the type changed.
-        private CharacterRig Rig(int slot, string type, string appearance = null, GameObject familyPrefab = null)
+        private CharacterRig Rig(int slot, string type, string appearance = null, GameObject familyPrefab = null,
+            bool civilian = false, bool boss = false)
         {
             string key = string.IsNullOrEmpty(appearance) ? type : appearance;
             if (_rigs.TryGetValue(slot, out CharacterRig rig) && _rigTypes[slot] == key) return rig;
             if (rig != null) Destroy(rig.gameObject);
             _rigs.Remove(slot);
             CharacterTypeCVO config = _characters != null ? _characters.Find(type) : null;
-            GameObject prefab = familyPrefab != null ? familyPrefab : config != null ? config.Prefab : null;
+            GameObject rolePrefab = boss && _characters != null ? _characters.BossPrefab
+                : civilian && _characters != null ? _characters.CivilianPrefab : null;
+            GameObject prefab = rolePrefab != null ? rolePrefab
+                : familyPrefab != null ? familyPrefab : config != null ? config.Prefab : null;
             if (prefab == null || _level == null) return null;
             GameObject made = Instantiate(prefab, _level.Dynamic != null ? _level.Dynamic : _level.transform, false);
             made.name = prefab.name + (slot == PlayerSlot ? " (player)" : " #" + slot);
@@ -736,6 +778,7 @@ namespace Modules.GameplayModule.ViewsMediators
                     ? Mathf.Clamp01((ContractRVO.IntroLength - state.IntroRemaining) / ContractRVO.IntroHeadset) : 1f,
                 Ammo = state.Ammo,
                 Magazine = weapon != null ? weapon.Magazine : 0,
+                VerticalSpeed = state.VerticalSpeed,
             });
         }
 
@@ -757,7 +800,8 @@ namespace Modules.GameplayModule.ViewsMediators
                 CD_Family family = _families != null ? _families.Find(guard.Family) : null;
                 FamilyRoleCVO role = family != null ? family.Role(guard.FamilyRank) : null;
                 string appearance = family != null ? family.Id + ":" + guard.FamilyRank : guard.Type;
-                CharacterRig rig = Rig(i, guard.Type, appearance, role != null ? role.Prefab : null);
+                CharacterRig rig = Rig(i, guard.Type, appearance, role != null ? role.Prefab : null,
+                    guard.Civilian, guard.Boss);
                 if (rig == null) continue;
                 rig.gameObject.SetActive(!guard.Escaped);
                 if (guard.Escaped) continue;
@@ -973,7 +1017,12 @@ namespace Modules.GameplayModule.ViewsMediators
             for (int i = 0; i < state.Doors.Length && i < _doorsOpen.Length; i++)
             {
                 if (state.Doors[i].Open && !_doorsOpen[i])
+                {
                     Play(NightShiftPoolKeys.DoorKick, state.Doors[i].Position + Vector2.up * 1.2f, new Vector2(state.Doors[i].Position.x - state.Player.x, 0f));
+                    // The door the player stands at went in under his boot.
+                    bool atDoor = Mathf.Abs(state.Doors[i].Position.x - state.Player.x) < 1.6f && Mathf.Abs(state.Doors[i].Position.y - state.Player.y) < 1f;
+                    if (atDoor && _rigs.TryGetValue(PlayerSlot, out CharacterRig kicker) && kicker != null) kicker.KickDoor();
+                }
                 _doorsOpen[i] = state.Doors[i].Open;
             }
             foreach (ImpactRVO impact in state.Impacts)

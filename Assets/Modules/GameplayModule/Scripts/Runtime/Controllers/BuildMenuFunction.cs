@@ -46,17 +46,39 @@ namespace Modules.GameplayModule.Controllers
                 else if (ours) status = _loc.Get("WORKS FOR US");
                 else status = _loc.Format("WORKS FOR {0}", _loc.Get(territory.FamilyName(owner)));
                 float paymentsPerHour = mission.WorkPaymentInterval > 0f ? 3600f / mission.WorkPaymentInterval : 0f;
+                // The card's money in plain words: what the shop pays, what our men there cost, what is left for us.
+                int grossPerHour = Mathf.RoundToInt(territory.GrossPayment(mission) * paymentsPerHour);
                 int netPerHour = Mathf.RoundToInt(territory.NetPayment(mission) * paymentsPerHour);
-                int upkeepPerHour = Mathf.RoundToInt(territory.Guards(mission.Id) * territory.Config.GuardUpkeepPerPayment * paymentsPerHour);
-                string income = _model.Tuning.UseMoney && mission.WorkPayment > 0
-                    ? _loc.Format("NET ${0} / HOUR  ·  MEN -${1} / HOUR  ·  HIRE ${2}", netPerHour, upkeepPerHour, territory.Config.GuardHirePrice)
-                    : "—";
+                int guards = territory.Guards(mission.Id);
+                int manPerHour = Mathf.RoundToInt(territory.Config.GuardUpkeepPerPayment * paymentsPerHour);
+                string income = "—";
+                if (_model.Tuning.UseMoney && mission.WorkPayment > 0)
+                {
+                    string cost = guards > 0
+                        ? _loc.Format("Shop pays ${0}, your {1} men take ${2}", grossPerHour, guards, guards * manPerHour)
+                        : _loc.Get("No men posted, you keep it all");
+                    income = ours || attacked
+                        ? _loc.Format("YOU GET ${0} / HOUR", netPerHour) + "\n<size=12>" + cost + "\n"
+                          + _loc.Format("A new man: ${0} once, then ${1} / hour", territory.Config.GuardHirePrice, manPerHour) + "</size>"
+                        : _loc.Format("PAYS ${0} / HOUR", grossPerHour) + "\n<size=12>" + _loc.Get("Yours once you take it over") + "</size>";
+                }
                 float danger = territory.Wealth(mission);
                 RaidVO raid = territory.RaidOn(mission.Id);
-                string risk = _loc.Format("RAIDS: {0}  ·  {1} ATTACKERS", _loc.Get(danger < 0.34f ? "LOW" : danger < 0.67f ? "MEDIUM" : "HIGH"), raid.Attackers);
-                string action = attacked ? _loc.Get("GO AND HELP") : ours ? "" : _loc.Get("TAKE IT OVER");
+                string level = _loc.Get(danger < 0.34f ? "LOW" : danger < 0.67f ? "MEDIUM" : "HIGH");
+                string risk = ours || attacked ? _loc.Format("{0}  ·  a raid brings {1} men", level, raid.Attackers) : level;
+                // On our own shop the big button puts money into it; at the top level there is nothing left to buy.
+                int upgrade = territory.ShopUpgradePrice(mission.Id);
+                int shopLevel = territory.ShopLevel(mission.Id);
+                string action = attacked ? _loc.Get("GO AND HELP")
+                    : ours ? shopLevel < territory.Config.MaxShopLevel
+                        ? _loc.Format("UPGRADE SHOP  ${0}  (+{1}%)", upgrade, Mathf.RoundToInt(territory.Config.ShopIncomePerLevel * 100f)) : ""
+                    : _loc.Get("TAKE IT OVER");
                 string translated = _loc.Get(mission.Title);
                 string name = translated.Contains("/") ? translated[(translated.IndexOf('/') + 1)..].Trim() : translated;
+                // How hard the job is, at a glance, and how far the shop has been built up.
+                int stars = (int) mission.LocationDifficulty + 1;
+                name += "  " + new string('\u2605', stars) + new string('\u2606', 3 - stars);
+                if (ours && shopLevel > 0) name += "  " + _loc.Format("LV {0}", shopLevel);
                 Color color = territory.FamilyColor(owner);
                 menu.Entries[i] = string.Join(MapFieldSeparator.ToString(), name, _loc.Get(territory.FamilyName(owner)), "#" + ColorUtility.ToHtmlStringRGB(color),
                     state.ToString(), income, status, territory.Guards(mission.Id).ToString(), territory.MaxGuards.ToString(), risk,
@@ -74,7 +96,11 @@ namespace Modules.GameplayModule.Controllers
             if (kind == StationKind.FamilyBoard)
             {
                 menu.Title = _loc.Get("FAMILY BOARD");
-                menu.Subtitle = _loc.Get("INTER-FAMILY RELATIONS");
+                ITerritoryModel territory = _model.Territory;
+                PlayerStatsSVO stats = _model.Progress.Stats ?? new PlayerStatsSVO();
+                menu.Subtitle = _loc.Format("TAKEN {0}  ·  LOST {1}  ·  RAIDS BEATEN {2}  ·  MEN DOWN {3}  ·  SHOPS EARNED ${4}",
+                    stats.ShopsTaken, stats.ShopsLost, stats.RaidsRepelled, stats.MenDown, stats.ShopIncome)
+                    + (money ? "  ·  " + _loc.Format("CASH  ${0}", _model.Progress.Cash) : "");
                 var families = _model.Families != null ? _model.Families.Families : new System.Collections.Generic.List<CD_Family>();
                 menu.Entries = new string[families.Count];
                 for (int i = 0; i < families.Count; i++)
@@ -96,6 +122,11 @@ namespace Modules.GameplayModule.Controllers
                         family != null ? _loc.Get(family.DisplayName) : "—",
                         friends.Count > 0 ? string.Join(", ", friends) : "—",
                         enemies.Count > 0 ? string.Join(", ", enemies) : "—");
+                    // An enemy of ours can be bought off: picking its line pays for a truce.
+                    if (family != null && territory.RelationToPlayer(family.Id) == FamilyRelation.Enemy)
+                        menu.Entries[i] += "\n" + _loc.Format("Pick to buy a truce: ${0}", territory.Config.TrucePrice);
+                    else if (family != null && _model.Progress.TruceFamilies != null && _model.Progress.TruceFamilies.Contains(family.Id))
+                        menu.Entries[i] += "\n" + _loc.Get("Truce: they leave our shops alone - unless we hit theirs");
                 }
                 return menu;
             }

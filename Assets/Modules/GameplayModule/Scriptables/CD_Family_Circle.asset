@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Modules.Gameplay::Modules.GameplayModule.Data.UnityObjects.CD_Family
   Id: circle
   DisplayName: CIRCLE FAMILY
+  Color: {r: 0.32, g: 0.56, b: 0.92, a: 1}
   RelationToPlayer: 1
   Relations:
   - {Family: player, Relation: 0}

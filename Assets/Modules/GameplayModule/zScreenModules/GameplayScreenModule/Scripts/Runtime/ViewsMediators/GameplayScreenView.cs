@@ -220,6 +220,7 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             Transform cityMap = Named(station, "City Map");
             _cityMap = cityMap.gameObject;
             _mapCity = (RectTransform) Named(cityMap, "City");
+            AddMapZoom();
             Transform shopCard = Named(cityMap, "Shop Card");
             _cardName = Named<Text>(shopCard, "Name");
             _cardSwatch = Named<Image>(shopCard, "Swatch");
@@ -261,6 +262,8 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             _deckVolume.Changed = volume => DeckVolumeChanged?.Invoke(volume);
 
             _touch = Named(transform, "Touch Controls").gameObject;
+            // The baked layout keeps the controls switched off, so a phone or a tablet turns them on here as well.
+            SetTouchControls(Application.isMobilePlatform);
             Transform call = Named(transform, "Phone Call");
             _call = call.gameObject;
             _callPhone = Named<Image>(call, "Phone");
@@ -779,6 +782,7 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             // ---- the city: water, parks, avenues, blocks and district names, seen from above at night
             Image city = CreatePanel("City", root, 0f, 0f, .66f, 1f, new Color32(18, 22, 24, 255));
             _mapCity = city.rectTransform;
+            AddMapZoom();
             CreatePanel("Harbour", city.transform, 0f, 0f, 1f, .1f, new Color32(14, 30, 40, 255));
             for (int i = 0; i < 9; i++)
                 CreatePanel("Ripple", city.transform, .04f + i * .11f, .03f + (i % 3) * .02f, .09f + i * .11f, .036f + (i % 3) * .02f, new Color32(40, 70, 86, 180));
@@ -852,6 +856,25 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             _cityMap.SetActive(false);
         }
 
+        // The city goes inside a masked frame of its own place and size, which zooms and pans it.
+        private void AddMapZoom()
+        {
+            if (_mapCity == null || _mapCity.parent.GetComponent<MapZoom>() != null) return;
+            var viewport = new GameObject("City Viewport", typeof(RectTransform), typeof(RectMask2D), typeof(MapZoom)).GetComponent<RectTransform>();
+            viewport.SetParent(_mapCity.parent, false);
+            viewport.SetSiblingIndex(_mapCity.GetSiblingIndex());
+            viewport.anchorMin = _mapCity.anchorMin;
+            viewport.anchorMax = _mapCity.anchorMax;
+            viewport.offsetMin = _mapCity.offsetMin;
+            viewport.offsetMax = _mapCity.offsetMax;
+            _mapCity.SetParent(viewport, false);
+            _mapCity.anchorMin = Vector2.zero;
+            _mapCity.anchorMax = Vector2.one;
+            _mapCity.pivot = new Vector2(.5f, .5f);
+            _mapCity.offsetMin = _mapCity.offsetMax = Vector2.zero;
+            viewport.GetComponent<MapZoom>().Content = _mapCity;
+        }
+
         private void MapAction(int action)
         {
             if (_mapSelected >= 0) MapActionClicked?.Invoke(_mapSelected, action);
@@ -909,6 +932,20 @@ namespace Modules.GameplayModule.GameplayScreenModule.ViewsMediators
             _cardOwner.text = Field(f, FOwner);
             _cardStatus.text = Field(f, FStatus);
             _cardStatus.color = state == 2 ? _warning : state == 1 ? _success : _cream;
+            // The money reads as three lines in words and needs no "INCOME" heading: it takes the heading's room.
+            if (!_cardIncome.supportRichText || _cardIncome.verticalOverflow != VerticalWrapMode.Overflow)
+            {
+                Transform heading = _cardIncome.transform.parent.Find("Income Label");
+                if (heading != null) heading.gameObject.SetActive(false);
+                RectTransform money = _cardIncome.rectTransform;
+                money.anchorMin = new Vector2(.07f, .535f);
+                money.anchorMax = new Vector2(.95f, .69f);
+                _cardIncome.supportRichText = true;
+                _cardIncome.alignment = TextAnchor.UpperLeft;
+                _cardIncome.horizontalOverflow = HorizontalWrapMode.Wrap;
+                _cardIncome.verticalOverflow = VerticalWrapMode.Overflow;
+                _cardIncome.fontSize = 18;
+            }
             _cardIncome.text = Field(f, FIncome);
             _cardRisk.text = Field(f, FRisk);
             RectTransform bar = _cardDanger.rectTransform;

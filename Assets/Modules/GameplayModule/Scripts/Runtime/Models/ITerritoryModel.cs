@@ -32,6 +32,12 @@ namespace Modules.GameplayModule.Models
         int MaxGuards { get; }
         int Guards(string mission);
         int NetPayment(MissionCVO mission);
+        // What a shop pays per payment before its men take their cut: WorkPayment raised by its upgrade level.
+        int GrossPayment(MissionCVO mission);
+        int ShopLevel(string mission);
+        // Cash the shop's next level costs; 0 when it is at the top.
+        int ShopUpgradePrice(string mission);
+        bool TryUpgradeShop(string mission);
         bool TryHireGuard(string mission);
         void SetGuards(string mission, int count);
 
@@ -42,6 +48,8 @@ namespace Modules.GameplayModule.Models
         FamilyDiplomacy RelationBetween(string firstFamily, string secondFamily);
         // True only when a friendly family has just become an enemy.
         bool DeclareEnemy(string family);
+        // Buys a truce with an enemy family; false when it is not an enemy or the cash is short.
+        bool TryMakeTruce(string family);
 
         // ---- time
         // Settles everything since the game was last open: income, raids that ran out, a shop lost per day away.

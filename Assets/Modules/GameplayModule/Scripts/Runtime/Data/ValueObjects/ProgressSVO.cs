@@ -26,6 +26,12 @@ namespace Modules.GameplayModule.Data.ValueObjects
         public List<WorkingLocationSVO> WorkingLocations = new();
         // Config relations are the starting diplomacy. Attacking a friendly family adds its Id here permanently.
         public List<string> EnemyFamilies = new();
+        // Enemy families the player bought a truce with: friendly until the player goes after one of their shops.
+        public List<string> TruceFamilies = new();
+        // Money put into shops: each level raises what that shop pays. Lost with the shop.
+        public List<ShopLevelSVO> ShopLevels = new();
+        // The player's record, shown on the Family Board.
+        public PlayerStatsSVO Stats = new();
         // The contract in progress when the game was left; empty means home. Play picks it up again.
         public string CurrentMission;
         // The broker's first call has been answered and heard; it never rings again.
@@ -39,6 +45,23 @@ namespace Modules.GameplayModule.Data.ValueObjects
     {
         public string Mission;
         public int Count;
+    }
+
+    [Serializable]
+    public class ShopLevelSVO
+    {
+        public string Mission;
+        public int Level;
+    }
+
+    [Serializable]
+    public class PlayerStatsSVO
+    {
+        public int ShopsTaken;
+        public int ShopsLost;
+        public int RaidsRepelled;
+        public int MenDown;
+        public long ShopIncome;
     }
 
     [Serializable]

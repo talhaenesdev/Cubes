@@ -48,7 +48,15 @@ namespace Modules.GameplayModule.Controllers
                 _signals.Incoming.StartContract.Dispatch();
                 return;
             }
-            if (territory.IsOurs(mission.Id)) return;
+            if (territory.IsOurs(mission.Id))
+            {
+                if (territory.ShopLevel(mission.Id) >= territory.Config.MaxShopLevel) return;
+                if (!territory.TryUpgradeShop(mission.Id))
+                    _signals.Outgoing.BannerShown.Dispatch(_loc.Format("NEED ${0} TO UPGRADE", territory.ShopUpgradePrice(mission.Id)));
+                else _signals.Outgoing.BannerShown.Dispatch(_loc.Format("SHOP UPGRADED TO LV {0}", territory.ShopLevel(mission.Id)));
+                Refresh();
+                return;
+            }
             // Going after a friendly family's shop makes them an enemy.
             string owner = territory.OwnerOf(mission);
             if (territory.DeclareEnemy(owner))

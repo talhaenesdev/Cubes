@@ -29,5 +29,7 @@ namespace Modules.GameplayModule.Data.ValueObjects
         public float Headphones;
         // Changing the song: 0 to 1 while the hand goes to the headphones and back; below 0 when not.
         public float TrackSwitch;
+        // Up through a jump above 0, down below it; 0 on the ground.
+        public float VerticalSpeed;
     }
 }

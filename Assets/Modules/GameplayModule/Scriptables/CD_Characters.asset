@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: CD_Characters
   m_EditorClassIdentifier: Modules.Gameplay::Modules.GameplayModule.Data.UnityObjects.CD_Characters
   PlayerType: rectangle
+  CivilianPrefab: {fileID: 2020069085933363738, guid: e326406227c778b429ad036e7a6105ff, type: 3}
+  BossPrefab: {fileID: 7209459088193011215, guid: 20cc4878cc34af04587a2e0faea57524, type: 3}
   Types:
   - Id: rectangle
     DisplayName: RECTANGLE
